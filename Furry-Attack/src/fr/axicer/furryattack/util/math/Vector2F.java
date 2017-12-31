@@ -1,8 +1,8 @@
-package fr.axicer.furryattack.util;
+package fr.axicer.furryattack.util.math;
 
 public class Vector2F {
 	
-	protected float x,y;
+	public float x,y;
 	
 	public Vector2F(float x, float y) {
 		this.x = x;

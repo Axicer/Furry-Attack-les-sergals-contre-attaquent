@@ -1,8 +1,8 @@
-package fr.axicer.furryattack.util;
+package fr.axicer.furryattack.util.math;
 
 public class Vector3F extends Vector2F{
 
-	protected float z;
+	public float z;
 	
 	public Vector3F(float x, float y, float z) {
 		super(x, y);

@@ -1,8 +1,10 @@
 package fr.axicer.furryattack.util;
 
+import fr.axicer.furryattack.util.math.Vector3F;
+
 public class Color extends Vector3F{
 
-	protected float a;
+	public float a;
 	
 	public Color(float r, float g, float b, float a) {
 		super(r, g, b);
