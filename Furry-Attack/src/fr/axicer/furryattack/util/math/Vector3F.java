@@ -33,4 +33,8 @@ public class Vector3F extends Vector2F{
 	public Vector3F copy() {
 		return new Vector3F(x, y, z);
 	}
+	
+	public String toString() {
+		return x+","+y+","+z;
+	}
 }

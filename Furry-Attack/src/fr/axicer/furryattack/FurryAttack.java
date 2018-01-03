@@ -5,6 +5,7 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
+import fr.axicer.furryattack.render.Background;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
 import fr.axicer.furryattack.util.Constants;
@@ -25,7 +26,9 @@ public class FurryAttack implements Renderable, Updateable{
 	private boolean running = true;
 	@SuppressWarnings("unused")
 	private KeyboardHandler keyhandler;
-
+	
+	Background back;
+	
 	public void run() {
 		System.out.println("Hello LWJGL " + Version.getVersion() + "!");
 
@@ -92,9 +95,11 @@ public class FurryAttack implements Renderable, Updateable{
 		GL.createCapabilities();
 
 		// Set the clear color
-		glClearColor(0.5f, 0.0f, 0.5f, 0.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 
+		back = new Background();
+		
 		long lastTimeTick = System.nanoTime();
 		long lastRenderTime = System.nanoTime();
 		
@@ -157,12 +162,12 @@ public class FurryAttack implements Renderable, Updateable{
 	
 	@Override
 	public void update() {
-		
+		back.update();
 	}
 
 	@Override
 	public void render() {
-		//TODO update ratio if changed
+		back.render();
 	}
 	
 	//////////////////	CONSTRUCTOR		///////////////////
