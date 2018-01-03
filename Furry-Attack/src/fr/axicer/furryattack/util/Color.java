@@ -1,13 +1,12 @@
 package fr.axicer.furryattack.util;
 
-import fr.axicer.furryattack.util.math.Vector3F;
+import org.joml.Vector4f;
 
-public class Color extends Vector3F{
+public class Color extends Vector4f{
 
 	public float a;
 	
 	public Color(float r, float g, float b, float a) {
-		super(r, g, b);
 		this.x = bound(0, 255, r);
 		this.y = bound(0, 255, g);
 		this.z = bound(0, 255, b);

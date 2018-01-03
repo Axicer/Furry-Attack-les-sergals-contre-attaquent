@@ -1,15 +1,18 @@
 package fr.axicer.furryattack;
 
+import org.joml.Vector3f;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
+import fr.axicer.furryattack.game.Entity;
 import fr.axicer.furryattack.render.Background;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
 import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.KeyboardHandler;
+import fr.axicer.furryattack.util.MouseHandler;
 
 import java.nio.*;
 
@@ -26,6 +29,11 @@ public class FurryAttack implements Renderable, Updateable{
 	private boolean running = true;
 	@SuppressWarnings("unused")
 	private KeyboardHandler keyhandler;
+	@SuppressWarnings("unused")
+	private MouseHandler mousehandler;
+	private GLFWMouseButtonCallback mousebuttoncallback;
+	public Entity entity;
+	public boolean MouseGrabbed = false;
 	
 	Background back;
 	
@@ -58,6 +66,21 @@ public class FurryAttack implements Renderable, Updateable{
 
 		// Setup a key callback. It will be called every time a key is pressed, repeated or released.
 		glfwSetKeyCallback(window, keyhandler = new KeyboardHandler());
+		glfwSetCursorPosCallback(window, mousehandler = new MouseHandler());
+		glfwSetMouseButtonCallback(window, mousebuttoncallback = new GLFWMouseButtonCallback() {
+			@Override
+			public void invoke(long window, int button, int action, int mods) {
+				if(!MouseGrabbed && action == GLFW.GLFW_PRESS) {
+					MouseGrabbed = true;
+					glfwSetCursorPos(window, Constants.WIDTH/2, Constants.HEIGHT/2);
+					MouseHandler.mouseX = Constants.WIDTH/2;
+					MouseHandler.mouseY = Constants.HEIGHT/2;
+					glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+					MouseHandler.getDX();
+					MouseHandler.getDY();
+				}
+			}
+		});
 
 		// Get the thread stack and push a new frame
 		try ( MemoryStack stack = stackPush() ) {
@@ -97,7 +120,7 @@ public class FurryAttack implements Renderable, Updateable{
 		// Set the clear color
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-
+		entity = new Entity(new Vector3f(), new Vector3f());
 		back = new Background();
 		
 		long lastTimeTick = System.nanoTime();
@@ -162,7 +185,14 @@ public class FurryAttack implements Renderable, Updateable{
 	
 	@Override
 	public void update() {
-		back.update();
+		if(KeyboardHandler.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
+			MouseGrabbed = false;
+			 glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		}
+		if(MouseGrabbed) {
+			glfwSetCursorPos(window, Constants.WIDTH/2, Constants.HEIGHT/2);
+		}
+		entity.update();
 	}
 
 	@Override
@@ -170,13 +200,15 @@ public class FurryAttack implements Renderable, Updateable{
 		back.render();
 	}
 	
-	//////////////////	CONSTRUCTOR		///////////////////
 	
-	public FurryAttack() {
-		run();
+	public static FurryAttack instance;
+
+	public static FurryAttack getInstance() {
+		return instance;
 	}
 	
 	public static void main(String[] args) {
-		new FurryAttack();
+		instance = new FurryAttack();
+		instance.run();
 	}
 }
