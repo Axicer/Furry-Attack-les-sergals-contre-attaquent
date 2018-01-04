@@ -10,10 +10,12 @@ import java.nio.ByteBuffer;
 import org.lwjgl.BufferUtils;
 
 public class Texture {
-	public int ID;
+	public int ID, width, height;
 	
-	public Texture(int id) {
+	public Texture(int id, int width, int height) {
 		this.ID = id;
+		this.width = width;
+		this.height = height;
 	}
 	
 	public void bind(int sampler){
@@ -62,6 +64,6 @@ public class Texture {
 	    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 	    glBindTexture(GL_TEXTURE_2D, 0);
 	    //Return the texture ID so we can bind it later again
-	    return new Texture(textureID);
+	    return new Texture(textureID, image.getWidth(), image.getHeight());
 	}
 }

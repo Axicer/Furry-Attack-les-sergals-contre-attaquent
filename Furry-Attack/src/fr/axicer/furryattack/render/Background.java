@@ -24,11 +24,11 @@ public class Background implements Renderable{
 	private int vbo_texture;
 	private BackgroundShader shader;
 	
-	public Background() {
+	public Background(String imgPath) {
 		shader = new BackgroundShader();
 		BufferedImage img = null;
 		try {
-			img = ImageIO.read(Texture.class.getResourceAsStream("/img/intro.png"));
+			img = ImageIO.read(Texture.class.getResourceAsStream(imgPath));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -72,8 +72,8 @@ public class Background implements Renderable{
 		tex.bind(0);
 		shader.bind();
 		shader.setUniformi("tex", 0);
-		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projection);
-		shader.setUniformMat4f("viewMatrix", new Matrix4f().identity());
+		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
+		shader.setUniformMat4f("viewMatrix", FurryAttack.getInstance().viewMatrix);
 		shader.setUniformMat4f("modelMatrix", new Matrix4f().identity());
 		
 		int verticesAttrib = GL20.glGetAttribLocation(shader.program, "vertices");
@@ -93,6 +93,7 @@ public class Background implements Renderable{
 		GL20.glDisableVertexAttribArray(textureAttrib);
 		
 		shader.unbind();
+		Texture.unbind();
 	}
 	
 	public void destroy() {

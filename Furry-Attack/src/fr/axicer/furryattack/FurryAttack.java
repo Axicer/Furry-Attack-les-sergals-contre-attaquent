@@ -18,10 +18,13 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 
-import fr.axicer.furryattack.render.Background;
+import fr.axicer.furryattack.character.Character;
+import fr.axicer.furryattack.character.Species;
+import fr.axicer.furryattack.character.animation.CharacterAnimation;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
 import fr.axicer.furryattack.unused.MouseHandler;
+import fr.axicer.furryattack.util.Color;
 import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.KeyboardHandler;
 
@@ -39,9 +42,10 @@ public class FurryAttack implements Renderable, Updateable{
 	@SuppressWarnings("unused")
 	private GLFWWindowSizeCallback windowSizeCallback;
 	
-	//public boolean MouseGrabbed = false;
-	public Matrix4f projection;
-	public Background back;
+	public Matrix4f projectionMatrix;
+	public Matrix4f viewMatrix;
+	
+	public Character character;
 	
 	public void run() {
 		System.out.println("Hello LWJGL " + Version.getVersion() + "!");
@@ -107,33 +111,20 @@ public class FurryAttack implements Renderable, Updateable{
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		
 		
-		projection = new Matrix4f().ortho(-Constants.WIDTH/2, Constants.WIDTH/2, -Constants.HEIGHT/2, Constants.HEIGHT/2, 0.1f, 1000.0f);
-		back = new Background();
+		projectionMatrix = new Matrix4f().ortho(-Constants.WIDTH/2, Constants.WIDTH/2, -Constants.HEIGHT/2, Constants.HEIGHT/2, 0.1f, 1000.0f);
+		viewMatrix = new Matrix4f().identity();
+		character = new Character(Species.WOLF, new Color(127,127,127,255), new Color(220,216,213,255), "Kaboom !", new CharacterAnimation("/anim/human_walk.anim", "/img/human_walk_texture.png"));
 		
 		glfwSetKeyCallback(window, keyhandler = new KeyboardHandler());
 		glfwSetCursorPosCallback(window, mousehandler = new MouseHandler());
-		/*glfwSetMouseButtonCallback(window, mousebuttoncallback = new GLFWMouseButtonCallback() {
-			@Override
-			public void invoke(long window, int button, int action, int mods) {
-				if(!MouseGrabbed && action == GLFW.GLFW_PRESS) {
-					MouseGrabbed = true;
-					glfwSetCursorPos(window, Constants.WIDTH/2, Constants.HEIGHT/2);
-					MouseHandler.mouseX = Constants.WIDTH/2;
-					MouseHandler.mouseY = Constants.HEIGHT/2;
-					glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-					MouseHandler.getDX();
-					MouseHandler.getDY();
-				}
-			}
-		});*/
 		glfwSetWindowSizeCallback(window, windowSizeCallback = new GLFWWindowSizeCallback(){
             @Override
             public void invoke(long window, int width, int height){
             	Constants.WIDTH = width;
             	Constants.HEIGHT = height;
-            	back.recalculate(width, height);
+            	//TODO recalculate the background
             	GL11.glViewport(0, 0, width, height);
-            	projection = new Matrix4f().ortho(-width/2, width/2, -height/2, height/2, 0.1f, 1000.0f);
+            	projectionMatrix = new Matrix4f().ortho(-width/2, width/2, -height/2, height/2, 0.1f, 1000.0f);
             }
         });
 	}
@@ -150,8 +141,6 @@ public class FurryAttack implements Renderable, Updateable{
 		
 		long timer = System.currentTimeMillis();
 		
-		// Run the rendering loop until the user has attempted to close
-		// the window or has pressed the ESCAPE key.
 		while ( !glfwWindowShouldClose(window) && running) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 			
@@ -186,7 +175,7 @@ public class FurryAttack implements Renderable, Updateable{
 	}
 	
 	public void exit() {
-		back.destroy();
+		character.destroy();
 		// Free the window callbacks and destroy the window
 		glfwFreeCallbacks(window);
 		glfwDestroyWindow(window);
@@ -202,22 +191,12 @@ public class FurryAttack implements Renderable, Updateable{
 	
 	@Override
 	public void update() {
-		/*if(KeyboardHandler.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
-			MouseGrabbed = false;
-			 glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-		}
-		if(MouseGrabbed) {
-			glfwSetCursorPos(window, Constants.WIDTH/2, Constants.HEIGHT/2);
-		}*/
-		/*double[] x = new double[1];
-		double[] y = new double[1];
-		glfwGetCursorPos(window, x, y);
-		System.out.println(x[0]+","+y[0]);*/
+		character.update();
 	}
 
 	@Override
 	public void render() {
-		back.render();
+		character.render();
 	}
 	
 	
