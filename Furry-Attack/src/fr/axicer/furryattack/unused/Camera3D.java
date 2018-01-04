@@ -1,4 +1,4 @@
-package fr.axicer.furryattack.render;
+package fr.axicer.furryattack.unused;
 
 import org.joml.Math;
 import org.joml.Matrix4f;
@@ -25,10 +25,10 @@ public class Camera3D {
 	
 	public Matrix4f getViewMatrix() {
 		Matrix4f mat = new Matrix4f();
-		mat.rotate(rot.x, 1, 0, 0);
+		mat.rotate(-rot.x, 1, 0, 0);
 		mat.rotate(rot.y, 0, 1, 0);
 		mat.rotate(rot.z, 0, 0, 1);
-		mat.translate(pos.x, pos.y, pos.z);
+		mat.translate(-pos.x, -pos.y, -pos.z);
 		return mat;
 	}
 	

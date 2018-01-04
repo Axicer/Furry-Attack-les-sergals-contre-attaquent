@@ -1,26 +1,29 @@
 package fr.axicer.furryattack;
 
-import org.joml.Vector3f;
-import org.lwjgl.*;
-import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
-import org.lwjgl.system.*;
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
-import fr.axicer.furryattack.game.Entity;
+import java.nio.IntBuffer;
+
+import org.joml.Matrix4f;
+import org.lwjgl.Version;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWMouseButtonCallback;
+import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.glfw.GLFWWindowSizeCallback;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.system.MemoryStack;
+
 import fr.axicer.furryattack.render.Background;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
+import fr.axicer.furryattack.unused.MouseHandler;
 import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.KeyboardHandler;
-import fr.axicer.furryattack.util.MouseHandler;
-
-import java.nio.*;
-
-import static org.lwjgl.glfw.Callbacks.*;
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
 
 public class FurryAttack implements Renderable, Updateable{
 	
@@ -31,11 +34,14 @@ public class FurryAttack implements Renderable, Updateable{
 	private KeyboardHandler keyhandler;
 	@SuppressWarnings("unused")
 	private MouseHandler mousehandler;
+	@SuppressWarnings("unused")
 	private GLFWMouseButtonCallback mousebuttoncallback;
-	public Entity entity;
-	public boolean MouseGrabbed = false;
+	@SuppressWarnings("unused")
+	private GLFWWindowSizeCallback windowSizeCallback;
 	
-	Background back;
+	//public boolean MouseGrabbed = false;
+	public Matrix4f projection;
+	public Background back;
 	
 	public void run() {
 		System.out.println("Hello LWJGL " + Version.getVersion() + "!");
@@ -64,24 +70,6 @@ public class FurryAttack implements Renderable, Updateable{
 		if ( window == NULL )
 			throw new RuntimeException("Failed to create the GLFW window");
 
-		// Setup a key callback. It will be called every time a key is pressed, repeated or released.
-		glfwSetKeyCallback(window, keyhandler = new KeyboardHandler());
-		glfwSetCursorPosCallback(window, mousehandler = new MouseHandler());
-		glfwSetMouseButtonCallback(window, mousebuttoncallback = new GLFWMouseButtonCallback() {
-			@Override
-			public void invoke(long window, int button, int action, int mods) {
-				if(!MouseGrabbed && action == GLFW.GLFW_PRESS) {
-					MouseGrabbed = true;
-					glfwSetCursorPos(window, Constants.WIDTH/2, Constants.HEIGHT/2);
-					MouseHandler.mouseX = Constants.WIDTH/2;
-					MouseHandler.mouseY = Constants.HEIGHT/2;
-					glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-					MouseHandler.getDX();
-					MouseHandler.getDY();
-				}
-			}
-		});
-
 		// Get the thread stack and push a new frame
 		try ( MemoryStack stack = stackPush() ) {
 			IntBuffer pWidth = stack.mallocInt(1); // int*
@@ -107,9 +95,7 @@ public class FurryAttack implements Renderable, Updateable{
 		glfwSwapInterval(1);
 		// Make the window visible
 		glfwShowWindow(window);
-	}
-
-	private void loop() {
+		
 		// This line is critical for LWJGL's interoperation with GLFW's
 		// OpenGL context, or any context that is managed externally.
 		// LWJGL detects the context that is current in the current thread,
@@ -119,10 +105,40 @@ public class FurryAttack implements Renderable, Updateable{
 
 		// Set the clear color
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
-		entity = new Entity(new Vector3f(), new Vector3f());
+		
+		
+		projection = new Matrix4f().ortho(-Constants.WIDTH/2, Constants.WIDTH/2, -Constants.HEIGHT/2, Constants.HEIGHT/2, 0.1f, 1000.0f);
 		back = new Background();
 		
+		glfwSetKeyCallback(window, keyhandler = new KeyboardHandler());
+		glfwSetCursorPosCallback(window, mousehandler = new MouseHandler());
+		/*glfwSetMouseButtonCallback(window, mousebuttoncallback = new GLFWMouseButtonCallback() {
+			@Override
+			public void invoke(long window, int button, int action, int mods) {
+				if(!MouseGrabbed && action == GLFW.GLFW_PRESS) {
+					MouseGrabbed = true;
+					glfwSetCursorPos(window, Constants.WIDTH/2, Constants.HEIGHT/2);
+					MouseHandler.mouseX = Constants.WIDTH/2;
+					MouseHandler.mouseY = Constants.HEIGHT/2;
+					glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+					MouseHandler.getDX();
+					MouseHandler.getDY();
+				}
+			}
+		});*/
+		glfwSetWindowSizeCallback(window, windowSizeCallback = new GLFWWindowSizeCallback(){
+            @Override
+            public void invoke(long window, int width, int height){
+            	Constants.WIDTH = width;
+            	Constants.HEIGHT = height;
+            	back.recalculate(width, height);
+            	GL11.glViewport(0, 0, width, height);
+            	projection = new Matrix4f().ortho(-width/2, width/2, -height/2, height/2, 0.1f, 1000.0f);
+            }
+        });
+	}
+
+	private void loop() {
 		long lastTimeTick = System.nanoTime();
 		long lastRenderTime = System.nanoTime();
 		
@@ -138,10 +154,6 @@ public class FurryAttack implements Renderable, Updateable{
 		// the window or has pressed the ESCAPE key.
 		while ( !glfwWindowShouldClose(window) && running) {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-			glfwSwapBuffers(window); // swap the color buffers
-			// Poll for window events. The key callback above will only be
-			// invoked during this call.
-			glfwPollEvents();
 			
 			if(System.nanoTime() - lastTimeTick > tickTime){
 				update();
@@ -166,10 +178,15 @@ public class FurryAttack implements Renderable, Updateable{
 					e.printStackTrace();
 				}
 			}
+			glfwSwapBuffers(window); // swap the color buffers
+			// Poll for window events. The key callback above will only be
+			// invoked during this call.
+			glfwPollEvents();
 		}
 	}
 	
 	public void exit() {
+		back.destroy();
 		// Free the window callbacks and destroy the window
 		glfwFreeCallbacks(window);
 		glfwDestroyWindow(window);
@@ -185,14 +202,17 @@ public class FurryAttack implements Renderable, Updateable{
 	
 	@Override
 	public void update() {
-		if(KeyboardHandler.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
+		/*if(KeyboardHandler.isKeyDown(GLFW.GLFW_KEY_ESCAPE)) {
 			MouseGrabbed = false;
 			 glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 		}
 		if(MouseGrabbed) {
 			glfwSetCursorPos(window, Constants.WIDTH/2, Constants.HEIGHT/2);
-		}
-		entity.update();
+		}*/
+		/*double[] x = new double[1];
+		double[] y = new double[1];
+		glfwGetCursorPos(window, x, y);
+		System.out.println(x[0]+","+y[0]);*/
 	}
 
 	@Override

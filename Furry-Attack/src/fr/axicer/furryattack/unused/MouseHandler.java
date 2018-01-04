@@ -1,4 +1,4 @@
-package fr.axicer.furryattack.util;
+package fr.axicer.furryattack.unused;
 
 import org.lwjgl.glfw.GLFWCursorPosCallbackI;
 
