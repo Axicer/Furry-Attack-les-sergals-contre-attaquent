@@ -1,13 +1,12 @@
 package fr.axicer.furryattack.character.animation;
 
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.imageio.ImageIO;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import fr.axicer.furryattack.render.textures.Texture;
 
@@ -24,14 +23,7 @@ public class CharacterAnimation {
 		this.start = 0;
 		this.actual = 0;
 		this.end = keyframes[keyframes.length-1].millis; //end is at the last keyframe millis
-		
-		BufferedImage bimg;
-		try {
-			bimg = ImageIO.read(CharacterAnimation.class.getResourceAsStream(texturePath));
-			this.texture = Texture.loadTexture(bimg);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.texture = Texture.loadTexture(texturePath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_LINEAR);
 	}
 	
 	public Texture getTexture() {

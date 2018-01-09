@@ -132,5 +132,6 @@ public class Character implements Renderable,Updateable{
 	
 	public void destroy() {
 		GL15.glDeleteBuffers(VERTEX_VBO_ID);
+		walk.getTexture().delete();
 	}
 }

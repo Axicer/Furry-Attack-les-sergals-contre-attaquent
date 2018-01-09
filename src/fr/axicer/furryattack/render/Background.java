@@ -1,14 +1,11 @@
 package fr.axicer.furryattack.render;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.nio.FloatBuffer;
-
-import javax.imageio.ImageIO;
 
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
@@ -25,13 +22,7 @@ public class Background implements Renderable{
 	
 	public Background(String imgPath) {
 		shader = new BackgroundShader();
-		BufferedImage img = null;
-		try {
-			img = ImageIO.read(Texture.class.getResourceAsStream(imgPath));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		tex = Texture.loadTexture(img);
+		tex = Texture.loadTexture(imgPath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_LINEAR);
 		
 		FloatBuffer vertices = BufferUtils.createFloatBuffer(3);
 		vertices.put(new float[] {0f,0f,0f});
@@ -72,5 +63,6 @@ public class Background implements Renderable{
 	
 	public void destroy() {
 		GL15.glDeleteBuffers(vbo);
+		tex.delete();
 	}
 }

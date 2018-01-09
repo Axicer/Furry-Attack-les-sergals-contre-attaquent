@@ -1,21 +1,26 @@
 package fr.axicer.furryattack.render.textures;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL12.*;
 import static org.lwjgl.opengl.GL13.*;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.nio.ByteBuffer;
+
+import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
 
 public class Texture {
-	public int ID, width, height;
 	
-	public Texture(int id, int width, int height) {
+	public int ID, width, height, wrapMode, filtermode;
+	
+	public Texture(int id, int width, int height, int wrapMode, int filterMode) {
 		this.ID = id;
 		this.width = width;
 		this.height = height;
+		this.wrapMode = wrapMode;
+		this.filtermode = filterMode;
 	}
 	
 	public void bind(int sampler){
@@ -27,9 +32,20 @@ public class Texture {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	
+	public void delete() {
+		glDeleteTextures(ID);
+	}
+	
 	private final static int BYTES_PER_PIXEL = 4;
 
-	public static Texture loadTexture(BufferedImage image){
+	public static Texture loadTexture(String path, int wrapMode, int filterMode){
+		
+		BufferedImage image = null;
+		try {
+			image = ImageIO.read(Texture.class.getResourceAsStream(path));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 	    int[] pixels = image.getRGB(0, 0, image.getWidth(), image.getHeight(), null, 0, image.getWidth());
 	
@@ -53,17 +69,17 @@ public class Texture {
 	    int textureID = glGenTextures(); //Generate texture ID
 	    glBindTexture(GL_TEXTURE_2D, textureID);
 	    //Setup wrap mode
-	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
+	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
 	
 	    //Setup texture scaling filtering
-	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterMode);
+	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filterMode);
 	    
 	    //Send texel data to OpenGL
 	    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 	    glBindTexture(GL_TEXTURE_2D, 0);
 	    //Return the texture ID so we can bind it later again
-	    return new Texture(textureID, image.getWidth(), image.getHeight());
+	    return new Texture(textureID, image.getWidth(), image.getHeight(), wrapMode, filterMode);
 	}
 }
