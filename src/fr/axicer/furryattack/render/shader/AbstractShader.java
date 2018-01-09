@@ -35,8 +35,6 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 
-import fr.axicer.furryattack.util.Color;
-
 public abstract class AbstractShader {
 	
 	public int program,vs,gs,fs;

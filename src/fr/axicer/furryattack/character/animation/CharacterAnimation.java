@@ -40,11 +40,11 @@ public class CharacterAnimation {
 	
 	public void updateState() {
 		actual++;
-		if(actual == end)actual = start;
+		if(actual == end)reset();
 	}
 	
 	public void reset() {
-		actual = 0;
+		actual = start;
 	}
 	
 	public KeyFrame getBeforeKeyFrame() {
@@ -63,6 +63,7 @@ public class CharacterAnimation {
 		for(int i = 0 ; i < keyframes.length ; i++) {
 			if(keyframes[i].millis == millis) {
 				kf = keyframes[i];
+				break;
 			}
 		}
 		return kf;

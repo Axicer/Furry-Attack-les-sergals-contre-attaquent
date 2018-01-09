@@ -21,6 +21,7 @@ import org.lwjgl.system.MemoryStack;
 import fr.axicer.furryattack.character.Character;
 import fr.axicer.furryattack.character.Species;
 import fr.axicer.furryattack.character.animation.CharacterAnimation;
+import fr.axicer.furryattack.render.Background;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
 import fr.axicer.furryattack.unused.MouseHandler;
@@ -46,6 +47,7 @@ public class FurryAttack implements Renderable, Updateable{
 	public Matrix4f viewMatrix;
 	
 	public Character character;
+	public Background background;
 	
 	public void run() {
 		System.out.println("Hello LWJGL " + Version.getVersion() + "!");
@@ -114,6 +116,7 @@ public class FurryAttack implements Renderable, Updateable{
 		projectionMatrix = new Matrix4f().ortho(-Constants.WIDTH/2, Constants.WIDTH/2, -Constants.HEIGHT/2, Constants.HEIGHT/2, 0.1f, 1000.0f);
 		viewMatrix = new Matrix4f().identity();
 		character = new Character(Species.WOLF, new Color(127,127,127,255), new Color(220,216,213,255), "Kaboom !", new CharacterAnimation("/anim/human_walk.anim", "/img/human_walk_texture.png"));
+		background = new Background("/img/intro.png");
 		
 		glfwSetKeyCallback(window, keyhandler = new KeyboardHandler());
 		glfwSetCursorPosCallback(window, mousehandler = new MouseHandler());
@@ -176,6 +179,7 @@ public class FurryAttack implements Renderable, Updateable{
 	
 	public void exit() {
 		character.destroy();
+		background.destroy();
 		// Free the window callbacks and destroy the window
 		glfwFreeCallbacks(window);
 		glfwDestroyWindow(window);
@@ -196,6 +200,7 @@ public class FurryAttack implements Renderable, Updateable{
 
 	@Override
 	public void render() {
+		background.render();
 		character.render();
 	}
 	
