@@ -8,6 +8,8 @@ __Ce code se compile avec Java 8__
 - LWJGL doc: https://www.lwjgl.org/guide
 - LWJGL source: https://www.lwjgl.org/source
 - GLSL: https://www.khronos.org/opengl/wiki/OpenGL_Shading_Language
+- slf4j: https://www.slf4j.org/
+- LogBack: https://logback.qos.ch/
 
 ## Questions & Idées
 

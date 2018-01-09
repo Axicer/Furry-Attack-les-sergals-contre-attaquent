@@ -1,8 +1,34 @@
 package fr.axicer.furryattack;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
+import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
+import static org.lwjgl.glfw.GLFW.GLFW_TRUE;
+import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
+import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
+import static org.lwjgl.glfw.GLFW.glfwDefaultWindowHints;
+import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
+import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
+import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
+import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
+import static org.lwjgl.glfw.GLFW.glfwInit;
+import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
+import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+import static org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
+import static org.lwjgl.glfw.GLFW.glfwShowWindow;
+import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
+import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
+import static org.lwjgl.glfw.GLFW.glfwTerminate;
+import static org.lwjgl.glfw.GLFW.glfwWindowHint;
+import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -17,6 +43,8 @@ import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import fr.axicer.furryattack.character.Character;
 import fr.axicer.furryattack.character.Species;
@@ -49,9 +77,11 @@ public class FurryAttack implements Renderable, Updateable{
 	public Character character;
 	public Background background;
 	
+	private Logger logger = LoggerFactory.getLogger(FurryAttack.class);
+	
 	public void run() {
-		System.out.println("Hello LWJGL " + Version.getVersion() + "!");
-
+		logger.debug("Hello LWJGL " + Version.getVersion() + "!");
+		
 		init();
 		loop();
 		exit();
@@ -125,7 +155,6 @@ public class FurryAttack implements Renderable, Updateable{
             public void invoke(long window, int width, int height){
             	Constants.WIDTH = width;
             	Constants.HEIGHT = height;
-            	//TODO recalculate the background
             	GL11.glViewport(0, 0, width, height);
             	projectionMatrix = new Matrix4f().ortho(-width/2, width/2, -height/2, height/2, 0.1f, 1000.0f);
             }
@@ -159,7 +188,7 @@ public class FurryAttack implements Renderable, Updateable{
 			}
 			if(System.currentTimeMillis() - timer > 1000){
 				timer += 1000;
-				System.out.println("frames: "+frames+" FPS, ticks: "+ticks);
+				logger.info("frames: "+frames+" FPS, ticks: "+ticks);
 				frames = 0;
 				ticks = 0;
 				updatesec();
