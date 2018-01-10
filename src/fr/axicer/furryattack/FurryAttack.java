@@ -128,7 +128,7 @@ public class FurryAttack implements Renderable, Updateable{
 		// Make the OpenGL context current
 		glfwMakeContextCurrent(window);
 		// Enable v-sync
-		glfwSwapInterval(1);
+		glfwSwapInterval(0);
 		// Make the window visible
 		glfwShowWindow(window);
 		
@@ -141,7 +141,6 @@ public class FurryAttack implements Renderable, Updateable{
 
 		// Set the clear color
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		
 		
 		projectionMatrix = new Matrix4f().ortho(-Constants.WIDTH/2, Constants.WIDTH/2, -Constants.HEIGHT/2, Constants.HEIGHT/2, 0.1f, 1000.0f);
 		viewMatrix = new Matrix4f().identity();
@@ -174,8 +173,6 @@ public class FurryAttack implements Renderable, Updateable{
 		long timer = System.currentTimeMillis();
 		
 		while ( !glfwWindowShouldClose(window) && running) {
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-			
 			if(System.nanoTime() - lastTimeTick > tickTime){
 				update();
 				lastTimeTick += tickTime;
@@ -199,7 +196,6 @@ public class FurryAttack implements Renderable, Updateable{
 					e.printStackTrace();
 				}
 			}
-			glfwSwapBuffers(window); // swap the color buffers
 			// Poll for window events. The key callback above will only be
 			// invoked during this call.
 			glfwPollEvents();
@@ -229,8 +225,10 @@ public class FurryAttack implements Renderable, Updateable{
 
 	@Override
 	public void render() {
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 		background.render();
 		character.render();
+		glfwSwapBuffers(window); // swap the color buffers
 	}
 	
 	

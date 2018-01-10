@@ -59,7 +59,7 @@ public class Character implements Renderable,Updateable{
 		shader.setUniformMat4f("viewMatrix", FurryAttack.getInstance().viewMatrix);
 		shader.setUniformvec3f("primaryColor", new Vector3f(primaryColor.x, primaryColor.y, primaryColor.z));
 		shader.setUniformvec3f("secondaryColor", new Vector3f(secondaryColor.x, secondaryColor.y, secondaryColor.z));
-		shader.setUniformf("spriteWidth", 1f/(float)walk.getKeyframes().length);
+		shader.setUniformf("spriteWidth", 1f/((float)walk.getKeyframes().length-1f));
 		shader.setUniformf("characterWidth", CHARACTER_WIDTH);
 		shader.setUniformf("characterHeight", CHARACTER_HEIGHT);
 		shader.setUniformi("tex", 0);
