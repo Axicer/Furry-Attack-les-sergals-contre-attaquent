@@ -49,6 +49,7 @@ import org.slf4j.LoggerFactory;
 import fr.axicer.furryattack.character.Character;
 import fr.axicer.furryattack.character.Species;
 import fr.axicer.furryattack.character.animation.CharacterAnimation;
+import fr.axicer.furryattack.gui.elements.GUIText;
 import fr.axicer.furryattack.render.Background;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
@@ -56,6 +57,7 @@ import fr.axicer.furryattack.unused.MouseHandler;
 import fr.axicer.furryattack.util.Color;
 import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.KeyboardHandler;
+import fr.axicer.furryattack.util.font.FontType;
 
 public class FurryAttack implements Renderable, Updateable{
 	
@@ -76,6 +78,7 @@ public class FurryAttack implements Renderable, Updateable{
 	
 	public Character character;
 	public Background background;
+	public GUIText text;
 	
 	private Logger logger = LoggerFactory.getLogger(FurryAttack.class);
 	
@@ -140,12 +143,13 @@ public class FurryAttack implements Renderable, Updateable{
 		GL.createCapabilities();
 
 		// Set the clear color
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		
 		projectionMatrix = new Matrix4f().ortho(-Constants.WIDTH/2, Constants.WIDTH/2, -Constants.HEIGHT/2, Constants.HEIGHT/2, 0.1f, 1000.0f);
 		viewMatrix = new Matrix4f().identity();
 		character = new Character(Species.WOLF, new Color(127,127,127,255), new Color(220,216,213,255), "Kaboom !", new CharacterAnimation("/anim/human_walk.anim", "/img/human_walk_texture.png"));
 		background = new Background("/img/custom.png");
+		text = new GUIText("Test", FontType.CONSOLAS, new Color(0, 0, 255, 255));
 		
 		glfwSetKeyCallback(window, keyhandler = new KeyboardHandler());
 		glfwSetCursorPosCallback(window, mousehandler = new MouseHandler());
@@ -205,6 +209,7 @@ public class FurryAttack implements Renderable, Updateable{
 	public void exit() {
 		character.destroy();
 		background.destroy();
+		text.destroy();
 		// Free the window callbacks and destroy the window
 		glfwFreeCallbacks(window);
 		glfwDestroyWindow(window);
@@ -221,6 +226,7 @@ public class FurryAttack implements Renderable, Updateable{
 	@Override
 	public void update() {
 		character.update();
+		text.update();
 	}
 
 	@Override
@@ -228,6 +234,7 @@ public class FurryAttack implements Renderable, Updateable{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 		background.render();
 		character.render();
+		text.render();
 		glfwSwapBuffers(window); // swap the color buffers
 	}
 	
