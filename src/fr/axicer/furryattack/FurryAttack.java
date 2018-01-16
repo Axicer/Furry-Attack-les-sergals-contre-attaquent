@@ -91,6 +91,9 @@ public class FurryAttack implements Renderable, Updateable{
 	}
 
 	private void init() {
+		//because OSX don't like axt fonts ><
+		System.setProperty("java.awt.headless", "true");
+		
 		// Setup an error callback. The default implementation
 		// will print the error message in System.err.
 		GLFWErrorCallback.createPrint(System.err).set();
