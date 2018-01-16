@@ -149,7 +149,7 @@ public class FurryAttack implements Renderable, Updateable{
 		viewMatrix = new Matrix4f().identity();
 		character = new Character(Species.WOLF, new Color(127,127,127,255), new Color(220,216,213,255), "Kaboom !", new CharacterAnimation("/anim/human_walk.anim", "/img/human_walk_texture.png"));
 		background = new Background("/img/custom.png");
-		text = new GUIText("Test", FontType.CONSOLAS, new Color(0, 0, 255, 255));
+		text = new GUIText("Test", FontType.ARIAL.getFont(), new Color(0, 0, 255, 255));
 		
 		glfwSetKeyCallback(window, keyhandler = new KeyboardHandler());
 		glfwSetCursorPosCallback(window, mousehandler = new MouseHandler());

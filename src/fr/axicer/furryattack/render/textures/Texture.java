@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL13.*;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 import javax.imageio.ImageIO;
@@ -38,11 +39,15 @@ public class Texture {
 	
 	private final static int BYTES_PER_PIXEL = 4;
 
-	public static Texture loadTexture(String path, int wrapMode, int filterMode){
+	public static Texture loadTexture(String path, int wrapMode, int filterMode) {
+		return loadTexture(Texture.class.getResourceAsStream(path), wrapMode, filterMode);
+	}
+	
+	public static Texture loadTexture(InputStream stream, int wrapMode, int filterMode){
 		
 		BufferedImage image = null;
 		try {
-			image = ImageIO.read(Texture.class.getResourceAsStream(path));
+			image = ImageIO.read(stream);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -80,6 +85,11 @@ public class Texture {
 	    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 	    glBindTexture(GL_TEXTURE_2D, 0);
 	    //Return the texture ID so we can bind it later again
+	    try {
+			stream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	    return new Texture(textureID, image.getWidth(), image.getHeight(), wrapMode, filterMode);
 	}
 }

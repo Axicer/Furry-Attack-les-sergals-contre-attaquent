@@ -1,7 +1,20 @@
 package fr.axicer.furryattack.gui.elements;
 
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.nio.FloatBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.imageio.ImageIO;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -15,13 +28,14 @@ import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.render.shader.TextShader;
 import fr.axicer.furryattack.render.textures.Texture;
 import fr.axicer.furryattack.util.Color;
-import fr.axicer.furryattack.util.font.FontType;
 
 public class GUIText extends GUIComponent{
 
 	public String text;
-	public FontType type;
+	public Font font;
 	public Color color;
+	public Map<Character, CharInfo> charMap;
+	private int width, height;
 	
 	public Texture tex;
 	public TextShader shader;
@@ -29,71 +43,127 @@ public class GUIText extends GUIComponent{
 	public int TEXCOORD_VBO;
 	public Matrix4f modelMatrix;
 	
-	public GUIText(String text, FontType type, Color color) {
+	public GUIText(String text, Font font, Color color) {
 		super();
 		this.text = text;
-		this.type = type;
+		this.font = font;
 		this.color = color;
 		init();
 	}
 	
-	public GUIText(String text, Vector3f pos, float rot, FontType type, Color color) {
+	public GUIText(String text, Vector3f pos, float rot, Font font, Color color) {
 		super(pos, rot);
 		this.text = text;
-		this.type = type;
+		this.font = font;
 		this.color = color;
 		init();
+	}
+	
+	private String getAllAvailableChars(String charsetName) {
+	    CharsetEncoder ce = Charset.forName(charsetName).newEncoder();
+	    StringBuilder result = new StringBuilder();
+	    for (char c = 0; c < Character.MAX_VALUE; c++) {
+	        if (ce.canEncode(c)) {
+	            result.append(c);
+	        }
+	    }
+	    return result.toString();
+	}
+	
+	private void buildTexture() throws Exception {
+		// Get the font metrics for each character for the selected font by using image
+	    BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+	    Graphics2D g2D = img.createGraphics();
+	    g2D.setFont(font);
+	    FontMetrics fontMetrics = g2D.getFontMetrics();
+
+	    String allChars = getAllAvailableChars("ISO-8859-1");
+	    this.width = 0;
+	    this.height = 0;
+	    for (char c : allChars.toCharArray()) {
+	        // Get the size for each character and update global image size
+	        CharInfo charInfo = new CharInfo(width, fontMetrics.charWidth(c));
+	        charMap.put(c, charInfo);
+	        width += charInfo.width;
+	        height = Math.max(height, fontMetrics.getHeight());
+	    }
+	    g2D.dispose();
+	    // Create the image associated to the charset
+	    img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+	    g2D = img.createGraphics();
+	    g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+	    g2D.setFont(font);
+	    fontMetrics = g2D.getFontMetrics();
+	    g2D.setColor(java.awt.Color.WHITE);
+	    g2D.drawString(allChars, 0, fontMetrics.getAscent());
+	    g2D.dispose();
+	    // Dump image to a byte buffer
+	    InputStream is;
+	    try (
+	        ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+	        ImageIO.write(img, "PNG", out);
+	        out.flush();
+	        is = new ByteArrayInputStream(out.toByteArray());
+	    }
+	    
+	    tex = Texture.loadTexture(is, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
 	}
 	
 	public void init(){
+		charMap = new HashMap<>();
 		modelMatrix = new Matrix4f().translate(pos).rotateZ(rot);
 		shader = new TextShader();
-		tex = Texture.loadTexture(type.getTexturePath(), GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
+		try {
+			buildTexture();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
-		byte[] chars = text.getBytes(Charset.forName("UTF-8"));
-		float numCols = (float)type.getColumns();
-		float numRows = (float)type.getRows();
-		
-		float tileWidth = (float)tex.width /numCols;
-	    float tileHeight = (float)tex.height /numRows;
+		byte[] chars = text.getBytes(Charset.forName("ISO-8859-1"));
 	    
 	    FloatBuffer vertices = BufferUtils.createFloatBuffer(chars.length*6*3);
 	    FloatBuffer textures = BufferUtils.createFloatBuffer(chars.length*6*2);
 	    
-	    float totalWidth = chars.length*tileWidth;
+	    float startx = 0;
+	    
+	    float textWidth = 0;
+	    for(int i=0; i<chars.length; i++) {
+	    	byte currChar = chars[i];
+	        CharInfo charInfo = charMap.get((char)currChar);
+	        textWidth+= charInfo.width;
+	    }
 	    
 	    for(int i=0; i<chars.length; i++) {
 	        byte currChar = chars[i];
-	        float col = (float)currChar % numCols;
-	        int row = (int) ((float)currChar / numRows);
-	        
+	        CharInfo charInfo = charMap.get((char)currChar);
 	        // Build a character tile composed by two triangles
 
 	        // Left Top vertex
-	        vertices.put(new float[] {(float)i*tileWidth-totalWidth/2, -tileHeight/2, -0.2f});
-	        textures.put(new float[] {col / numCols, (row+1f) / numRows });
+	        vertices.put(new float[] {startx-textWidth/2, (float)-height/2, -0.2f});
+	        textures.put(new float[] {(float)charInfo.startX/(float)width, 1.0f });
 
 	        // Right Top vertex
-	        vertices.put(new float[] {(float)(i+1f)*tileWidth-totalWidth/2, -tileHeight/2, -0.2f});
-	        textures.put(new float[] {(col+1f) / numCols, (row+1f) / numRows });
+	        vertices.put(new float[] {startx+charInfo.width-textWidth/2, (float)-height/2, -0.2f});
+	        textures.put(new float[] {((float)charInfo.startX+(float)charInfo.width)/(float)width, 1.0f});
 
 	        // Right Bottom vertex
-	        vertices.put(new float[] {(float)(i+1f)*tileWidth-totalWidth/2, tileHeight/2, -0.2f});
-	        textures.put(new float[] {(col+1f) / numCols, row / numRows });
+	        vertices.put(new float[] {startx+charInfo.width-textWidth/2, (float)height/2, -0.2f});
+	        textures.put(new float[] {((float)charInfo.startX+(float)charInfo.width)/(float)width, 0.0f});
 
 	        
 	        // Right Bottom vertex
-	        vertices.put(new float[] {(float)(i+1f)*tileWidth-totalWidth/2, tileHeight/2, -0.2f});
-	        textures.put(new float[] {(col+1f)/numCols,	row/numRows });
+	        vertices.put(new float[] {startx+charInfo.width-textWidth/2, (float)height/2, -0.2f});
+	        textures.put(new float[] {((float)charInfo.startX+(float)charInfo.width)/(float)width, 0.0f});
 	        
 	        // Left Bottom vertex
-	        vertices.put(new float[] {(float)i*tileWidth-totalWidth/2, tileHeight/2, -0.2f});
-	        textures.put(new float[] {col/numCols,	row/numRows });
+	        vertices.put(new float[] {startx-textWidth/2, (float)height/2, -0.2f});
+	        textures.put(new float[] {(float)charInfo.startX/(float)width, 0.0f });
 	        
 	        // Left Top vertex
-	        vertices.put(new float[] {(float)i*tileWidth-totalWidth/2, -tileHeight/2, -0.2f});
-	        textures.put(new float[] {col/numCols,	(row+1f)/numRows });
+	        vertices.put(new float[] {startx-textWidth/2, (float)-height/2, -0.2f});
+	        textures.put(new float[] {(float)charInfo.startX/(float)width, 1.0f });
 	        
+	        startx += charInfo.width;
 	    }
 	    vertices.flip();
 	    textures.flip();
@@ -144,7 +214,7 @@ public class GUIText extends GUIComponent{
 
 	@Override
 	public void update() {
-		rot += (float)Math.PI/32f;
+		rot += (float)Math.PI/64f;
 		modelMatrix.identity().translate(pos).rotateZ(rot);
 		shader.bind();
 		shader.setUniformMat4f("modelMatrix", modelMatrix);
@@ -156,4 +226,15 @@ public class GUIText extends GUIComponent{
 		GL15.glDeleteBuffers(VERTICES_VBO);
 	}
 
+	
+	 public static class CharInfo {
+
+        private final int startX;
+        private final int width;
+
+        public CharInfo(int startX, int width) {
+            this.startX = startX;
+            this.width = width;
+        }
+    }
 }
