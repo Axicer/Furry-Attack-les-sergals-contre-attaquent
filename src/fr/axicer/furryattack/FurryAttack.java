@@ -46,23 +46,17 @@ import org.lwjgl.system.MemoryStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fr.axicer.furryattack.character.Character;
-import fr.axicer.furryattack.character.Species;
-import fr.axicer.furryattack.character.animation.CharacterAnimation;
-import fr.axicer.furryattack.gui.elements.GUIText;
-import fr.axicer.furryattack.render.Background;
+import fr.axicer.furryattack.gui.elements.GUIButton;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
 import fr.axicer.furryattack.unused.MouseHandler;
-import fr.axicer.furryattack.util.Color;
 import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.KeyboardHandler;
-import fr.axicer.furryattack.util.font.FontType;
 
 public class FurryAttack implements Renderable, Updateable{
 	
 	// The window handle
-	private long window;
+	public long window;
 	private boolean running = true;
 	@SuppressWarnings("unused")
 	private KeyboardHandler keyhandler;
@@ -76,9 +70,7 @@ public class FurryAttack implements Renderable, Updateable{
 	public Matrix4f projectionMatrix;
 	public Matrix4f viewMatrix;
 	
-	public Character character;
-	public Background background;
-	public GUIText text;
+	public GUIButton button;
 	
 	private Logger logger = LoggerFactory.getLogger(FurryAttack.class);
 	
@@ -91,7 +83,7 @@ public class FurryAttack implements Renderable, Updateable{
 	}
 
 	private void init() {
-		//because OSX don't like axt fonts ><
+		//because OSX don't like awt fonts ><
 		System.setProperty("java.awt.headless", "true");
 		
 		// Setup an error callback. The default implementation
@@ -150,9 +142,11 @@ public class FurryAttack implements Renderable, Updateable{
 		
 		projectionMatrix = new Matrix4f().ortho(-Constants.WIDTH/2, Constants.WIDTH/2, -Constants.HEIGHT/2, Constants.HEIGHT/2, 0.1f, 1000.0f);
 		viewMatrix = new Matrix4f().identity();
-		character = new Character(Species.WOLF, new Color(127,127,127,255), new Color(220,216,213,255), "Kaboom !", new CharacterAnimation("/anim/human_walk.anim", "/img/human_walk_texture.png"));
-		background = new Background("/img/custom.png");
-		text = new GUIText("Test", FontType.ARIAL.getFont(), new Color(0, 0, 255, 255));
+		button = new GUIButton("test", 200,100,"/img/gui/button/button.png","/img/gui/button/button_hover.png", new Runnable() {
+			@Override
+			public void run() {
+			}
+		});
 		
 		glfwSetKeyCallback(window, keyhandler = new KeyboardHandler());
 		glfwSetCursorPosCallback(window, mousehandler = new MouseHandler());
@@ -210,9 +204,7 @@ public class FurryAttack implements Renderable, Updateable{
 	}
 	
 	public void exit() {
-		character.destroy();
-		background.destroy();
-		text.destroy();
+		button.destroy();
 		// Free the window callbacks and destroy the window
 		glfwFreeCallbacks(window);
 		glfwDestroyWindow(window);
@@ -228,16 +220,13 @@ public class FurryAttack implements Renderable, Updateable{
 	
 	@Override
 	public void update() {
-		character.update();
-		text.update();
+		button.update();
 	}
 
 	@Override
 	public void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-		background.render();
-		character.render();
-		text.render();
+		button.render();
 		glfwSwapBuffers(window); // swap the color buffers
 	}
 	

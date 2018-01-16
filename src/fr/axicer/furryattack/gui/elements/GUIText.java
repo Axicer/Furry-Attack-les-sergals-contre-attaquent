@@ -214,7 +214,7 @@ public class GUIText extends GUIComponent{
 
 	@Override
 	public void update() {
-		rot += (float)Math.PI/64f;
+		//rot += (float)Math.PI/64f;
 		modelMatrix.identity().translate(pos).rotateZ(rot);
 		shader.bind();
 		shader.setUniformMat4f("modelMatrix", modelMatrix);
