@@ -46,7 +46,6 @@ import org.lwjgl.system.MemoryStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fr.axicer.furryattack.gui.elements.GUIButton;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
 import fr.axicer.furryattack.unused.MouseHandler;
@@ -69,8 +68,6 @@ public class FurryAttack implements Renderable, Updateable{
 	
 	public Matrix4f projectionMatrix;
 	public Matrix4f viewMatrix;
-	
-	public GUIButton button;
 	
 	private Logger logger = LoggerFactory.getLogger(FurryAttack.class);
 	
@@ -142,11 +139,6 @@ public class FurryAttack implements Renderable, Updateable{
 		
 		projectionMatrix = new Matrix4f().ortho(-Constants.WIDTH/2, Constants.WIDTH/2, -Constants.HEIGHT/2, Constants.HEIGHT/2, 0.1f, 1000.0f);
 		viewMatrix = new Matrix4f().identity();
-		button = new GUIButton("test", 200,100,"/img/gui/button/button.png","/img/gui/button/button_hover.png", new Runnable() {
-			@Override
-			public void run() {
-			}
-		});
 		
 		glfwSetKeyCallback(window, keyhandler = new KeyboardHandler());
 		glfwSetCursorPosCallback(window, mousehandler = new MouseHandler());
@@ -204,7 +196,6 @@ public class FurryAttack implements Renderable, Updateable{
 	}
 	
 	public void exit() {
-		button.destroy();
 		// Free the window callbacks and destroy the window
 		glfwFreeCallbacks(window);
 		glfwDestroyWindow(window);
@@ -220,13 +211,11 @@ public class FurryAttack implements Renderable, Updateable{
 	
 	@Override
 	public void update() {
-		button.update();
 	}
 
 	@Override
 	public void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-		button.render();
 		glfwSwapBuffers(window); // swap the color buffers
 	}
 	

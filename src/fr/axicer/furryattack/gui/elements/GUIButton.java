@@ -15,8 +15,10 @@ import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.render.shader.ButtonShader;
 import fr.axicer.furryattack.render.textures.Texture;
 import fr.axicer.furryattack.util.CollisionBox;
+import fr.axicer.furryattack.util.Color;
 import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.FPoint;
+import fr.axicer.furryattack.util.font.FontType;
 
 public class GUIButton extends GUIComponent{
 
@@ -28,32 +30,40 @@ public class GUIButton extends GUIComponent{
 	
 	private Runnable action;
 	
-	boolean hover;
+	private GUIText textG;
+	private boolean hover;
 	private Texture tex;
 	private Texture hover_tex;
 	private Matrix4f modelMatrix;
 	private ButtonShader shader;
 	private int VBO_ID;
+	private float scale;
 	
-	public GUIButton(String text,float width, float height, String texturePath, String hoverTexturePath, Runnable action) {
+	public GUIButton(String text, float width, float heigth, Color textColor, Runnable action) {
+		this(text, 1, width, heigth, "/img/gui/button/button.png", "/img/gui/button/button_hover.png", 1, FontType.CONSOLAS, textColor, action);
+	}
+	
+	public GUIButton(String text, float textMul ,float width, float height, String texturePath, String hoverTexturePath, float scale, FontType type, Color textColor, Runnable action) {
 		this.action = action;
 		this.tex = Texture.loadTexture(texturePath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
 		this.hover_tex = Texture.loadTexture(hoverTexturePath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
 		this.width = width;
 		this.height = height;
+		this.textG = new GUIText(text, type, textColor);
+		this.textG.setScale(textMul);
+		this.posX = new double[1];
+		this.posY = new double[1];
+		this.shader = new ButtonShader();
+		this.pos = new Vector3f();
+		this.rot = 0f;
+		this.hover = false;
+		this.box = new CollisionBox();
+		this.scale = scale;
+		this.modelMatrix = new Matrix4f().translate(pos).rotateZ(rot).scale(scale);
 		init();
 	}
 	
-	public void init(){
-		posX = new double[1];
-		posY = new double[1];
-		shader = new ButtonShader();
-		pos = new Vector3f();
-		rot = 0f;
-		hover = false;
-		box = new CollisionBox();
-		modelMatrix = new Matrix4f().translate(pos).rotateZ(rot);
-		
+	private void init(){
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(3);
 		buffer.put(new float[] {0,0,0});
 		buffer.flip();
@@ -73,23 +83,8 @@ public class GUIButton extends GUIComponent{
 		shader.unbind();
 	}
 	
-	public Vector3f getPos() {
-		return pos;
-	}
-
-	public void setPos(Vector3f pos) {
-		this.pos = pos;
-	}
-
-	public float getRot() {
-		return rot;
-	}
-
-	public void setRot(float rot) {
-		this.rot = rot;
-	}
-
 	public void onClick() {
+		//TODO
 		action.run();
 	}
 	
@@ -113,12 +108,12 @@ public class GUIButton extends GUIComponent{
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 		
 		shader.unbind();
-		//box.render();
+		textG.render();
 	}
 
 	@Override
 	public void update() {
-		modelMatrix.identity().translate(pos).rotateZ(rot);
+		modelMatrix.identity().translate(pos).rotateZ(rot).scale(scale);
 		shader.bind();
 		shader.setUniformMat4f("modelMatrix", modelMatrix);
 		shader.unbind();
@@ -136,6 +131,9 @@ public class GUIButton extends GUIComponent{
 		GLFW.glfwGetCursorPos(FurryAttack.getInstance().window, posX, posY);
 		
 		hover = box.isInside((float)posX[0]-Constants.WIDTH/2, -((float)posY[0]-Constants.HEIGHT/2));
+		textG.setPosition(pos);
+		textG.setRotation(rot);
+		textG.update();
 	}
 	
 	public void destroy() {
@@ -143,6 +141,78 @@ public class GUIButton extends GUIComponent{
 		tex.delete();
 		hover_tex.delete();
 		box.destroy();
+		textG.destroy();
 	}
 
+	public Vector3f getPosition() {
+		return pos;
+	}
+
+	public void setPosition(Vector3f pos) {
+		this.pos = pos;
+	}
+
+	public float getRotation() {
+		return rot;
+	}
+
+	public void setRotation(float rot) {
+		this.rot = rot;
+	}
+	
+	public Runnable getAction() {
+		return action;
+	}
+
+	public void setAction(Runnable action) {
+		this.action = action;
+	}
+
+	public Texture getTexture() {
+		return tex;
+	}
+
+	public void setTexture(Texture tex) {
+		this.tex = tex;
+	}
+
+	public Texture getHoverTexture() {
+		return hover_tex;
+	}
+
+	public void setHoverTexture(Texture hover_tex) {
+		this.hover_tex = hover_tex;
+	}
+
+	public float getButtonWidth() {
+		return width;
+	}
+
+	public float getButtonHeight() {
+		return height;
+	}
+
+	public CollisionBox getColisionBox() {
+		return box;
+	}
+
+	public GUIText getTextGUI() {
+		return textG;
+	}
+
+	public boolean isHover() {
+		return hover;
+	}
+
+	public Matrix4f getModelMatrix() {
+		return modelMatrix;
+	}
+
+	public float getScale() {
+		return scale;
+	}
+
+	public void setScale(float scale) {
+		this.scale = scale;
+	}
 }
