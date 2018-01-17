@@ -152,6 +152,7 @@ public class GUIText extends GUIComponent{
 	public void update() {
 		modelMatrix.identity().translate(pos).rotateZ(rot).scale(scale);
 		shader.bind();
+		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 		shader.setUniformMat4f("modelMatrix", modelMatrix);
 		shader.unbind();
 	}

@@ -22,8 +22,8 @@ import fr.axicer.furryattack.render.textures.Texture;
 import fr.axicer.furryattack.util.Constants;
 
 public enum FontType {
-	CONSOLAS("Consolas", Font.PLAIN, 20),
-	ARIAL("Arial", Font.PLAIN, 20);
+	CONSOLAS("Consolas", Font.BOLD, 100),
+	ARIAL("Arial", Font.BOLD, 100);
 	
 	private Font f;
 	private Texture tex;

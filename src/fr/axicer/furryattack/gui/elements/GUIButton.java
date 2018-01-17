@@ -39,11 +39,19 @@ public class GUIButton extends GUIComponent{
 	private int VBO_ID;
 	private float scale;
 	
-	public GUIButton(String text, float width, float heigth, Color textColor, Runnable action) {
-		this(text, 1, width, heigth, "/img/gui/button/button.png", "/img/gui/button/button_hover.png", 1, FontType.CONSOLAS, textColor, action);
+	public GUIButton(String text, Color color, FontType type, float width, float height, Vector3f pos, float rot, Runnable action) {
+		this(text, 1f, width, height, "/img/gui/button/button.png", "/img/gui/button/button_hover.png", 1f, type, color, pos, rot, action);
 	}
 	
-	public GUIButton(String text, float textMul ,float width, float height, String texturePath, String hoverTexturePath, float scale, FontType type, Color textColor, Runnable action) {
+	public GUIButton(String text, float width, float heigth, Color textColor, Runnable action) {
+		this(text, 1f, width, heigth, "/img/gui/button/button.png", "/img/gui/button/button_hover.png", 1f, FontType.CONSOLAS, textColor, new Vector3f(), 0f, action);
+	}
+	
+	public GUIButton(String text, float textMul ,float width, float height, float scale, FontType type, Color textColor, Vector3f pos, float rot, Runnable action) {
+		this(text, textMul, width, height, "/img/gui/button/button.png", "/img/gui/button/button_hover.png", scale, type, textColor, pos, rot, action);
+	}
+	
+	public GUIButton(String text, float textMul ,float width, float height, String texturePath, String hoverTexturePath, float scale, FontType type, Color textColor, Vector3f pos, float rot, Runnable action) {
 		this.action = action;
 		this.tex = Texture.loadTexture(texturePath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
 		this.hover_tex = Texture.loadTexture(hoverTexturePath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
@@ -54,8 +62,8 @@ public class GUIButton extends GUIComponent{
 		this.posX = new double[1];
 		this.posY = new double[1];
 		this.shader = new ButtonShader();
-		this.pos = new Vector3f();
-		this.rot = 0f;
+		this.pos = pos;
+		this.rot = rot;
 		this.hover = false;
 		this.box = new CollisionBox();
 		this.scale = scale;
@@ -84,7 +92,6 @@ public class GUIButton extends GUIComponent{
 	}
 	
 	public void onClick() {
-		//TODO
 		action.run();
 	}
 	
@@ -109,28 +116,34 @@ public class GUIButton extends GUIComponent{
 		
 		shader.unbind();
 		textG.render();
+		//box.render();
 	}
 
 	@Override
 	public void update() {
 		modelMatrix.identity().translate(pos).rotateZ(rot).scale(scale);
 		shader.bind();
+		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 		shader.setUniformMat4f("modelMatrix", modelMatrix);
 		shader.unbind();
 		
-		Vector3f topL = new Vector3f(pos.x-width/2, pos.y-height/2, 1.0f);
-		Vector3f topR = new Vector3f(pos.x+width/2, pos.y-height/2, 1.0f);
-		Vector3f bottomR = new Vector3f(pos.x+width/2, pos.y+height/2, 1.0f);
-		Vector3f bottomL = new Vector3f(pos.x-width/2, pos.y+height/2, 1.0f);
-		topL = modelMatrix.transformPosition(topL);
-		topR = modelMatrix.transformPosition(topR);
-		bottomR = modelMatrix.transformPosition(bottomR);
-		bottomL = modelMatrix.transformPosition(bottomL);
+		Vector3f topL = new Vector3f(-width/2, -height/2, 1.0f).rotateZ(rot).add(pos.x, pos.y, 0f);
+		Vector3f topR = new Vector3f(width/2, -height/2, 1.0f).rotateZ(rot).add(pos.x, pos.y, 0f);
+		Vector3f bottomR = new Vector3f(width/2, height/2, 1.0f).rotateZ(rot).add(pos.x, pos.y, 0f);
+		Vector3f bottomL = new Vector3f(-width/2, height/2, 1.0f).rotateZ(rot).add(pos.x, pos.y, 0f);
+		
 		box.updatePos(new FPoint(topL.x, topL.y), new FPoint(topR.x, topR.y), new FPoint(bottomR.x, bottomR.y), new FPoint(bottomL.x, bottomL.y));
 		
 		GLFW.glfwGetCursorPos(FurryAttack.getInstance().window, posX, posY);
 		
+		/*System.out.println(topL);
+		System.out.println(topR);
+		System.out.println(bottomR);
+		System.out.println(bottomL);
+		System.out.println((float)posX[0]-Constants.WIDTH/2+","+-((float)posY[0]-Constants.HEIGHT/2));*/
+
 		hover = box.isInside((float)posX[0]-Constants.WIDTH/2, -((float)posY[0]-Constants.HEIGHT/2));
+		
 		textG.setPosition(pos);
 		textG.setRotation(rot);
 		textG.update();

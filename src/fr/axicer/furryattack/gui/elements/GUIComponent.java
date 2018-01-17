@@ -35,4 +35,6 @@ public abstract class GUIComponent implements Renderable, Updateable{
 	public void setRotation(float rot) {
 		this.rot = rot;
 	}
+	
+	public abstract void destroy();
 }

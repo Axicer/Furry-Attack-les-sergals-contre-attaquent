@@ -1,36 +1,9 @@
 package fr.axicer.furryattack;
 
-import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
-import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
-import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
-import static org.lwjgl.glfw.GLFW.GLFW_TRUE;
-import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
-import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
-import static org.lwjgl.glfw.GLFW.glfwDefaultWindowHints;
-import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
-import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
-import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
-import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
-import static org.lwjgl.glfw.GLFW.glfwPollEvents;
-import static org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback;
-import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
-import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
-import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
-import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
-import static org.lwjgl.glfw.GLFW.glfwShowWindow;
-import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
-import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
-import static org.lwjgl.glfw.GLFW.glfwTerminate;
-import static org.lwjgl.glfw.GLFW.glfwWindowHint;
-import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.glfw.Callbacks.*;
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.system.MemoryUtil.*;
 
 import java.nio.IntBuffer;
 
@@ -41,11 +14,11 @@ import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fr.axicer.furryattack.gui.MenuGUI;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
 import fr.axicer.furryattack.unused.MouseHandler;
@@ -56,7 +29,8 @@ public class FurryAttack implements Renderable, Updateable{
 	
 	// The window handle
 	public long window;
-	private boolean running = true;
+	public static boolean fullscreen;
+	public boolean running = true;
 	@SuppressWarnings("unused")
 	private KeyboardHandler keyhandler;
 	@SuppressWarnings("unused")
@@ -70,6 +44,8 @@ public class FurryAttack implements Renderable, Updateable{
 	public Matrix4f viewMatrix;
 	
 	private Logger logger = LoggerFactory.getLogger(FurryAttack.class);
+	
+	public MenuGUI gui;
 	
 	public void run() {
 		logger.debug("Hello LWJGL " + Version.getVersion() + "!");
@@ -94,15 +70,16 @@ public class FurryAttack implements Renderable, Updateable{
 		// Configure GLFW
 		glfwDefaultWindowHints(); // optional, the current window hints are already the default
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // the window will not be resizable
+		glfwWindowHint(GLFW_DECORATED, GLFW_FALSE); //remove decoration
 
 		// Create the window
-		window = glfwCreateWindow(Constants.WIDTH, Constants.HEIGHT, Constants.TITLE, NULL, NULL);
+		window = glfwCreateWindow(Constants.WIDTH, Constants.HEIGHT, Constants.TITLE, fullscreen ? glfwGetPrimaryMonitor() : NULL, NULL);
 		if ( window == NULL )
 			throw new RuntimeException("Failed to create the GLFW window");
 
 		// Get the thread stack and push a new frame
-		try ( MemoryStack stack = stackPush() ) {
+		try ( MemoryStack stack = MemoryStack.stackPush() ) {
 			IntBuffer pWidth = stack.mallocInt(1); // int*
 			IntBuffer pHeight = stack.mallocInt(1); // int*
 
@@ -140,9 +117,11 @@ public class FurryAttack implements Renderable, Updateable{
 		projectionMatrix = new Matrix4f().ortho(-Constants.WIDTH/2, Constants.WIDTH/2, -Constants.HEIGHT/2, Constants.HEIGHT/2, 0.1f, 1000.0f);
 		viewMatrix = new Matrix4f().identity();
 		
+		gui = new MenuGUI();
+		
 		glfwSetKeyCallback(window, keyhandler = new KeyboardHandler());
 		glfwSetCursorPosCallback(window, mousehandler = new MouseHandler());
-		glfwSetWindowSizeCallback(window, windowSizeCallback = new GLFWWindowSizeCallback(){
+		/*glfwSetWindowSizeCallback(window, windowSizeCallback = new GLFWWindowSizeCallback(){
             @Override
             public void invoke(long window, int width, int height){
             	Constants.WIDTH = width;
@@ -150,7 +129,7 @@ public class FurryAttack implements Renderable, Updateable{
             	GL11.glViewport(0, 0, width, height);
             	projectionMatrix = new Matrix4f().ortho(-width/2, width/2, -height/2, height/2, 0.1f, 1000.0f);
             }
-        });
+        });*/
 	}
 
 	private void loop() {
@@ -196,6 +175,7 @@ public class FurryAttack implements Renderable, Updateable{
 	}
 	
 	public void exit() {
+		gui.destroy();
 		// Free the window callbacks and destroy the window
 		glfwFreeCallbacks(window);
 		glfwDestroyWindow(window);
@@ -211,11 +191,13 @@ public class FurryAttack implements Renderable, Updateable{
 	
 	@Override
 	public void update() {
+		gui.update();
 	}
 
 	@Override
 	public void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+		gui.render();
 		glfwSwapBuffers(window); // swap the color buffers
 	}
 	
@@ -227,6 +209,11 @@ public class FurryAttack implements Renderable, Updateable{
 	}
 	
 	public static void main(String[] args) {
+		String screenWidth = System.getProperty("width", "800");
+		String screenHeight = System.getProperty("height", "600");
+		fullscreen = Boolean.valueOf(System.getProperty("fullscreen", "false"));
+		Constants.WIDTH = Integer.parseInt(screenWidth);
+		Constants.HEIGHT = Integer.parseInt(screenHeight);
 		instance = new FurryAttack();
 		instance.run();
 	}

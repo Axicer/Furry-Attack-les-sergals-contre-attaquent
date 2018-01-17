@@ -103,8 +103,9 @@ public class Character implements Renderable,Updateable{
 		walk.updateState();
 		modelMatrix.identity().translate(pos.x, pos.y, 0).scale(100);
 		shader.bind();
-		shader.setUniformf("offsetX", walk.getBeforeKeyFrame().diffX);
+		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 		shader.setUniformMat4f("modelMatrix", modelMatrix);
+		shader.setUniformf("offsetX", walk.getBeforeKeyFrame().diffX);
 		shader.unbind();
 	}
 
