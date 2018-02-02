@@ -9,6 +9,7 @@ import java.nio.IntBuffer;
 
 import org.joml.Matrix4f;
 import org.lwjgl.Version;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -18,19 +19,21 @@ import org.lwjgl.system.MemoryStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fr.axicer.furryattack.gui.MenuGUI;
+import fr.axicer.furryattack.gui.GUIManager;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
-import fr.axicer.furryattack.unused.MouseHandler;
 import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.KeyboardHandler;
+import fr.axicer.furryattack.util.MouseButtonHandler;
+import fr.axicer.furryattack.util.MouseHandler;
 
 public class FurryAttack implements Renderable, Updateable{
 	
 	// The window handle
 	public long window;
-	public static boolean fullscreen;
 	public boolean running = true;
+	private static int screenid;
+	
 	@SuppressWarnings("unused")
 	private KeyboardHandler keyhandler;
 	@SuppressWarnings("unused")
@@ -39,13 +42,15 @@ public class FurryAttack implements Renderable, Updateable{
 	private GLFWMouseButtonCallback mousebuttoncallback;
 	@SuppressWarnings("unused")
 	private GLFWWindowSizeCallback windowSizeCallback;
+	@SuppressWarnings("unused")
+	private GLFWCursorPosCallback cursorposcallback;
 	
 	public Matrix4f projectionMatrix;
 	public Matrix4f viewMatrix;
+
+	public GUIManager guiManager;
 	
 	private Logger logger = LoggerFactory.getLogger(FurryAttack.class);
-	
-	public MenuGUI gui;
 	
 	public void run() {
 		logger.debug("Hello LWJGL " + Version.getVersion() + "!");
@@ -71,10 +76,12 @@ public class FurryAttack implements Renderable, Updateable{
 		glfwDefaultWindowHints(); // optional, the current window hints are already the default
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // the window will not be resizable
-		glfwWindowHint(GLFW_DECORATED, GLFW_FALSE); //remove decoration
-
+		glfwWindowHint(GLFW_DECORATED, Constants.FULLSCREEN ? GLFW_FALSE : GLFW_TRUE); //remove decoration
+		
+		long screen = glfwGetMonitors().get(screenid);
+		
 		// Create the window
-		window = glfwCreateWindow(Constants.WIDTH, Constants.HEIGHT, Constants.TITLE, fullscreen ? glfwGetPrimaryMonitor() : NULL, NULL);
+		window = glfwCreateWindow(Constants.WIDTH, Constants.HEIGHT, Constants.TITLE, Constants.FULLSCREEN ? screen : NULL, NULL);
 		if ( window == NULL )
 			throw new RuntimeException("Failed to create the GLFW window");
 
@@ -87,7 +94,7 @@ public class FurryAttack implements Renderable, Updateable{
 			glfwGetWindowSize(window, pWidth, pHeight);
 
 			// Get the resolution of the primary monitor
-			GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+			GLFWVidMode vidmode = glfwGetVideoMode(screen);
 
 			// Center the window
 			glfwSetWindowPos(
@@ -100,7 +107,7 @@ public class FurryAttack implements Renderable, Updateable{
 		// Make the OpenGL context current
 		glfwMakeContextCurrent(window);
 		// Enable v-sync
-		glfwSwapInterval(0);
+		glfwSwapInterval(Constants.V_SYNC ? 1 : 0);
 		// Make the window visible
 		glfwShowWindow(window);
 		
@@ -116,20 +123,12 @@ public class FurryAttack implements Renderable, Updateable{
 		
 		projectionMatrix = new Matrix4f().ortho(-Constants.WIDTH/2, Constants.WIDTH/2, -Constants.HEIGHT/2, Constants.HEIGHT/2, 0.1f, 1000.0f);
 		viewMatrix = new Matrix4f().identity();
-		
-		gui = new MenuGUI();
+
+		guiManager = new GUIManager();
 		
 		glfwSetKeyCallback(window, keyhandler = new KeyboardHandler());
 		glfwSetCursorPosCallback(window, mousehandler = new MouseHandler());
-		/*glfwSetWindowSizeCallback(window, windowSizeCallback = new GLFWWindowSizeCallback(){
-            @Override
-            public void invoke(long window, int width, int height){
-            	Constants.WIDTH = width;
-            	Constants.HEIGHT = height;
-            	GL11.glViewport(0, 0, width, height);
-            	projectionMatrix = new Matrix4f().ortho(-width/2, width/2, -height/2, height/2, 0.1f, 1000.0f);
-            }
-        });*/
+		glfwSetMouseButtonCallback(window, mousebuttoncallback = new MouseButtonHandler());
 	}
 
 	private void loop() {
@@ -175,7 +174,7 @@ public class FurryAttack implements Renderable, Updateable{
 	}
 	
 	public void exit() {
-		gui.destroy();
+		guiManager.destroy();
 		// Free the window callbacks and destroy the window
 		glfwFreeCallbacks(window);
 		glfwDestroyWindow(window);
@@ -191,13 +190,13 @@ public class FurryAttack implements Renderable, Updateable{
 	
 	@Override
 	public void update() {
-		gui.update();
+		guiManager.update();
 	}
 
 	@Override
 	public void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-		gui.render();
+		guiManager.render();
 		glfwSwapBuffers(window); // swap the color buffers
 	}
 	
@@ -211,10 +210,21 @@ public class FurryAttack implements Renderable, Updateable{
 	public static void main(String[] args) {
 		String screenWidth = System.getProperty("width", "800");
 		String screenHeight = System.getProperty("height", "600");
-		fullscreen = Boolean.valueOf(System.getProperty("fullscreen", "false"));
+		Constants.FULLSCREEN = contains(args, "-fullscreen");
+		Constants.V_SYNC = contains(args, "-vsync");
 		Constants.WIDTH = Integer.parseInt(screenWidth);
 		Constants.HEIGHT = Integer.parseInt(screenHeight);
+		screenid = Integer.valueOf(System.getProperty("fullscreenid", "0"));
 		instance = new FurryAttack();
 		instance.run();
+	}
+	
+	private static <T> boolean contains(T[] args, T val) {
+		for(int i = 0 ; i < args.length ; i++) {
+			if(args[i].equals(val)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

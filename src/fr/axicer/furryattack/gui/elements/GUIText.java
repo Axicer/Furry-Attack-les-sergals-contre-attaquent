@@ -50,7 +50,7 @@ public class GUIText extends GUIComponent{
 	}
 	
 	private void init() {
-		modelMatrix = new Matrix4f().translate(pos).rotateZ(rot);
+		modelMatrix = new Matrix4f().translate(pos).rotateZ(rot).scale((scale/((float)Constants.WIDTH/(float)Constants.HEIGHT))*1.4f);
 		shader = new TextShader();
 	}
 	
@@ -150,7 +150,7 @@ public class GUIText extends GUIComponent{
 
 	@Override
 	public void update() {
-		modelMatrix.identity().translate(pos).rotateZ(rot).scale(scale);
+		modelMatrix.identity().translate(pos).rotateZ(rot).scale((scale/((float)Constants.WIDTH/(float)Constants.HEIGHT))*1.4f);
 		shader.bind();
 		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 		shader.setUniformMat4f("modelMatrix", modelMatrix);

@@ -5,7 +5,6 @@ import java.nio.FloatBuffer;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL15;
@@ -18,6 +17,8 @@ import fr.axicer.furryattack.util.CollisionBox;
 import fr.axicer.furryattack.util.Color;
 import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.FPoint;
+import fr.axicer.furryattack.util.MouseButtonHandler;
+import fr.axicer.furryattack.util.MouseHandler;
 import fr.axicer.furryattack.util.font.FontType;
 
 public class GUIButton extends GUIComponent{
@@ -26,9 +27,9 @@ public class GUIButton extends GUIComponent{
 	private float rot;
 	private float width, height;
 	private CollisionBox box;
-	private double[] posX, posY;
 	
 	private Runnable action;
+	private Thread actionThread;
 	
 	private GUIText textG;
 	private boolean hover;
@@ -44,7 +45,7 @@ public class GUIButton extends GUIComponent{
 	}
 	
 	public GUIButton(String text, float width, float heigth, Color textColor, Runnable action) {
-		this(text, 1f, width, heigth, "/img/gui/button/button.png", "/img/gui/button/button_hover.png", 1f, FontType.CONSOLAS, textColor, new Vector3f(), 0f, action);
+		this(text, 1f, width, heigth, "/img/gui/button/button.png", "/img/gui/button/button_hover.png", 1f, FontType.DK_KITSUNE_TAIL, textColor, new Vector3f(), 0f, action);
 	}
 	
 	public GUIButton(String text, float textMul ,float width, float height, float scale, FontType type, Color textColor, Vector3f pos, float rot, Runnable action) {
@@ -59,8 +60,6 @@ public class GUIButton extends GUIComponent{
 		this.height = height;
 		this.textG = new GUIText(text, type, textColor);
 		this.textG.setScale(textMul);
-		this.posX = new double[1];
-		this.posY = new double[1];
 		this.shader = new ButtonShader();
 		this.pos = pos;
 		this.rot = rot;
@@ -68,6 +67,7 @@ public class GUIButton extends GUIComponent{
 		this.box = new CollisionBox();
 		this.scale = scale;
 		this.modelMatrix = new Matrix4f().translate(pos).rotateZ(rot).scale(scale);
+		this.actionThread = new Thread(action);
 		init();
 	}
 	
@@ -92,7 +92,7 @@ public class GUIButton extends GUIComponent{
 	}
 	
 	public void onClick() {
-		action.run();
+		if(!actionThread.isAlive())actionThread.run();
 	}
 	
 	@Override
@@ -127,14 +127,16 @@ public class GUIButton extends GUIComponent{
 		shader.setUniformMat4f("modelMatrix", modelMatrix);
 		shader.unbind();
 		
-		Vector3f topL = new Vector3f(-width/2, -height/2, 1.0f).rotateZ(rot).add(pos.x, pos.y, 0f);
-		Vector3f topR = new Vector3f(width/2, -height/2, 1.0f).rotateZ(rot).add(pos.x, pos.y, 0f);
-		Vector3f bottomR = new Vector3f(width/2, height/2, 1.0f).rotateZ(rot).add(pos.x, pos.y, 0f);
-		Vector3f bottomL = new Vector3f(-width/2, height/2, 1.0f).rotateZ(rot).add(pos.x, pos.y, 0f);
+		Vector3f topL = new Vector3f(-width/2, -height/2, 1.0f);
+		modelMatrix.transformPosition(topL, topL);
+		Vector3f topR = new Vector3f(width/2, -height/2, 1.0f);
+		modelMatrix.transformPosition(topR, topR);
+		Vector3f bottomR = new Vector3f(width/2, height/2, 1.0f);
+		modelMatrix.transformPosition(bottomR, bottomR);
+		Vector3f bottomL = new Vector3f(-width/2, height/2, 1.0f);
+		modelMatrix.transformPosition(bottomL, bottomL);
 		
 		box.updatePos(new FPoint(topL.x, topL.y), new FPoint(topR.x, topR.y), new FPoint(bottomR.x, bottomR.y), new FPoint(bottomL.x, bottomL.y));
-		
-		GLFW.glfwGetCursorPos(FurryAttack.getInstance().window, posX, posY);
 		
 		/*System.out.println(topL);
 		System.out.println(topR);
@@ -142,7 +144,11 @@ public class GUIButton extends GUIComponent{
 		System.out.println(bottomL);
 		System.out.println((float)posX[0]-Constants.WIDTH/2+","+-((float)posY[0]-Constants.HEIGHT/2));*/
 
-		hover = box.isInside((float)posX[0]-Constants.WIDTH/2, -((float)posY[0]-Constants.HEIGHT/2));
+		hover = box.isInside((float)MouseHandler.getPosX()-Constants.WIDTH/2, -((float)MouseHandler.getPosY()-Constants.HEIGHT/2));
+		
+		if(hover && MouseButtonHandler.isPressedL()) {
+			onClick();
+		}
 		
 		textG.setPosition(pos);
 		textG.setRotation(rot);

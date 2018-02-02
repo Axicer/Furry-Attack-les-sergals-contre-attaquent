@@ -28,4 +28,6 @@ public abstract class GUI implements Renderable, Updateable{
 	public List<GUIComponent> getComponents() {
 		return components;
 	}
+	
+	public abstract void destroy();
 }

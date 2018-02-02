@@ -1,20 +1,31 @@
-package fr.axicer.furryattack.unused;
+package fr.axicer.furryattack.util;
 
 import org.lwjgl.glfw.GLFWCursorPosCallbackI;
 
 public class MouseHandler implements GLFWCursorPosCallbackI{
 	
-	// Mouse positions
-    public static int mouseX, mouseY;
+	private static int posX,posY;
+	
+	// Mouse movement
+    private static int mouseX, mouseY;
     private static int mouseDX, mouseDY;
 	
 	@Override
     public void invoke(long window, double xpos, double ypos) {
+		posX = (int)xpos;
+		posY = (int)ypos;
         // Add delta of x and y mouse coordinates
         mouseDX += (int)xpos - mouseX;
         mouseDY += (int)ypos - mouseY;
     }
 
+	public static int getPosX() {
+		return posX;
+	}
+	
+	public static int getPosY() {
+		return posY;
+	}
 	
 	public static int getDX(){
         // Return mouse delta x and set delta x to 0

@@ -22,8 +22,7 @@ import fr.axicer.furryattack.render.textures.Texture;
 import fr.axicer.furryattack.util.Constants;
 
 public enum FontType {
-	CONSOLAS("Consolas", Font.BOLD, 100),
-	ARIAL("Arial", Font.BOLD, 100);
+	DK_KITSUNE_TAIL("DK Kitsune Tail", Font.PLAIN, 100);
 	
 	private Font f;
 	private Texture tex;
@@ -31,6 +30,14 @@ public enum FontType {
 	private Map<Character, CharInfo> charMap;
 	
 	private FontType(String name, int style, int size) {
+		/*try {
+			this.f = Font.createFont(Font.TRUETYPE_FONT, new File(FontType.class.getResource("/font/"+name).toURI()));
+			this.f.deriveFont(style, size);
+			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			ge.registerFont(f);
+		} catch (FontFormatException | IOException | URISyntaxException e1) {
+			e1.printStackTrace();
+		}*/
 		this.f = new Font(name, style, size);
 		this.charMap = new HashMap<>();
 		try {
@@ -56,6 +63,8 @@ public enum FontType {
 	    BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 	    Graphics2D g2D = img.createGraphics();
 	    g2D.setFont(f);
+	    g2D.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+	    g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 	    FontMetrics fontMetrics = g2D.getFontMetrics();
 
 	    String allChars = getAllAvailableChars(Constants.ENCODING);
@@ -72,6 +81,7 @@ public enum FontType {
 	    // Create the image associated to the charset
 	    img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 	    g2D = img.createGraphics();
+	    g2D.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
 	    g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 	    g2D.setFont(f);
 	    fontMetrics = g2D.getFontMetrics();

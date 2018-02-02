@@ -8,4 +8,7 @@ public class Constants {
 	public static String TITLE = "Furry-Attack : Les sergals contre-attaquent !";
 	
 	public static final String ENCODING="ISO-8859-1";
+	
+	public static boolean FULLSCREEN = false;
+	public static boolean V_SYNC = false;
 }
