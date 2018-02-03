@@ -13,12 +13,12 @@ import org.lwjgl.opengl.GL20;
 import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.render.shader.ButtonShader;
 import fr.axicer.furryattack.render.textures.Texture;
-import fr.axicer.furryattack.util.CollisionBox;
 import fr.axicer.furryattack.util.Color;
 import fr.axicer.furryattack.util.Constants;
-import fr.axicer.furryattack.util.FPoint;
-import fr.axicer.furryattack.util.MouseButtonHandler;
-import fr.axicer.furryattack.util.MouseHandler;
+import fr.axicer.furryattack.util.collision.CollisionBox;
+import fr.axicer.furryattack.util.collision.FPoint;
+import fr.axicer.furryattack.util.control.MouseButtonHandler;
+import fr.axicer.furryattack.util.control.MouseHandler;
 import fr.axicer.furryattack.util.font.FontType;
 
 public class GUIButton extends GUIComponent{
@@ -58,8 +58,7 @@ public class GUIButton extends GUIComponent{
 		this.hover_tex = Texture.loadTexture(hoverTexturePath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
 		this.width = width;
 		this.height = height;
-		this.textG = new GUIText(text, type, textColor);
-		this.textG.setScale(textMul);
+		this.textG = new GUIText(text, pos, rot, type, textColor, textMul);
 		this.shader = new ButtonShader();
 		this.pos = pos;
 		this.rot = rot;
@@ -155,6 +154,7 @@ public class GUIButton extends GUIComponent{
 		textG.update();
 	}
 	
+	@Override
 	public void destroy() {
 		GL15.glDeleteBuffers(VBO_ID);
 		tex.delete();

@@ -157,6 +157,7 @@ public class GUIText extends GUIComponent{
 		shader.unbind();
 	}
 	
+	@Override
 	public void destroy() {
 		GL15.glDeleteBuffers(TEXCOORD_VBO);
 		GL15.glDeleteBuffers(VERTICES_VBO);

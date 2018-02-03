@@ -1,9 +1,10 @@
 package fr.axicer.furryattack.gui;
 
+import fr.axicer.furryattack.render.Destroyable;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
 
-public class GUIManager implements Renderable,Updateable{
+public class GUIManager implements Renderable,Updateable,Destroyable{
 	
 	public static GUI MENU;
 	
@@ -33,6 +34,7 @@ public class GUIManager implements Renderable,Updateable{
 		actualGUI.render();
 	}
 	
+	@Override
 	public void destroy() {
 		MENU.destroy();
 	}

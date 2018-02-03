@@ -2,10 +2,11 @@ package fr.axicer.furryattack.gui.elements;
 
 import org.joml.Vector3f;
 
+import fr.axicer.furryattack.render.Destroyable;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
 
-public abstract class GUIComponent implements Renderable, Updateable{
+public abstract class GUIComponent implements Renderable, Updateable, Destroyable{
 	
 	protected Vector3f pos;
 	protected float rot;
@@ -35,6 +36,4 @@ public abstract class GUIComponent implements Renderable, Updateable{
 	public void setRotation(float rot) {
 		this.rot = rot;
 	}
-	
-	public abstract void destroy();
 }

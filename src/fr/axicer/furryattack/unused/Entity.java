@@ -4,7 +4,7 @@ import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
 import fr.axicer.furryattack.render.Updateable;
-import fr.axicer.furryattack.util.KeyboardHandler;
+import fr.axicer.furryattack.util.control.KeyboardHandler;
 
 public class Entity implements Updateable{
 	

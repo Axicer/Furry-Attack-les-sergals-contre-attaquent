@@ -23,9 +23,9 @@ import fr.axicer.furryattack.gui.GUIManager;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
 import fr.axicer.furryattack.util.Constants;
-import fr.axicer.furryattack.util.KeyboardHandler;
-import fr.axicer.furryattack.util.MouseButtonHandler;
-import fr.axicer.furryattack.util.MouseHandler;
+import fr.axicer.furryattack.util.control.KeyboardHandler;
+import fr.axicer.furryattack.util.control.MouseButtonHandler;
+import fr.axicer.furryattack.util.control.MouseHandler;
 
 public class FurryAttack implements Renderable, Updateable{
 	

@@ -39,6 +39,7 @@ public class MenuGUI extends GUI{
 		for(GUIComponent comp : components)comp.update();
 	}
 	
+	@Override
 	public void destroy() {
 		for(GUIComponent comp : components)comp.destroy();
 	}

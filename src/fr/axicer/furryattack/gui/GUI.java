@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.axicer.furryattack.gui.elements.GUIComponent;
+import fr.axicer.furryattack.render.Destroyable;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
 
-public abstract class GUI implements Renderable, Updateable{
+public abstract class GUI implements Renderable, Updateable, Destroyable{
 	
 	protected String id;
 	protected List<GUIComponent> components;
@@ -28,6 +29,4 @@ public abstract class GUI implements Renderable, Updateable{
 	public List<GUIComponent> getComponents() {
 		return components;
 	}
-	
-	public abstract void destroy();
 }

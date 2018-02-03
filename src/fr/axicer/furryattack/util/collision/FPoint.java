@@ -1,4 +1,4 @@
-package fr.axicer.furryattack.util;
+package fr.axicer.furryattack.util.collision;
 
 public final class FPoint{
 	public float x,y;

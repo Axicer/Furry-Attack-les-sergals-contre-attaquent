@@ -14,7 +14,7 @@ import fr.axicer.furryattack.render.shader.BackgroundShader;
 import fr.axicer.furryattack.render.textures.Texture;
 import fr.axicer.furryattack.util.Constants;
 
-public class Background implements Renderable{
+public class Background implements Renderable, Destroyable{
 	
 	private Texture tex;
 	private int vbo;
@@ -61,6 +61,7 @@ public class Background implements Renderable{
 		Texture.unbind();
 	}
 	
+	@Override
 	public void destroy() {
 		GL15.glDeleteBuffers(vbo);
 		tex.delete();

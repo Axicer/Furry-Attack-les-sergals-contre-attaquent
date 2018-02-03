@@ -1,4 +1,4 @@
-package fr.axicer.furryattack.util;
+package fr.axicer.furryattack.util.collision;
 
 import java.nio.FloatBuffer;
 

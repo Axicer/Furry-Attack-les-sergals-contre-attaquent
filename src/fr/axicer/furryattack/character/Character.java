@@ -12,12 +12,13 @@ import org.lwjgl.opengl.GL20;
 
 import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.character.animation.CharacterAnimation;
+import fr.axicer.furryattack.render.Destroyable;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
 import fr.axicer.furryattack.render.shader.CharacterShader;
 import fr.axicer.furryattack.util.Color;
 
-public class Character implements Renderable,Updateable{
+public class Character implements Renderable,Updateable,Destroyable{
 
 	public static final float CHARACTER_HEIGHT = 1.7f;
 	public static final float CHARACTER_WIDTH = 1f;
@@ -131,6 +132,7 @@ public class Character implements Renderable,Updateable{
 		GL11.glDisable(GL11.GL_BLEND);
 	}
 	
+	@Override
 	public void destroy() {
 		GL15.glDeleteBuffers(VERTEX_VBO_ID);
 		walk.getTexture().delete();

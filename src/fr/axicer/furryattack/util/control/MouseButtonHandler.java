@@ -1,4 +1,4 @@
-package fr.axicer.furryattack.util;
+package fr.axicer.furryattack.util.control;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
