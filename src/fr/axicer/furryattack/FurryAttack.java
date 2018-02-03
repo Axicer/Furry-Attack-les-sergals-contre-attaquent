@@ -26,6 +26,7 @@ import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.control.KeyboardHandler;
 import fr.axicer.furryattack.util.control.MouseButtonHandler;
 import fr.axicer.furryattack.util.control.MouseHandler;
+import fr.axicer.furryattack.util.events.EventManager;
 
 public class FurryAttack implements Renderable, Updateable{
 	
@@ -48,7 +49,8 @@ public class FurryAttack implements Renderable, Updateable{
 	public Matrix4f projectionMatrix;
 	public Matrix4f viewMatrix;
 
-	public GUIManager guiManager;
+	private GUIManager guiManager;
+	private EventManager eventManager;
 	
 	private Logger logger = LoggerFactory.getLogger(FurryAttack.class);
 	
@@ -125,6 +127,7 @@ public class FurryAttack implements Renderable, Updateable{
 		viewMatrix = new Matrix4f().identity();
 
 		guiManager = new GUIManager();
+		eventManager = new EventManager();
 		
 		glfwSetKeyCallback(window, keyhandler = new KeyboardHandler());
 		glfwSetCursorPosCallback(window, mousehandler = new MouseHandler());
@@ -200,23 +203,31 @@ public class FurryAttack implements Renderable, Updateable{
 		glfwSwapBuffers(window); // swap the color buffers
 	}
 	
+	public GUIManager getGuiManager() {
+		return guiManager;
+	}
 	
-	public static FurryAttack instance;
+	public EventManager getEventManager() {
+		return eventManager;
+	}
+	
+	//******************** Launch ********************//
 
+	private static FurryAttack instance = null;
+	private FurryAttack() {}
 	public static FurryAttack getInstance() {
+		if(instance == null)instance = new FurryAttack();
 		return instance;
 	}
 	
 	public static void main(String[] args) {
-		String screenWidth = System.getProperty("width", "800");
-		String screenHeight = System.getProperty("height", "600");
 		Constants.FULLSCREEN = contains(args, "-fullscreen");
 		Constants.V_SYNC = contains(args, "-vsync");
-		Constants.WIDTH = Integer.parseInt(screenWidth);
-		Constants.HEIGHT = Integer.parseInt(screenHeight);
+		Constants.WIDTH = Integer.parseInt(System.getProperty("width", "800"));
+		Constants.HEIGHT = Integer.parseInt(System.getProperty("height", "600"));
 		screenid = Integer.valueOf(System.getProperty("fullscreenid", "0"));
-		instance = new FurryAttack();
-		instance.run();
+		
+		getInstance().run();
 	}
 	
 	private static <T> boolean contains(T[] args, T val) {
