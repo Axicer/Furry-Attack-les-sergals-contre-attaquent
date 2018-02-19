@@ -67,6 +67,7 @@ public class GUIButton extends GUIComponent{
 		this.scale = scale;
 		this.modelMatrix = new Matrix4f().translate(pos).rotateZ(rot).scale(scale);
 		this.actionThread = new Thread(action);
+		
 		init();
 	}
 	

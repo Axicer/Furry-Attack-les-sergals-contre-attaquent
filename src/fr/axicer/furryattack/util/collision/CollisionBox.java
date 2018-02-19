@@ -47,11 +47,15 @@ public class CollisionBox {
 	
 	public void updateRender() {
 		GL15.glDeleteBuffers(vbo);
-		FloatBuffer buffer = BufferUtils.createFloatBuffer(4*3);
+		FloatBuffer buffer = BufferUtils.createFloatBuffer(8*3);
 		buffer.put(new float[] {A.x, A.y, -1f,
 								B.x, B.y, -1f,
+								B.x, B.y, -1f,
 								C.x, C.y, -1f,
-								D.x, D.y, -1f});
+								C.x, C.y, -1f,
+								D.x, D.y, -1f,
+								D.x, D.y, -1f,
+								A.x, A.y, -1f});
 		buffer.flip();
 		
 		vbo = GL15.glGenBuffers();
@@ -63,17 +67,19 @@ public class CollisionBox {
 	
 	
 	public void render() {
+		GL11.glLineWidth(2f);
 		shader.bind();
 		int vertexAttribLocation = GL20.glGetAttribLocation(shader.program, "position");
 		GL20.glEnableVertexAttribArray(vertexAttribLocation);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
 		GL20.glVertexAttribPointer(vertexAttribLocation, 3, GL11.GL_FLOAT, false, 0, 0);
 		
-		GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
+		GL11.glDrawArrays(GL11.GL_LINES, 0, 8);
 		
 		GL20.glDisableVertexAttribArray(vertexAttribLocation);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 		shader.unbind();
+		GL11.glLineWidth(1f);
 	}
 	
 	public void destroy() {
