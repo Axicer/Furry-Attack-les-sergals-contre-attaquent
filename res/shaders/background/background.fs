@@ -7,6 +7,8 @@ out vec4 color;
 uniform float screenWidth;
 uniform float screenHeight;
 uniform sampler2D tex;
+uniform int blur;
+uniform vec2 blurDir;
 
 vec4 blur13(sampler2D image, vec2 uv, vec2 resolution, vec2 direction) {
   vec4 color = vec4(0.0);
@@ -24,6 +26,9 @@ vec4 blur13(sampler2D image, vec2 uv, vec2 resolution, vec2 direction) {
 }
 
 void main(){
-	color = texture(tex, pass_textureCoordinate);
-	//color = blur13(tex, pass_textureCoordinate, vec2(screenWidth,screenHeight), vec2(1.0,0.0));
+	if(blur == 1){
+		color = blur13(tex, pass_textureCoordinate, vec2(screenWidth,screenHeight), vec2(1.0,0.0));
+	}else{
+		color = texture(tex, pass_textureCoordinate);
+	}
 }

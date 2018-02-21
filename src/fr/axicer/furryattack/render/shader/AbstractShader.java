@@ -1,27 +1,6 @@
 package fr.axicer.furryattack.render.shader;
 
-import static org.lwjgl.opengl.GL20.GL_COMPILE_STATUS;
-import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
-import static org.lwjgl.opengl.GL20.GL_LINK_STATUS;
-import static org.lwjgl.opengl.GL20.GL_VALIDATE_STATUS;
-import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
-import static org.lwjgl.opengl.GL20.glAttachShader;
-import static org.lwjgl.opengl.GL20.glCompileShader;
-import static org.lwjgl.opengl.GL20.glCreateProgram;
-import static org.lwjgl.opengl.GL20.glCreateShader;
-import static org.lwjgl.opengl.GL20.glGetProgramInfoLog;
-import static org.lwjgl.opengl.GL20.glGetProgrami;
-import static org.lwjgl.opengl.GL20.glGetShaderInfoLog;
-import static org.lwjgl.opengl.GL20.glGetShaderi;
-import static org.lwjgl.opengl.GL20.glGetUniformLocation;
-import static org.lwjgl.opengl.GL20.glLinkProgram;
-import static org.lwjgl.opengl.GL20.glShaderSource;
-import static org.lwjgl.opengl.GL20.glUniform1f;
-import static org.lwjgl.opengl.GL20.glUniform1i;
-import static org.lwjgl.opengl.GL20.glUniform3f;
-import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
-import static org.lwjgl.opengl.GL20.glUseProgram;
-import static org.lwjgl.opengl.GL20.glValidateProgram;
+import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
 
 import java.io.BufferedReader;
@@ -32,10 +11,13 @@ import java.net.URISyntaxException;
 import java.nio.FloatBuffer;
 
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 
-public abstract class AbstractShader {
+import fr.axicer.furryattack.render.Destroyable;
+
+public abstract class AbstractShader implements Destroyable{
 	
 	public int program,vs,gs,fs;
 	
@@ -92,6 +74,9 @@ public abstract class AbstractShader {
 			System.err.println(glGetProgramInfoLog(program, 2048));
 			System.exit(1);
 		}
+		glDeleteShader(vs);
+		glDeleteShader(gs);
+		glDeleteShader(fs);
 	}
 	
 	public void bind() {
@@ -102,12 +87,21 @@ public abstract class AbstractShader {
 		glUseProgram(0);
 	}
 	
+	@Override
+	public void destroy() {
+		glDeleteProgram(program);
+	}
+	
 	public void setUniformf(String name, float v) {
 		glUniform1f(glGetUniformLocation(program, name), v);
 	}
 
 	public void setUniformi(String name, int i) {
 		glUniform1i(glGetUniformLocation(program, name), i);
+	}
+	
+	public void setUniformvec2f(String name, Vector2f vec) {
+		glUniform2f(glGetUniformLocation(program, name), vec.x, vec.y);
 	}
 	
 	public void setUniformvec3f(String name, Vector3f vec) {

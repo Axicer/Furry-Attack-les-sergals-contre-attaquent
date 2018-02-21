@@ -1,8 +1,9 @@
-package fr.axicer.furryattack.render;
+package fr.axicer.furryattack.gui.elements;
 
 import java.nio.FloatBuffer;
 
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -14,13 +15,17 @@ import fr.axicer.furryattack.render.shader.BackgroundShader;
 import fr.axicer.furryattack.render.textures.Texture;
 import fr.axicer.furryattack.util.Constants;
 
-public class Background implements Renderable, Destroyable{
-	
+public class GUIImage extends GUIComponent{
+
 	private Texture tex;
 	private int vbo;
 	private BackgroundShader shader;
 	
-	public Background(String imgPath) {
+	public GUIImage(String imgPath) {
+		this(imgPath, false, new Vector2f(0.5f, 0.5f));
+	}
+	
+	public GUIImage(String imgPath, boolean blur, Vector2f blurDirection) {
 		shader = new BackgroundShader();
 		tex = Texture.loadTexture(imgPath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_LINEAR);
 		
@@ -39,6 +44,8 @@ public class Background implements Renderable, Destroyable{
 		shader.setUniformMat4f("modelMatrix", new Matrix4f().identity());
 		shader.setUniformf("screenWidth", (float)Constants.WIDTH);
 		shader.setUniformf("screenHeight", (float)Constants.HEIGHT);
+		shader.setUniformi("blur", blur ? 1 : 0);
+		shader.setUniformvec2f("blurDir", blurDirection);
 		shader.unbind();
 	}
 	
@@ -60,10 +67,15 @@ public class Background implements Renderable, Destroyable{
 		shader.unbind();
 		Texture.unbind();
 	}
-	
+
+	@Override
+	public void update() {}
+
 	@Override
 	public void destroy() {
 		GL15.glDeleteBuffers(vbo);
 		tex.delete();
+		shader.destroy();
 	}
+
 }

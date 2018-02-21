@@ -1,12 +1,15 @@
 package fr.axicer.furryattack.util.font;
 
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
@@ -22,7 +25,7 @@ import fr.axicer.furryattack.render.textures.Texture;
 import fr.axicer.furryattack.util.Constants;
 
 public enum FontType {
-	DK_KITSUNE_TAIL("DK Kitsune Tail", Font.PLAIN, 100);
+	DK_KITSUNE_TAIL("dkkt.ttf", Font.PLAIN, 100);
 	
 	private Font f;
 	private Texture tex;
@@ -30,15 +33,15 @@ public enum FontType {
 	private Map<Character, CharInfo> charMap;
 	
 	private FontType(String name, int style, int size) {
-		/*try {
-			this.f = Font.createFont(Font.TRUETYPE_FONT, new File(FontType.class.getResource("/font/"+name).toURI()));
-			this.f.deriveFont(style, size);
+		try {
+			Font realFont = Font.createFont(Font.TRUETYPE_FONT, FontType.class.getResourceAsStream("/font/"+name));
+			this.f = realFont.deriveFont(style, size);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(f);
-		} catch (FontFormatException | IOException | URISyntaxException e1) {
+			
+		} catch (FontFormatException | IOException e1) {
 			e1.printStackTrace();
-		}*/
-		this.f = new Font(name, style, size);
+		}
 		this.charMap = new HashMap<>();
 		try {
 			buildTexture();
@@ -78,6 +81,7 @@ public enum FontType {
 	        height = Math.max(height, fontMetrics.getHeight());
 	    }
 	    g2D.dispose();
+	    
 	    // Create the image associated to the charset
 	    img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 	    g2D = img.createGraphics();
@@ -86,8 +90,11 @@ public enum FontType {
 	    g2D.setFont(f);
 	    fontMetrics = g2D.getFontMetrics();
 	    g2D.setColor(java.awt.Color.WHITE);
-	    g2D.drawString(allChars, 0, fontMetrics.getAscent());
+	    for(char c : allChars.toCharArray()) {
+	    	g2D.drawString(String.valueOf(c), charMap.get(c).startX, fontMetrics.getAscent());
+	    }
 	    g2D.dispose();
+	    
 	    // Dump image to a byte buffer
 	    InputStream is;
 	    try (

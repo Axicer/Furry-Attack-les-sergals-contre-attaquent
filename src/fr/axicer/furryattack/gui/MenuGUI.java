@@ -5,6 +5,7 @@ import org.joml.Vector3f;
 import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.gui.elements.GUIButton;
 import fr.axicer.furryattack.gui.elements.GUIComponent;
+import fr.axicer.furryattack.gui.elements.GUIImage;
 import fr.axicer.furryattack.gui.elements.GUIText;
 import fr.axicer.furryattack.util.Color;
 import fr.axicer.furryattack.util.Constants;
@@ -14,6 +15,7 @@ public class MenuGUI extends GUI{
 
 	public MenuGUI() {
 		super("menu");
+		components.add(new GUIImage("/img/gui/background/menu-bg.png"));
 		components.add(new GUIText("FURRY-ATTACK", new Vector3f(0f,  4f*Constants.HEIGHT/10f, -1f), 0f, FontType.DK_KITSUNE_TAIL, new Color(255, 0, 0, 255), 1f));
 		components.add(new GUIText("Les sergals contre attaquent", new Vector3f(0f, 3f*Constants.HEIGHT/10f, -1f),  0f, FontType.DK_KITSUNE_TAIL, new Color(0, 255, 255, 255), 1f));
 		components.add(new GUIButton("Nouvelle Partie", 0.3f, Constants.WIDTH/4f, Constants.HEIGHT/12f, 1f, FontType.DK_KITSUNE_TAIL, new Color(255, 255, 255, 255), new Vector3f(0f, Constants.HEIGHT/10f, -1f), 0f, null));
