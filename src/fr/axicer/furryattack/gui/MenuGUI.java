@@ -15,20 +15,94 @@ public class MenuGUI extends GUI{
 
 	public MenuGUI() {
 		super("menu");
-		components.add(new GUIImage("/img/gui/background/menu-bg.png"));
-		components.add(new GUIText("FURRY-ATTACK", new Vector3f(0f,  4f*Constants.HEIGHT/10f, -1f), 0f, FontType.DK_KITSUNE_TAIL, new Color(255, 0, 0, 255), 1f));
-		components.add(new GUIText("Les sergals contre attaquent", new Vector3f(0f, 3f*Constants.HEIGHT/10f, -1f),  0f, FontType.DK_KITSUNE_TAIL, new Color(0, 255, 255, 255), 1f));
-		components.add(new GUIButton("Nouvelle Partie", 0.3f, Constants.WIDTH/4f, Constants.HEIGHT/12f, 1f, FontType.DK_KITSUNE_TAIL, new Color(255, 255, 255, 255), new Vector3f(0f, Constants.HEIGHT/10f, -1f), 0f, null));
-		components.add(new GUIButton("Charger partie", 0.3f, Constants.WIDTH/4f, Constants.HEIGHT/12f, 1f, FontType.DK_KITSUNE_TAIL, new Color(255, 255, 255, 255), new Vector3f(0f, 0f, -1f), 0f, null));
-		components.add(new GUIButton("Personnalisation du personnage", 0.25f, Constants.WIDTH/4f, Constants.HEIGHT/12f, 1f, FontType.DK_KITSUNE_TAIL, new Color(255, 255, 255, 255), new Vector3f(0f, -Constants.HEIGHT/10f, -1f), 0f, null));
-		components.add(new GUIButton("Personnalisation de l'arme", 0.3f, Constants.WIDTH/4f, Constants.HEIGHT/12f, 1f, FontType.DK_KITSUNE_TAIL, new Color(255, 255, 255, 255), new Vector3f(0f, -2*Constants.HEIGHT/10f, -1f), 0f, null));
-		components.add(new GUIButton("Quitter", 0.3f, Constants.WIDTH/4f, Constants.HEIGHT/12f, 1f, FontType.DK_KITSUNE_TAIL, new Color(255, 255, 255, 255), new Vector3f(0f, -3*Constants.HEIGHT/10f, -1f), 0f, new Runnable() {
-			@Override
-			public void run() {
-				FurryAttack.getInstance().running = false;
-			}
-		}));
-		components.add(new GUIButton("Options", 0.3f, Constants.WIDTH/8f, Constants.HEIGHT/12f, 1f, FontType.DK_KITSUNE_TAIL, new Color(255, 255, 255, 255), new Vector3f(-Constants.WIDTH/2f+150f, -Constants.HEIGHT/2+100f, -1f), 0f, null));
+		float ratio = (float)Constants.WIDTH/(float)Constants.HEIGHT;
+		components.add(new GUIImage("/img/gui/background/menu-bg.png", //imgPath
+									Constants.WIDTH, //width
+									Constants.HEIGHT, //height
+									new Vector3f(0,0,-1f))); //pos
+		components.add(new GUIText("FURRY-ATTACK", //text
+									new Vector3f(0f,  4f*Constants.HEIGHT/10f, -1f), //pos
+									0f, //rot
+									FontType.DK_KITSUNE_TAIL, //font
+									new Color(255, 50, 50, 255), //color
+									ratio*0.5f)); //scale
+		
+		components.add(new GUIText("Les sergals contre attaquent",
+									new Vector3f(0f, 3f*Constants.HEIGHT/10f, -1f),
+									0f,
+									FontType.DK_KITSUNE_TAIL,
+									new Color(50, 255, 255, 255),
+									ratio*0.5f));
+		
+		components.add(new GUIButton("Nouvelle Partie",//text
+									ratio*0.2f,// textscale
+									Constants.WIDTH/4f, //width
+									Constants.HEIGHT/12f, //height
+									ratio*0.5f, //scale
+									FontType.DK_KITSUNE_TAIL, //font
+									Color.WHITE, //color
+									new Vector3f(0f, Constants.HEIGHT/10f, -1f), //pos
+									0f, //rot
+									null));//action
+		components.add(new GUIButton("Charger partie",
+									ratio*0.2f,
+									Constants.WIDTH/4f,
+									Constants.HEIGHT/12f,
+									ratio*0.5f,
+									FontType.DK_KITSUNE_TAIL,
+									Color.WHITE,
+									new Vector3f(0f, 0f, -1f),
+									0f,
+									null));
+		components.add(new GUIButton("Personnalisation du personnage",
+									ratio*0.15f,
+									Constants.WIDTH/4f,
+									Constants.HEIGHT/12f,
+									ratio*0.5f,
+									FontType.DK_KITSUNE_TAIL,
+									Color.WHITE,
+									new Vector3f(0f, -Constants.HEIGHT/10f, -1f),
+									0f,
+									new Runnable() {
+										public void run() {
+											FurryAttack.getInstance().getGuiManager().setGUI(GUIManager.CHARACTER_CUSTOMISATION_MENU);
+										}
+									}));
+		components.add(new GUIButton("Personnalisation de l'arme",
+									ratio*0.2f,
+									Constants.WIDTH/4f,
+									Constants.HEIGHT/12f,
+									ratio*0.5f,
+									FontType.DK_KITSUNE_TAIL,
+									Color.WHITE,
+									new Vector3f(0f, -2*Constants.HEIGHT/10f, -1f),
+									0f,
+									null));
+		components.add(new GUIButton("Quitter",
+									ratio*0.2f,
+									Constants.WIDTH/4f,
+									Constants.HEIGHT/12f,
+									ratio*0.5f,
+									FontType.DK_KITSUNE_TAIL,
+									Color.WHITE,
+									new Vector3f(0f, -3*Constants.HEIGHT/10f, -1f),
+									0f,
+									new Runnable() {
+										@Override
+										public void run() {
+											FurryAttack.getInstance().running = false;
+										}
+									}));
+		components.add(new GUIButton("Options",
+									ratio*0.2f,
+									Constants.WIDTH/8f,
+									Constants.HEIGHT/12f,
+									ratio*0.5f,
+									FontType.DK_KITSUNE_TAIL,
+									Color.WHITE,
+									new Vector3f(-Constants.WIDTH/2f+150f, -Constants.HEIGHT/2+100f, -1f),
+									0f,
+									null));
 	}
 
 	@Override

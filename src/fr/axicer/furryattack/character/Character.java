@@ -24,6 +24,7 @@ public class Character implements Renderable,Updateable,Destroyable{
 	public static final float CHARACTER_WIDTH = 1f;
 	
 	private Vector2f pos;
+	private float scale;
 	
 	private Species race;
 	private Color primaryColor;
@@ -35,14 +36,15 @@ public class Character implements Renderable,Updateable,Destroyable{
 	private CharacterShader shader;
 	private int VERTEX_VBO_ID;
 	
-	public Character(Species race, Color primary, Color secondary, String expression, CharacterAnimation walkAnim) {
+	public Character(Species race, Color primary, Color secondary, String expression, CharacterAnimation walkAnim, float scale) {
 		this.race = race;
 		this.primaryColor = primary;
 		this.secondaryColor = secondary;
 		this.expression = expression;
 		this.pos = new Vector2f();
 		this.walk = walkAnim;
-		this.modelMatrix = new Matrix4f();
+		this.scale = scale;
+		this.modelMatrix = new Matrix4f().identity().translate(pos.x, pos.y, 0).scale(100*scale);
 		
 		shader = new CharacterShader();
 		
@@ -98,11 +100,18 @@ public class Character implements Renderable,Updateable,Destroyable{
 	public void setExpression(String expression) {
 		this.expression = expression;
 	}
+	
+	public void setScale(float scale) {
+		this.scale = scale;
+	}
+	public float getScale() {
+		return scale;
+	}
 
 	@Override
 	public void update() {
 		walk.updateState();
-		modelMatrix.identity().translate(pos.x, pos.y, 0).scale(100);
+		modelMatrix.identity().translate(pos.x, pos.y, 0).scale(100*scale);
 		shader.bind();
 		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 		shader.setUniformMat4f("modelMatrix", modelMatrix);

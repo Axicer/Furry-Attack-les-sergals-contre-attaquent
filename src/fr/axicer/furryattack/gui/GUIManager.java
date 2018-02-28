@@ -7,11 +7,13 @@ import fr.axicer.furryattack.render.Updateable;
 public class GUIManager implements Renderable,Updateable,Destroyable{
 	
 	public static GUI MENU;
+	public static GUI CHARACTER_CUSTOMISATION_MENU;
 	
 	private GUI actualGUI;
 	
 	public GUIManager() {
 		MENU = new MenuGUI();
+		CHARACTER_CUSTOMISATION_MENU = new CharacterCustomisationMenuGUI();
 		//TODO add GUIs
 		this.actualGUI = MENU;
 	}

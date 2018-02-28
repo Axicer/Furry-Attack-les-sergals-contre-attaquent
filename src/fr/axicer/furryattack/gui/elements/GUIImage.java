@@ -4,6 +4,7 @@ import java.nio.FloatBuffer;
 
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -13,21 +14,37 @@ import org.lwjgl.opengl.GL20;
 import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.render.shader.BackgroundShader;
 import fr.axicer.furryattack.render.textures.Texture;
-import fr.axicer.furryattack.util.Constants;
 
 public class GUIImage extends GUIComponent{
 
 	private Texture tex;
 	private int vbo;
 	private BackgroundShader shader;
+	private Matrix4f modelMatrix;
+	private float scale;
 	
-	public GUIImage(String imgPath) {
-		this(imgPath, false, new Vector2f(0.5f, 0.5f));
+	public GUIImage(String imgPath, Vector3f pos) {
+		this(imgPath, 128, 128, pos);
 	}
 	
-	public GUIImage(String imgPath, boolean blur, Vector2f blurDirection) {
+	public GUIImage(String imgPath, int width, int height, Vector3f pos) {
+		this(imgPath, height, width, pos, 0f, 1f);
+	}
+	
+	public GUIImage(String imgPath, int width, int height, Vector3f pos, float rot) {
+		this(imgPath, height, width, pos, rot, 1f);
+	}
+	
+	public GUIImage(String imgPath, int width, int height, Vector3f pos, float rot, float scale) {
+		this(imgPath, false, new Vector2f(), height, width, pos, rot, scale);
+	}
+	
+	public GUIImage(String imgPath, boolean blur, Vector2f blurDirection, int width, int height, Vector3f pos, float rot, float scale) {
 		shader = new BackgroundShader();
 		tex = Texture.loadTexture(imgPath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_LINEAR);
+		this.pos = pos;
+		this.rot = rot;
+		this.scale = scale;
 		
 		FloatBuffer vertices = BufferUtils.createFloatBuffer(3);
 		vertices.put(new float[] {0f,0f,0f});
@@ -37,13 +54,15 @@ public class GUIImage extends GUIComponent{
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertices, GL15.GL_STATIC_DRAW);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 		
+		modelMatrix = new Matrix4f().identity().translate(pos).rotateZ(rot).scale(scale);
+		
 		shader.bind();
 		shader.setUniformi("tex", 0);
 		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 		shader.setUniformMat4f("viewMatrix", FurryAttack.getInstance().viewMatrix);
-		shader.setUniformMat4f("modelMatrix", new Matrix4f().identity());
-		shader.setUniformf("screenWidth", (float)Constants.WIDTH);
-		shader.setUniformf("screenHeight", (float)Constants.HEIGHT);
+		shader.setUniformMat4f("modelMatrix", modelMatrix);
+		shader.setUniformf("screenWidth", (float)width);
+		shader.setUniformf("screenHeight", (float)height);
 		shader.setUniformi("blur", blur ? 1 : 0);
 		shader.setUniformvec2f("blurDir", blurDirection);
 		shader.unbind();
@@ -67,9 +86,15 @@ public class GUIImage extends GUIComponent{
 		shader.unbind();
 		Texture.unbind();
 	}
-
+	
 	@Override
-	public void update() {}
+	public void update() {
+		modelMatrix.identity().translate(pos).rotateZ(rot).scale(scale);
+		shader.bind();
+		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
+		shader.setUniformMat4f("modelMatrix", modelMatrix);
+		shader.unbind();
+	}
 
 	@Override
 	public void destroy() {
@@ -78,4 +103,17 @@ public class GUIImage extends GUIComponent{
 		shader.destroy();
 	}
 
+	public void setPos(Vector3f pos) {
+		this.pos = pos;
+	}
+	public Vector3f getPos() {
+		return this.pos;
+	}
+	
+	public void setScale(float scale) {
+		this.scale = scale;
+	}
+	public float getScale() {
+		return this.scale;
+	}
 }
