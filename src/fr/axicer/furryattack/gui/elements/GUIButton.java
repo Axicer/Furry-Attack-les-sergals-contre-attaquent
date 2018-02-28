@@ -3,6 +3,7 @@ package fr.axicer.furryattack.gui.elements;
 import java.nio.FloatBuffer;
 
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -15,8 +16,7 @@ import fr.axicer.furryattack.render.shader.ButtonShader;
 import fr.axicer.furryattack.render.textures.Texture;
 import fr.axicer.furryattack.util.Color;
 import fr.axicer.furryattack.util.Constants;
-import fr.axicer.furryattack.util.collision.CollisionBox;
-import fr.axicer.furryattack.util.collision.FPoint;
+import fr.axicer.furryattack.util.collision.CollisionBoxM;
 import fr.axicer.furryattack.util.control.MouseButtonHandler;
 import fr.axicer.furryattack.util.control.MouseHandler;
 import fr.axicer.furryattack.util.font.FontType;
@@ -26,7 +26,7 @@ public class GUIButton extends GUIComponent{
 	private Vector3f pos;
 	private float rot;
 	private float width, height;
-	private CollisionBox box;
+	private CollisionBoxM box;
 	
 	private Runnable action;
 	private Thread actionThread;
@@ -63,7 +63,7 @@ public class GUIButton extends GUIComponent{
 		this.pos = pos;
 		this.rot = rot;
 		this.hover = false;
-		this.box = new CollisionBox();
+		this.box = new CollisionBoxM();
 		this.scale = scale;
 		this.modelMatrix = new Matrix4f().translate(pos).rotateZ(rot).scale(scale);
 		this.actionThread = new Thread(action);
@@ -136,7 +136,7 @@ public class GUIButton extends GUIComponent{
 		Vector3f bottomL = new Vector3f(-width/2, height/2, 1.0f);
 		modelMatrix.transformPosition(bottomL, bottomL);
 		
-		box.updatePos(new FPoint(topL.x, topL.y), new FPoint(topR.x, topR.y), new FPoint(bottomR.x, bottomR.y), new FPoint(bottomL.x, bottomL.y));
+		box.updatePos(new Vector2f(topL.x, topL.y), new Vector2f(topR.x, topR.y), new Vector2f(bottomR.x, bottomR.y), new Vector2f(bottomL.x, bottomL.y));
 		
 		/*System.out.println(topL);
 		System.out.println(topR);
@@ -212,7 +212,7 @@ public class GUIButton extends GUIComponent{
 		return height;
 	}
 
-	public CollisionBox getColisionBox() {
+	public CollisionBoxM getColisionBox() {
 		return box;
 	}
 
