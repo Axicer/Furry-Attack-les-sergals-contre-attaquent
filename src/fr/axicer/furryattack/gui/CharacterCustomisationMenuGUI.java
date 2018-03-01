@@ -21,7 +21,10 @@ public class CharacterCustomisationMenuGUI extends GUI{
 	public CharacterCustomisationMenuGUI() {
 		super("character-customisation-menu");
 		float ratio = (float)Constants.WIDTH/(float)Constants.HEIGHT;
-		character = new Character(Species.FOX, Color.WHITE, Color.BLACK, "", new CharacterAnimation("/anim/human_walk.anim", "/img/human_walk_texture.png"), ratio);
+		components.add(new GUIImage("/img/gui/background/menu-bg.png", //imgPath
+									Constants.WIDTH, //width
+									Constants.HEIGHT, //height
+									new Vector3f(0,0,-1f))); //pos
 		components.add(new GUIText("Customisation du personnage", //text
 									new Vector3f(0f, (float)Constants.HEIGHT/2.5f, -1f), //pos
 									0f, //rot
@@ -86,6 +89,7 @@ public class CharacterCustomisationMenuGUI extends GUI{
 				new Vector3f((float)-Constants.WIDTH/2.5f, (float)-Constants.HEIGHT/2.5f, -1f),
 				0f,
 				null));
+		character = new Character(Species.FOX, Color.WHITE, Color.BLACK, "", new CharacterAnimation("/anim/human_walk.anim", "/img/human_walk_texture.png"), ratio);
 	}
 
 	@Override

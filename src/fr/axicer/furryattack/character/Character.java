@@ -44,7 +44,7 @@ public class Character implements Renderable,Updateable,Destroyable{
 		this.pos = new Vector2f();
 		this.walk = walkAnim;
 		this.scale = scale;
-		this.modelMatrix = new Matrix4f().identity().translate(pos.x, pos.y, 0).scale(100*scale);
+		this.modelMatrix = new Matrix4f().identity().translate(pos.x, pos.y, 0f).scale(100*scale);
 		
 		shader = new CharacterShader();
 		
@@ -111,7 +111,7 @@ public class Character implements Renderable,Updateable,Destroyable{
 	@Override
 	public void update() {
 		walk.updateState();
-		modelMatrix.identity().translate(pos.x, pos.y, 0).scale(100*scale);
+		modelMatrix.identity().translate(pos.x, pos.y, 0f).scale(100*scale);
 		shader.bind();
 		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 		shader.setUniformMat4f("modelMatrix", modelMatrix);
