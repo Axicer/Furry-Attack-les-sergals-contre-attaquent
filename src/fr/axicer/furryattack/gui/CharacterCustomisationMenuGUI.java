@@ -10,6 +10,8 @@ import fr.axicer.furryattack.gui.elements.GUIButton;
 import fr.axicer.furryattack.gui.elements.GUIComponent;
 import fr.axicer.furryattack.gui.elements.GUIImage;
 import fr.axicer.furryattack.gui.elements.GUIText;
+import fr.axicer.furryattack.gui.elements.selector.GUISelector;
+import fr.axicer.furryattack.gui.elements.selector.GUISelectorItem;
 import fr.axicer.furryattack.util.Color;
 import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.font.FontType;
@@ -18,6 +20,7 @@ public class CharacterCustomisationMenuGUI extends GUI{
 
 	public Character character;
 	
+	@SuppressWarnings("unchecked")
 	public CharacterCustomisationMenuGUI() {
 		super("character-customisation-menu");
 		float ratio = (float)Constants.WIDTH/(float)Constants.HEIGHT;
@@ -29,9 +32,9 @@ public class CharacterCustomisationMenuGUI extends GUI{
 									new Vector3f(0f, (float)Constants.HEIGHT/2.5f, -1f), //pos
 									0f, //rot
 									FontType.DK_KITSUNE_TAIL, //font
-									Color.WHITE, // color
+									new Color(50, 70, 120, 255), // color
 									ratio*0.5f)); //scale
-		components.add(new GUIImage("/img/gui/background/char-preview-bg.png",
+		components.add(new GUIImage("/img/gui/background/gray-back-bg.png",
 									Constants.WIDTH/4,
 									Constants.HEIGHT/2,
 									new Vector3f(0,0,-1f)));
@@ -89,6 +92,68 @@ public class CharacterCustomisationMenuGUI extends GUI{
 				new Vector3f((float)-Constants.WIDTH/2.5f, (float)-Constants.HEIGHT/2.5f, -1f),
 				0f,
 				null));
+		components.add(new GUIText("Race", //text
+				new Vector3f((float)-Constants.WIDTH/2f+(float)Constants.WIDTH/5.5f,(float)Constants.HEIGHT/3.5f,-0.5f), //pos
+				0f, //rot
+				FontType.DK_KITSUNE_TAIL, //font
+				Color.WHITE, // color
+				ratio*0.3f)); //scale
+		components.add(new GUISelector<Species>(
+				new Vector3f((float)-Constants.WIDTH/2f+(float)Constants.WIDTH/5.5f,(float)Constants.HEIGHT/5f,-0.5f),
+				Constants.WIDTH/3f,
+				Constants.HEIGHT/10f,
+				FontType.DK_KITSUNE_TAIL,
+				Color.WHITE,
+				new GUISelectorItem<>(Species.FOX, "Renard"),
+				new GUISelectorItem<>(Species.WOLF, "Loup"),
+				new GUISelectorItem<>(Species.DUTCH_ANGEL_DRAGON, "Dutch Angel Dragon"),
+				new GUISelectorItem<>(Species.HYENA, "Hyene")));
+		components.add(new GUIText("Couleur primaire", //text
+				new Vector3f((float)-Constants.WIDTH/2f+(float)Constants.WIDTH/5.5f,(float)Constants.HEIGHT/11f,-0.5f), //pos
+				0f, //rot
+				FontType.DK_KITSUNE_TAIL, //font
+				Color.WHITE, // color
+				ratio*0.3f)); //scale
+		components.add(new GUISelector<Color>(
+				new Vector3f((float)-Constants.WIDTH/2f+(float)Constants.WIDTH/5.5f,0f,-0.5f),
+				Constants.WIDTH/3f,
+				Constants.HEIGHT/10f,
+				FontType.DK_KITSUNE_TAIL,
+				Color.WHITE,
+				new GUISelectorItem<>(Color.WHITE, "Blanc"),
+				new GUISelectorItem<>(Color.BLACK, "Noir")));
+		components.add(new GUIText("Couleur secondaire", //text
+				new Vector3f((float)-Constants.WIDTH/2f+(float)Constants.WIDTH/5.5f,(float)-Constants.HEIGHT/9f,-0.5f), //pos
+				0f, //rot
+				FontType.DK_KITSUNE_TAIL, //font
+				Color.WHITE, // color
+				ratio*0.3f)); //scale
+		components.add(new GUISelector<Color>(
+				new Vector3f((float)-Constants.WIDTH/2f+(float)Constants.WIDTH/5.5f,(float)-Constants.HEIGHT/5f,-0.5f),
+				Constants.WIDTH/3f,
+				Constants.HEIGHT/10f,
+				FontType.DK_KITSUNE_TAIL,
+				Color.WHITE,
+				new GUISelectorItem<>(Color.WHITE, "Blanc"),
+				new GUISelectorItem<>(Color.BLACK, "Noir")));
+		components.add(new GUIText("//TODO", //text
+				new Vector3f((float)Constants.WIDTH/2f-(float)Constants.WIDTH/5.5f,0f,-0.5f), //pos
+				0f, //rot
+				FontType.DK_KITSUNE_TAIL, //font
+				Color.WHITE, // color
+				ratio*0.3f)); //scale
+		components.add(new GUIText("//TODO", //text
+				new Vector3f((float)Constants.WIDTH/2f-(float)Constants.WIDTH/5.5f,(float)Constants.HEIGHT/5.5f,-0.5f), //pos
+				0f, //rot
+				FontType.DK_KITSUNE_TAIL, //font
+				Color.WHITE, // color
+				ratio*0.3f)); //scale
+		components.add(new GUIText("//TODO", //text
+				new Vector3f((float)Constants.WIDTH/2f-(float)Constants.WIDTH/5.5f,(float)-Constants.HEIGHT/5.5f,-0.5f), //pos
+				0f, //rot
+				FontType.DK_KITSUNE_TAIL, //font
+				Color.WHITE, // color
+				ratio*0.3f)); //scale
 		character = new Character(Species.FOX, Color.WHITE, Color.BLACK, "", new CharacterAnimation("/anim/human_walk.anim", "/img/human_walk_texture.png"), ratio);
 	}
 

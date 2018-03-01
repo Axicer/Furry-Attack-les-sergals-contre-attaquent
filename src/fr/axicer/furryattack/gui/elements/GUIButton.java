@@ -16,6 +16,7 @@ import fr.axicer.furryattack.render.shader.ButtonShader;
 import fr.axicer.furryattack.render.textures.Texture;
 import fr.axicer.furryattack.util.Color;
 import fr.axicer.furryattack.util.Constants;
+import fr.axicer.furryattack.util.DelayableTask;
 import fr.axicer.furryattack.util.collision.CollisionBoxM;
 import fr.axicer.furryattack.util.control.MouseButtonHandler;
 import fr.axicer.furryattack.util.control.MouseHandler;
@@ -39,6 +40,7 @@ public class GUIButton extends GUIComponent{
 	private ButtonShader shader;
 	private int VBO_ID;
 	private float scale;
+	private boolean clickable = true;
 	
 	public GUIButton(String text, Color color, FontType type, float width, float height, Vector3f pos, float rot, Runnable action) {
 		this(text, 1f, width, height, "/img/gui/button/button.png", "/img/gui/button/button_hover.png", 1f, type, color, pos, rot, action);
@@ -92,7 +94,7 @@ public class GUIButton extends GUIComponent{
 	}
 	
 	public void onClick() {
-		if(!actionThread.isAlive())actionThread.run();
+		if(!actionThread.isAlive() && clickable)actionThread.run();
 	}
 	
 	@Override
@@ -148,6 +150,12 @@ public class GUIButton extends GUIComponent{
 		
 		if(hover && MouseButtonHandler.isPressedL()) {
 			onClick();
+			clickable = false;
+			new DelayableTask(new Runnable() {
+				public void run() {
+					clickable = true;
+				}
+			}, 100L).start();
 		}
 		
 		textG.setPosition(pos);
