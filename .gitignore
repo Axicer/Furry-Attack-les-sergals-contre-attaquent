@@ -1,6 +1,4 @@
-/bin/
-/res/lib/
-/res/natives/
+/src/test/
 
 #Eclipse
 /.settings/
@@ -15,3 +13,4 @@
 
 # virtual machine crash logs
 hs_err_pid*
+/target/
