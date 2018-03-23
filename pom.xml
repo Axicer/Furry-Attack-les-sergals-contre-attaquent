@@ -12,7 +12,7 @@
 	<lwjgl.version>3.1.6</lwjgl.version>
 	<joml.version>1.9.8</joml.version>
 	<slf4jVersion>1.7.25</slf4jVersion>
-	<natives.version>0.0.6</natives.version>
+	<natives.version>0.0.7</natives.version>
   </properties>
 
 	<profiles>
@@ -46,6 +46,12 @@
 	</profiles>
 
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
+		<dependency>
+		    <groupId>com.googlecode.json-simple</groupId>
+		    <artifactId>json-simple</artifactId>
+		    <version>1.1.1</version>
+		</dependency>
 		<dependency>
 			<groupId>org.lwjgl</groupId>
 			<artifactId>lwjgl</artifactId>
@@ -148,7 +154,6 @@
 	                    <encoding>UTF-8</encoding>
 	                </configuration>
 	            </plugin>
-				
 	            <plugin>
 	                <groupId>com.googlecode.mavennatives</groupId>
 	                <artifactId>maven-nativedependencies-plugin</artifactId>

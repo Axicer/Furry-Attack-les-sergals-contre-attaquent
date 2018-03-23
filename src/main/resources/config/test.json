@@ -1,0 +1,16 @@
+{
+	"test":"Coucou",
+	"profile":{
+		"test":"Bouh !"
+	},
+	"testarray":[
+		"ceci",
+		"est",
+		true,
+		"un",
+		"test",
+		{
+			"value":"YOLO TEST"
+		}
+	]
+}
