@@ -13,7 +13,9 @@ uniform float characterWidth;
 uniform float characterHeight;
 
 uniform float spriteWidth;
+uniform float spriteHeight;
 uniform float offsetX;
+uniform float offsetY;
 
 void createVertex(vec3 offset, vec2 texoffset){
 
@@ -21,8 +23,9 @@ void createVertex(vec3 offset, vec2 texoffset){
 	gl_Position = projectionMatrix * viewMatrix * modelMatrix * worldPosition;
 	
 	float xtex = (offsetX+texoffset.x)*spriteWidth;
+	float ytex = (offsetY+texoffset.y)*spriteHeight;
 	
-	pass_texcoord = vec2(xtex, texoffset.y);
+	pass_texcoord = vec2(xtex, ytex);
 	
 	EmitVertex();
 }

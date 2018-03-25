@@ -1,28 +1,23 @@
 package fr.axicer.furryattack.character.animation;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import fr.axicer.furryattack.render.textures.Texture;
+import fr.axicer.furryattack.util.config.Configuration;
 
-public class CharacterAnimation {
+public class CharacterAnimation extends Configuration{
 	
 	private Texture texture;
-	private KeyFrame[] keyframes;
-	private long start;
-	private long actual;
-	private long end;
+	private int actual, countX, countY, actualTick, tickCount;
 	
 	public CharacterAnimation(String AnimPath, String texturePath) {
-		this.keyframes= loadFramesFromFile(AnimPath);
-		this.start = 0;
+		super(AnimPath);
 		this.actual = 0;
-		this.end = keyframes[keyframes.length-1].millis; //end is at the last keyframe millis
+		this.actualTick = 0;
+		this.countX = getInt("counts.x");
+		this.countY = getInt("counts.y");
+		this.tickCount = getInt("interval");
 		this.texture = Texture.loadTexture(texturePath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_LINEAR);
 	}
 	
@@ -31,58 +26,27 @@ public class CharacterAnimation {
 	}
 	
 	public void updateState() {
-		actual++;
-		if(actual == end)reset();
+		actualTick++;
+		checkTicks();
 	}
 	
-	public void reset() {
-		actual = start;
-	}
-	
-	public KeyFrame getBeforeKeyFrame() {
-		long time = actual;
-		KeyFrame kf = null;
-		while(kf == null && time > 0) {
-			kf = get(time);
-			time--;
+	public void checkTicks() {
+		if(actualTick >= tickCount) {
+			actual++;
+			if(actual >= countX*countY)actual=0;
 		}
-		if(kf == null)return keyframes[0];
-		return kf;
+		actualTick %= tickCount;
 	}
 	
-	private KeyFrame get(long millis) {
-		KeyFrame kf = null;
-		for(int i = 0 ; i < keyframes.length ; i++) {
-			if(keyframes[i].millis == millis) {
-				kf = keyframes[i];
-				break;
-			}
-		}
-		return kf;
+	public float getNormalisedSpriteWidth() {
+		return 1f/((float)countX);
+	}
+	public float getNormalisedSpriteHeight() {
+		return 1f/((float)countY);
 	}
 	
-	public KeyFrame[] getKeyframes() {
-		return keyframes;
-	}
-
-	private KeyFrame[] loadFramesFromFile(String path) {
-		List<KeyFrame> list = new ArrayList<KeyFrame>();
-		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(CharacterAnimation.class.getResourceAsStream(path), "UTF-8"));
-		    String line = br.readLine();
-		    while (line != null) {
-		        String[] parts = line.split(",");
-		        long t = Long.parseLong(parts[0]);
-		        int diffX = Integer.parseInt(parts[1]);
-		        KeyFrame kf = new KeyFrame(t, diffX);
-		        list.add(kf);
-		        line = br.readLine();
-		    }
-		    br.close();
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		KeyFrame[] kfs = new KeyFrame[list.size()];
-		return list.toArray(kfs);
+	public KeyFrame getActualFrame() {
+		KeyFrame frame = new KeyFrame(actual%countX, actual/countX);
+		return frame;
 	}
 }

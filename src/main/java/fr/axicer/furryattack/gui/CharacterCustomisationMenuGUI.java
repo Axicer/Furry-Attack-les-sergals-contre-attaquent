@@ -154,7 +154,7 @@ public class CharacterCustomisationMenuGUI extends GUI{
 				FontType.DK_KITSUNE_TAIL, //font
 				Color.WHITE, // color
 				ratio*0.3f)); //scale
-		character = new Character(Species.FOX, Color.WHITE, Color.BLACK, "", new CharacterAnimation("/anim/human_walk.anim", "/img/human_walk_texture.png"), ratio);
+		character = new Character(Species.FOX, Color.WHITE, Color.BLACK, "", new CharacterAnimation("/anim/wolf_head_normal.anim", "/img/human_walk_texture.png"), ratio);
 	}
 
 	@Override

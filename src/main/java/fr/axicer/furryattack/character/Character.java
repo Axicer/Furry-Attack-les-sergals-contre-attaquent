@@ -62,7 +62,8 @@ public class Character implements Renderable,Updateable,Destroyable{
 		shader.setUniformMat4f("viewMatrix", FurryAttack.getInstance().viewMatrix);
 		shader.setUniformvec3f("primaryColor", new Vector3f(primaryColor.x, primaryColor.y, primaryColor.z));
 		shader.setUniformvec3f("secondaryColor", new Vector3f(secondaryColor.x, secondaryColor.y, secondaryColor.z));
-		shader.setUniformf("spriteWidth", 1f/((float)walk.getKeyframes().length-1f));
+		shader.setUniformf("spriteWidth", walk.getNormalisedSpriteWidth());
+		shader.setUniformf("spriteHeight", walk.getNormalisedSpriteHeight());
 		shader.setUniformf("characterWidth", CHARACTER_WIDTH);
 		shader.setUniformf("characterHeight", CHARACTER_HEIGHT);
 		shader.setUniformi("tex", 0);
@@ -115,7 +116,8 @@ public class Character implements Renderable,Updateable,Destroyable{
 		shader.bind();
 		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 		shader.setUniformMat4f("modelMatrix", modelMatrix);
-		shader.setUniformf("offsetX", walk.getBeforeKeyFrame().diffX);
+		shader.setUniformf("offsetX", walk.getActualFrame().getPosX());
+		shader.setUniformf("offsetY", walk.getActualFrame().getPosY());
 		shader.unbind();
 	}
 

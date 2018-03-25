@@ -2,13 +2,19 @@ package fr.axicer.furryattack.character.animation;
 
 public class KeyFrame {
 	
-	public int diffX;
-	public long millis;
+	private int posX,posY;
 	
-	public KeyFrame(long millis, int diffX) {
-		this.millis = millis;
-		this.diffX = diffX;
+	public KeyFrame(int posX, int posY) {
+		this.posX = posX;
+		this.posY = posY;
 	}
-	
-	
+
+	public int getPosX() {
+		return posX;
+	}
+
+	public int getPosY() {
+		return posY;
+	}
+
 }
