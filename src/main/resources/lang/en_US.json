@@ -1,0 +1,13 @@
+{
+	"name":"English (US)",
+	"translation":{
+		"menu":{
+			"singleplayer":"Singleplayer",
+			"multiplayer":"Multiplayer",
+			"characterCustom":"Character Customisation",
+			"GunCustom":"Gun Customisation",
+			"quit":"Quit game",
+			"options":"Options"
+		}
+	}
+}

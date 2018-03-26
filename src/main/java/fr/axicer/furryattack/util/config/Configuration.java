@@ -30,6 +30,10 @@ public class Configuration {
 	private JSONObject root;
 	private Logger logger;
 	
+	public Configuration() {
+		this.logger = LoggerFactory.getLogger(this.getClass());
+		this.root = new JSONObject();
+	}
 	public Configuration(File f) throws FileNotFoundException {
 		this(new FileInputStream(f));
 	}
@@ -37,7 +41,7 @@ public class Configuration {
 		this(Configuration.class.getResourceAsStream(path));
 	}
 	public Configuration(InputStream stream) {
-		logger = LoggerFactory.getLogger(this.getClass());
+		this();
 		JSONParser parser = new JSONParser();
 		String rawJSON = getStringFromInputStream(stream);
 		try {
@@ -109,18 +113,20 @@ public class Configuration {
 			}else {
 				if(cur instanceof JSONArray) {
 					Object val = ((JSONArray)cur).get(Integer.parseInt(realNode));
-					if(!(val instanceof Long)) {
-						logger.warn("Error while getting value of path ! setting value to \""+CONFIG_READ_VALUE_ERROR_ID+"\" for path:"+path);
+					if(!(val instanceof Long) && !(val instanceof Integer)) {
+						logger.warn("Error while getting value of path ! setting value to \""+CONFIG_READ_VALUE_ERROR_ID+"\" for path: "+path);
 						return CONFIG_READ_VALUE_ERROR_ID;
 					}
-					return Math.toIntExact((long) val);
+					if(val instanceof Long)return Math.toIntExact((long) val);
+					else return (int) val;
 				}else if(cur instanceof JSONObject) {
 					Object val = ((JSONObject)cur).get(realNode);
-					if(!(val instanceof Long)) {
-						logger.warn("Error while getting value of path ! setting value to \""+CONFIG_READ_VALUE_ERROR_ID+"\" for path:"+path);
+					if(!(val instanceof Long) && !(val instanceof Integer)) {
+						logger.warn("Error while getting value of path ! setting value to \""+CONFIG_READ_VALUE_ERROR_ID+"\" for path: "+path);
 						return CONFIG_READ_VALUE_ERROR_ID;
 					}
-					return Math.toIntExact((long) val);
+					if(val instanceof Long)return Math.toIntExact((long) val);
+					else return (int) val;
 				}else {
 					logger.warn("Error while reading path ! setting value to \""+CONFIG_READ_PATH_ERROR_ID+"\" for path: "+path);
 					return CONFIG_READ_PATH_ERROR_ID;

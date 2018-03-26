@@ -23,7 +23,8 @@ import fr.axicer.furryattack.gui.GUIManager;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
 import fr.axicer.furryattack.util.Constants;
-import fr.axicer.furryattack.util.Util;
+import fr.axicer.furryattack.util.config.FileManager;
+import fr.axicer.furryattack.util.config.lang.Language;
 import fr.axicer.furryattack.util.control.KeyboardHandler;
 import fr.axicer.furryattack.util.control.MouseButtonHandler;
 import fr.axicer.furryattack.util.control.MouseHandler;
@@ -222,11 +223,9 @@ public class FurryAttack implements Renderable, Updateable{
 	}
 	
 	public static void main(String[] args) {
-		Constants.FULLSCREEN = Util.contains(args, "-fullscreen");
-		Constants.V_SYNC = Util.contains(args, "-vsync");
-		Constants.WIDTH = Integer.parseInt(System.getProperty("width", "800"));
-		Constants.HEIGHT = Integer.parseInt(System.getProperty("height", "600"));
-		screenid = Integer.valueOf(System.getProperty("fullscreenid", "0"));
+		FileManager.initialize();
+		Constants.initialize(args);
+		screenid = Constants.MAIN_CONFIG.getInt("screenid");
 		
 		getInstance().run();
 	}
