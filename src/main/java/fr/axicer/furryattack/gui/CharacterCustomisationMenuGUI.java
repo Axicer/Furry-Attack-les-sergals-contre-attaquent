@@ -31,7 +31,7 @@ public class CharacterCustomisationMenuGUI extends GUI{
 		components.add(new GUIText("Customisation du personnage", //text
 									new Vector3f(0f, (float)Constants.HEIGHT/2.5f, -1f), //pos
 									0f, //rot
-									FontType.DK_KITSUNE_TAIL, //font
+									FontType.CAPTAIN, //font
 									new Color(50, 70, 120, 255), // color
 									ratio*0.5f)); //scale
 		components.add(new GUIImage("/img/gui/background/gray-back-bg.png",
@@ -43,7 +43,7 @@ public class CharacterCustomisationMenuGUI extends GUI{
 				Constants.WIDTH/6f, //width
 				Constants.HEIGHT/10f, //height
 				ratio*0.5f, //scale
-				FontType.DK_KITSUNE_TAIL, //font
+				FontType.CAPTAIN, //font
 				Color.WHITE, //color
 				new Vector3f(0f, (float)-Constants.HEIGHT/2.5f, -1f), //pos
 				0f, //rot
@@ -53,7 +53,7 @@ public class CharacterCustomisationMenuGUI extends GUI{
 				Constants.WIDTH/6f,
 				Constants.HEIGHT/10f,
 				ratio*0.5f,
-				FontType.DK_KITSUNE_TAIL,
+				FontType.CAPTAIN,
 				new Color(50, 230, 50, 255),
 				new Vector3f((float)Constants.WIDTH/5, (float)-Constants.HEIGHT/2.5f, -1f),
 				0f,
@@ -63,7 +63,7 @@ public class CharacterCustomisationMenuGUI extends GUI{
 				Constants.WIDTH/6f,
 				Constants.HEIGHT/10f,
 				ratio*0.5f,
-				FontType.DK_KITSUNE_TAIL,
+				FontType.CAPTAIN,
 				Color.WHITE,
 				new Vector3f((float)Constants.WIDTH/2.5f, (float)-Constants.HEIGHT/2.5f, -1f),
 				0f,
@@ -77,7 +77,7 @@ public class CharacterCustomisationMenuGUI extends GUI{
 				Constants.WIDTH/6f,
 				Constants.HEIGHT/10f,
 				ratio*0.5f,
-				FontType.DK_KITSUNE_TAIL,
+				FontType.CAPTAIN,
 				Color.WHITE,
 				new Vector3f((float)-Constants.WIDTH/5, (float)-Constants.HEIGHT/2.5f, -1f),
 				0f,
@@ -87,7 +87,7 @@ public class CharacterCustomisationMenuGUI extends GUI{
 				Constants.WIDTH/6f,
 				Constants.HEIGHT/10f,
 				ratio*0.5f,
-				FontType.DK_KITSUNE_TAIL,
+				FontType.CAPTAIN,
 				Color.WHITE,
 				new Vector3f((float)-Constants.WIDTH/2.5f, (float)-Constants.HEIGHT/2.5f, -1f),
 				0f,
@@ -95,14 +95,14 @@ public class CharacterCustomisationMenuGUI extends GUI{
 		components.add(new GUIText("Race", //text
 				new Vector3f((float)-Constants.WIDTH/2f+(float)Constants.WIDTH/5.5f,(float)Constants.HEIGHT/3.5f,-0.5f), //pos
 				0f, //rot
-				FontType.DK_KITSUNE_TAIL, //font
+				FontType.CAPTAIN, //font
 				Color.WHITE, // color
 				ratio*0.3f)); //scale
 		components.add(new GUISelector<Species>(
 				new Vector3f((float)-Constants.WIDTH/2f+(float)Constants.WIDTH/5.5f,(float)Constants.HEIGHT/5f,-0.5f),
 				Constants.WIDTH/3f,
 				Constants.HEIGHT/10f,
-				FontType.DK_KITSUNE_TAIL,
+				FontType.CAPTAIN,
 				Color.WHITE,
 				new GUISelectorItem<>(Species.FOX, "Renard"),
 				new GUISelectorItem<>(Species.WOLF, "Loup"),
@@ -111,47 +111,47 @@ public class CharacterCustomisationMenuGUI extends GUI{
 		components.add(new GUIText("Couleur primaire", //text
 				new Vector3f((float)-Constants.WIDTH/2f+(float)Constants.WIDTH/5.5f,(float)Constants.HEIGHT/11f,-0.5f), //pos
 				0f, //rot
-				FontType.DK_KITSUNE_TAIL, //font
+				FontType.CAPTAIN, //font
 				Color.WHITE, // color
 				ratio*0.3f)); //scale
 		components.add(new GUISelector<Color>(
 				new Vector3f((float)-Constants.WIDTH/2f+(float)Constants.WIDTH/5.5f,0f,-0.5f),
 				Constants.WIDTH/3f,
 				Constants.HEIGHT/10f,
-				FontType.DK_KITSUNE_TAIL,
+				FontType.CAPTAIN,
 				Color.WHITE,
 				new GUISelectorItem<>(Color.WHITE, "Blanc"),
 				new GUISelectorItem<>(Color.BLACK, "Noir")));
 		components.add(new GUIText("Couleur secondaire", //text
 				new Vector3f((float)-Constants.WIDTH/2f+(float)Constants.WIDTH/5.5f,(float)-Constants.HEIGHT/9f,-0.5f), //pos
 				0f, //rot
-				FontType.DK_KITSUNE_TAIL, //font
+				FontType.CAPTAIN, //font
 				Color.WHITE, // color
 				ratio*0.3f)); //scale
 		components.add(new GUISelector<Color>(
 				new Vector3f((float)-Constants.WIDTH/2f+(float)Constants.WIDTH/5.5f,(float)-Constants.HEIGHT/5f,-0.5f),
 				Constants.WIDTH/3f,
 				Constants.HEIGHT/10f,
-				FontType.DK_KITSUNE_TAIL,
+				FontType.CAPTAIN,
 				Color.WHITE,
 				new GUISelectorItem<>(Color.WHITE, "Blanc"),
 				new GUISelectorItem<>(Color.BLACK, "Noir")));
 		components.add(new GUIText("//TODO", //text
 				new Vector3f((float)Constants.WIDTH/2f-(float)Constants.WIDTH/5.5f,0f,-0.5f), //pos
 				0f, //rot
-				FontType.DK_KITSUNE_TAIL, //font
+				FontType.CAPTAIN, //font
 				Color.WHITE, // color
 				ratio*0.3f)); //scale
 		components.add(new GUIText("//TODO", //text
 				new Vector3f((float)Constants.WIDTH/2f-(float)Constants.WIDTH/5.5f,(float)Constants.HEIGHT/5.5f,-0.5f), //pos
 				0f, //rot
-				FontType.DK_KITSUNE_TAIL, //font
+				FontType.CAPTAIN, //font
 				Color.WHITE, // color
 				ratio*0.3f)); //scale
 		components.add(new GUIText("//TODO", //text
 				new Vector3f((float)Constants.WIDTH/2f-(float)Constants.WIDTH/5.5f,(float)-Constants.HEIGHT/5.5f,-0.5f), //pos
 				0f, //rot
-				FontType.DK_KITSUNE_TAIL, //font
+				FontType.CAPTAIN, //font
 				Color.WHITE, // color
 				ratio*0.3f)); //scale
 		character = new Character(Species.FOX, Color.WHITE, Color.BLACK, "", new CharacterAnimation("/anim/wolf_head_normal.anim", "/img/human_walk_texture.png"), ratio);

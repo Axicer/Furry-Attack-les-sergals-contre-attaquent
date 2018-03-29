@@ -13,7 +13,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -27,17 +29,28 @@ import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.config.Configuration;
 import fr.axicer.furryattack.util.config.FileManager;
 
-public enum FontType {
-	DK_KITSUNE_TAIL("dkkt.ttf", Font.PLAIN, 100);
+public class FontType {
+	//CAPTAIN("captain.ttf", Font.PLAIN, 100);
 	
+	public static FontType CAPTAIN;
+	
+	private static List<FontType> fonts;
+	
+	private String name;
 	private Font f;
 	private Texture tex;
 	private int width, height;
 	private Map<Character, CharInfo> charMap;
 	
-	private FontType(String name, int style, int size) {
+	public static void initalize(boolean recreate) {
+		fonts = new ArrayList<>();
+		CAPTAIN = new FontType("captain", "captain.ttf", Font.PLAIN, 100, recreate);
+		fonts.add(CAPTAIN);
+	}
+	
+	private FontType(String name, String fileName, int style, int size, boolean recreate) {
 		try {
-			Font realFont = Font.createFont(Font.TRUETYPE_FONT, FontType.class.getResourceAsStream("/font/"+name));
+			Font realFont = Font.createFont(Font.TRUETYPE_FONT, FontType.class.getResourceAsStream("/font/"+fileName));
 			this.f = realFont.deriveFont(style, size);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(f);
@@ -47,7 +60,7 @@ public enum FontType {
 		}
 		this.charMap = new HashMap<>();
 		try {
-			buildTexture();
+			buildTexture(recreate);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -64,10 +77,10 @@ public enum FontType {
 	    return result.toString();
 	}
 	
-	private void buildTexture() throws Exception {
+	private void buildTexture(boolean recreate) throws Exception {
 		File charTextureFile = new File(FileManager.IMAGE_FOLDER_FILE, "charMap.png");
 		File charTextureConfigFile = new File(FileManager.CONFIG_FOLDER_FILE, "charTexture.json");
-		if(!charTextureFile.exists() || !charTextureConfigFile.exists()) {
+		if(!charTextureFile.exists() || !charTextureConfigFile.exists() || recreate) {
 			// Get the font metrics for each character for the selected font by using image
 		    BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 		    Graphics2D g2D = img.createGraphics();
@@ -149,5 +162,20 @@ public enum FontType {
 
 	public Map<Character, CharInfo> getCharMap() {
 		return charMap;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public static FontType getFontType(String name) {
+		for(FontType typ : fonts) {
+			if(typ.name.equalsIgnoreCase(name))return typ;
+		}
+		return null;
 	}
 }

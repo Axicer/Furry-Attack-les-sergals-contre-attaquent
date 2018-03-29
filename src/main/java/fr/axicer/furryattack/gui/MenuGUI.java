@@ -16,6 +16,7 @@ public class MenuGUI extends GUI{
 	public MenuGUI() {
 		super("menu");
 		float ratio = (float)Constants.WIDTH/(float)Constants.HEIGHT;
+		
 		components.add(new GUIImage("/img/gui/background/menu-bg.png", //imgPath
 									Constants.WIDTH, //width
 									Constants.HEIGHT, //height
@@ -23,14 +24,14 @@ public class MenuGUI extends GUI{
 		components.add(new GUIText("FURRY-ATTACK", //text
 									new Vector3f(0f,  4f*Constants.HEIGHT/10f, -1f), //pos
 									0f, //rot
-									FontType.DK_KITSUNE_TAIL, //font
+									FontType.CAPTAIN, //font
 									new Color(255, 50, 50, 255), //color
 									ratio*0.5f)); //scale
 		
 		components.add(new GUIText("Les sergals contre attaquent",
 									new Vector3f(0f, 3f*Constants.HEIGHT/10f, -1f),
 									0f,
-									FontType.DK_KITSUNE_TAIL,
+									FontType.CAPTAIN,
 									new Color(50, 255, 255, 255),
 									ratio*0.5f));
 		
@@ -39,7 +40,7 @@ public class MenuGUI extends GUI{
 									Constants.WIDTH/4f, //width
 									Constants.HEIGHT/12f, //height
 									ratio*0.5f, //scale
-									FontType.DK_KITSUNE_TAIL, //font
+									FontType.CAPTAIN, //font
 									Color.WHITE, //color
 									new Vector3f(0f, Constants.HEIGHT/10f, -1f), //pos
 									0f, //rot
@@ -49,7 +50,7 @@ public class MenuGUI extends GUI{
 									Constants.WIDTH/4f,
 									Constants.HEIGHT/12f,
 									ratio*0.5f,
-									FontType.DK_KITSUNE_TAIL,
+									FontType.CAPTAIN,
 									Color.WHITE,
 									new Vector3f(0f, 0f, -1f),
 									0f,
@@ -59,7 +60,7 @@ public class MenuGUI extends GUI{
 									Constants.WIDTH/4f,
 									Constants.HEIGHT/12f,
 									ratio*0.5f,
-									FontType.DK_KITSUNE_TAIL,
+									FontType.CAPTAIN,
 									Color.WHITE,
 									new Vector3f(0f, -Constants.HEIGHT/10f, -1f),
 									0f,
@@ -73,7 +74,7 @@ public class MenuGUI extends GUI{
 									Constants.WIDTH/4f,
 									Constants.HEIGHT/12f,
 									ratio*0.5f,
-									FontType.DK_KITSUNE_TAIL,
+									FontType.CAPTAIN,
 									Color.WHITE,
 									new Vector3f(0f, -2*Constants.HEIGHT/10f, -1f),
 									0f,
@@ -83,7 +84,7 @@ public class MenuGUI extends GUI{
 									Constants.WIDTH/4f,
 									Constants.HEIGHT/12f,
 									ratio*0.5f,
-									FontType.DK_KITSUNE_TAIL,
+									FontType.CAPTAIN,
 									Color.WHITE,
 									new Vector3f(0f, -3*Constants.HEIGHT/10f, -1f),
 									0f,
@@ -98,11 +99,15 @@ public class MenuGUI extends GUI{
 									Constants.WIDTH/8f,
 									Constants.HEIGHT/12f,
 									ratio*0.5f,
-									FontType.DK_KITSUNE_TAIL,
+									FontType.CAPTAIN,
 									Color.WHITE,
 									new Vector3f(-Constants.WIDTH/2f+150f, -Constants.HEIGHT/2+100f, -1f),
 									0f,
-									null));
+									new Runnable() {
+										public void run() {
+											FurryAttack.getInstance().getGuiManager().setGUI(GUIManager.OPTIONS_MENU);
+										}
+									}));
 	}
 
 	@Override

@@ -23,12 +23,13 @@ import fr.axicer.furryattack.gui.GUIManager;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
 import fr.axicer.furryattack.util.Constants;
+import fr.axicer.furryattack.util.Util;
 import fr.axicer.furryattack.util.config.FileManager;
-import fr.axicer.furryattack.util.config.lang.Language;
 import fr.axicer.furryattack.util.control.KeyboardHandler;
 import fr.axicer.furryattack.util.control.MouseButtonHandler;
 import fr.axicer.furryattack.util.control.MouseHandler;
 import fr.axicer.furryattack.util.events.EventManager;
+import fr.axicer.furryattack.util.font.FontType;
 
 public class FurryAttack implements Renderable, Updateable{
 	
@@ -56,15 +57,14 @@ public class FurryAttack implements Renderable, Updateable{
 	
 	private Logger logger = LoggerFactory.getLogger(FurryAttack.class);
 	
-	public void run() {
+	public void run(String[] args) {
 		logger.debug("Hello LWJGL " + Version.getVersion() + "!");
-		
-		init();
+		init(args);
 		loop();
 		exit();
 	}
 
-	private void init() {
+	private void init(String[] args) {
 		//because OSX don't like awt fonts ><
 		System.setProperty("java.awt.headless", "true");
 		
@@ -124,6 +124,8 @@ public class FurryAttack implements Renderable, Updateable{
 
 		// Set the clear color
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		
+		FontType.initalize(Util.contains(args, "-forcechars"));
 		
 		projectionMatrix = new Matrix4f().ortho(-Constants.WIDTH/2, Constants.WIDTH/2, -Constants.HEIGHT/2, Constants.HEIGHT/2, 0.1f, 1000.0f);
 		viewMatrix = new Matrix4f().identity();
@@ -227,6 +229,6 @@ public class FurryAttack implements Renderable, Updateable{
 		Constants.initialize(args);
 		screenid = Constants.MAIN_CONFIG.getInt("screenid");
 		
-		getInstance().run();
+		getInstance().run(args);
 	}
 }

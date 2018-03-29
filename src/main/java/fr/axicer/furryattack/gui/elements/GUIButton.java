@@ -47,7 +47,7 @@ public class GUIButton extends GUIComponent{
 	}
 	
 	public GUIButton(String text, float width, float heigth, Color textColor, Runnable action) {
-		this(text, 1f, width, heigth, "/img/gui/button/button.png", "/img/gui/button/button_hover.png", 1f, FontType.DK_KITSUNE_TAIL, textColor, new Vector3f(), 0f, action);
+		this(text, 1f, width, heigth, "/img/gui/button/button.png", "/img/gui/button/button_hover.png", 1f, FontType.CAPTAIN, textColor, new Vector3f(), 0f, action);
 	}
 	
 	public GUIButton(String text, float textMul ,float width, float height, float scale, FontType type, Color textColor, Vector3f pos, float rot, Runnable action) {

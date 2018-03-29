@@ -10,12 +10,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 
+import org.joml.Vector3f;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import fr.axicer.furryattack.util.Color;
+import fr.axicer.furryattack.util.font.FontType;
 
 public class Configuration {
 	
@@ -813,6 +817,57 @@ public class Configuration {
 			}
 		}
 		return false;
+	}
+	
+	public Color getColor(String path, Color replaceValue) {
+		JSONArray colorRoot = getJSONArray(path);
+		if(colorRoot != null) {
+			int r = getInt(path+".0");
+			int g = getInt(path+".1");
+			int b = getInt(path+".2");
+			int a = getInt(path+".3");
+			return new Color(r, g, b, a);
+		}
+		return replaceValue;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void setColor(String path, Color value, boolean forcecreation) {
+		JSONArray array = new JSONArray();
+		array.add(value.x);
+		array.add(value.y);
+		array.add(value.z);
+		array.add(value.w);
+		setJSONArray(path, array, forcecreation);
+	}
+	
+	public FontType getFontType(String path, FontType replaceValue) {
+		FontType type =  FontType.getFontType(getString(path));
+		return type == null ? replaceValue : type;
+	}
+	
+	public void setFontType(String path, FontType value, boolean forcecreation) {
+		setString(path, value.getName(), forcecreation);
+	}
+	
+	public Vector3f getVector3f(String path, Vector3f replaceValue) {
+		JSONArray colorRoot = getJSONArray(path);
+		if(colorRoot != null) {
+			float x = getFloat(path+".0");
+			float y = getFloat(path+".1");
+			float z = getFloat(path+".2");
+			return new Vector3f(x, y, z);
+		}
+		return replaceValue;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void setVector3f(String path, Vector3f value, boolean forcecreation) {
+		JSONArray array = new JSONArray();
+		array.add(value.x);
+		array.add(value.y);
+		array.add(value.z);
+		setJSONArray(path, array, forcecreation);
 	}
 	
 	private static String getStringFromInputStream(InputStream is) {

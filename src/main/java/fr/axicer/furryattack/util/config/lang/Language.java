@@ -7,6 +7,10 @@ import fr.axicer.furryattack.util.config.Configuration;
 
 public class Language extends Configuration{
 	
+	public static final String TRANSLATION_GOLBAL_PATH = "translation.";
+	public static final String NULL_GLOBAL_VARIABLE_MSG = "[null global variable]";
+	public static final String NULL_ARGUMENT_VARIABLE_MSG = "[null argument variable]";
+	
 	public Language(String name) {
 		super("/lang/"+name+".json");
 	}
@@ -22,7 +26,7 @@ public class Language extends Configuration{
 	}
 	
 	public String getTranslation(String path, String replaceIfNull, String... values) {
-		String rawString = getText(path, replaceIfNull);
+		String rawString = getText(TRANSLATION_GOLBAL_PATH+path, replaceIfNull);
 		
 		String[] globalPartsSplitted = rawString.split("[@][^ ]{1,}");
 		Pattern globalPattern = Pattern.compile("[@][^ ]{1,}");
@@ -31,7 +35,7 @@ public class Language extends Configuration{
 		globalBuilder.append(globalPartsSplitted[0]);
 		int globalPartsId = 1;
 		while(globalMatcher.find()) {
-			globalBuilder.append(getRawText(globalMatcher.group().substring(1)));
+			globalBuilder.append(getTranslation(globalMatcher.group().substring(1), NULL_GLOBAL_VARIABLE_MSG, values));
 			if(globalPartsId < globalPartsSplitted.length)globalBuilder.append(globalPartsSplitted[globalPartsId]);
 			globalPartsId++;
 		}
@@ -44,7 +48,12 @@ public class Language extends Configuration{
 		builder.append(partsSplitted[0]);
 		int partsId = 1;
 		while(matcher.find()) {
-			builder.append(values[Integer.parseInt(matcher.group().substring(1))]);
+			int id = Integer.parseInt(matcher.group().substring(1));
+			if(id < 0 || id > values.length) {
+				builder.append(NULL_ARGUMENT_VARIABLE_MSG);
+			}else {
+				builder.append(values[id]);
+			}
 			if(partsId < partsSplitted.length)builder.append(partsSplitted[partsId]);
 			partsId++;
 		}
