@@ -15,9 +15,9 @@ public class CharacterAnimation extends Configuration{
 		super(AnimPath);
 		this.actual = 0;
 		this.actualTick = 0;
-		this.countX = getInt("counts.x");
-		this.countY = getInt("counts.y");
-		this.tickCount = getInt("interval");
+		this.countX = getInt("counts.x", 0);
+		this.countY = getInt("counts.y", 0);
+		this.tickCount = getInt("interval", 0);
 		this.texture = Texture.loadTexture(texturePath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_LINEAR);
 	}
 	

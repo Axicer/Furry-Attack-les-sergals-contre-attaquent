@@ -35,10 +35,10 @@ public class Constants {
 			MAIN_CONFIG.setInt("screenid", Integer.valueOf(System.getProperty("fullscreenid", "0")), true);
 			MAIN_CONFIG.save(new File(FileManager.CONFIG_FOLDER_FILE, "main.json"));
 		}
-		Constants.FULLSCREEN = MAIN_CONFIG.getBoolean("fullscreen");
-		Constants.V_SYNC = MAIN_CONFIG.getBoolean("vsync");
-		Constants.WIDTH = MAIN_CONFIG.getInt("width");
-		Constants.HEIGHT = MAIN_CONFIG.getInt("height");
+		Constants.FULLSCREEN = MAIN_CONFIG.getBoolean("fullscreen",false);
+		Constants.V_SYNC = MAIN_CONFIG.getBoolean("vsync",false);
+		Constants.WIDTH = MAIN_CONFIG.getInt("width", 800);
+		Constants.HEIGHT = MAIN_CONFIG.getInt("height", 600);
 	}
 	
 }

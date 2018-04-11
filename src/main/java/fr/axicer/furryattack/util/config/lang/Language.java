@@ -16,7 +16,7 @@ public class Language extends Configuration{
 	}
 	
 	public String getRawText(String path) {
-		return getString(path);
+		return getString(path, null);
 	}
 	
 	public String getText(String path, String replaceIfNull) {

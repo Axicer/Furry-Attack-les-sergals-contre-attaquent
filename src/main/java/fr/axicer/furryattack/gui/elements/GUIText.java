@@ -1,7 +1,6 @@
 package fr.axicer.furryattack.gui.elements;
 
 import java.nio.FloatBuffer;
-import java.nio.charset.Charset;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -55,23 +54,19 @@ public class GUIText extends GUIComponent{
 	}
 	
 	private void initRender(){
-		byte[] chars = text.getBytes(Charset.forName(Constants.ENCODING));
-	    
-	    FloatBuffer vertices = BufferUtils.createFloatBuffer(chars.length*6*3);
-	    FloatBuffer textures = BufferUtils.createFloatBuffer(chars.length*6*2);
+		FloatBuffer vertices = BufferUtils.createFloatBuffer(text.length()*6*3);
+	    FloatBuffer textures = BufferUtils.createFloatBuffer(text.length()*6*2);
 	    
 	    float startx = 0;
 	    
 	    float textWidth = 0;
-	    for(int i=0; i<chars.length; i++) {
-	    	byte currChar = chars[i];
-	        CharInfo charInfo = type.getCharMap().get((char)currChar);
-	        textWidth+= charInfo.width;
+	    for(char c : text.toCharArray()) {
+	    	CharInfo charInfo = type.getCharMap().get(String.valueOf(c));
+	    	textWidth+= charInfo.width;
 	    }
 	    
-	    for(int i=0; i<chars.length; i++) {
-	        byte currChar = chars[i];
-	        CharInfo charInfo = type.getCharMap().get((char)currChar);
+	    for(char c : text.toCharArray()) {
+	        CharInfo charInfo = type.getCharMap().get(String.valueOf(c));
 	        // Build a character tile composed by two triangles
 
 	        // Left Top vertex
@@ -190,7 +185,6 @@ public class GUIText extends GUIComponent{
 		this.text = text;
 		if(VERTICES_VBO != 0 || TEXCOORD_VBO != 0) destroy();
 		initRender();
-		
 	}
 
 	public Matrix4f getModelMatrix() {

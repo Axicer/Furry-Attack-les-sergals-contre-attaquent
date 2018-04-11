@@ -27,4 +27,11 @@ public class KeyboardHandler extends GLFWKeyCallback{
 	public static boolean isKeyDownOnce(int keycode) {
 		return newKeys[keycode];
 	}
+	
+	public static int getFirstKeyDown() {
+		for(int i = 0 ; i < keys.length ; i++) {
+			if(keys[i])return i;
+		}
+		return -1;
+	}
 }

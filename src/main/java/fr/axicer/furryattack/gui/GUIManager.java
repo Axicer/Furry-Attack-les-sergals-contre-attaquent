@@ -9,6 +9,7 @@ public class GUIManager implements Renderable,Updateable,Destroyable{
 	public static GUI MENU;
 	public static GUI CHARACTER_CUSTOMISATION_MENU;
 	public static GUI OPTIONS_MENU;
+	public static GUI CONTROL_MENU;
 	
 	private GUI actualGUI;
 	
@@ -16,6 +17,7 @@ public class GUIManager implements Renderable,Updateable,Destroyable{
 		MENU = new MenuGUI();
 		CHARACTER_CUSTOMISATION_MENU = new CharacterCustomisationMenuGUI();
 		OPTIONS_MENU = new OptionsMenu();
+		CONTROL_MENU = new ControlGUI();
 		//TODO add GUIs
 		this.actualGUI = MENU;
 	}

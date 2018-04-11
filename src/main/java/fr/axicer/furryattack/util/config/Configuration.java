@@ -24,9 +24,9 @@ import fr.axicer.furryattack.util.font.FontType;
 public class Configuration {
 	
 	private static final String CONFIG_READ_PATH_ERROR_MSG = "ERROR IN PATH READING !";
-	private static final int CONFIG_READ_PATH_ERROR_ID = -1;
+	private static final int CONFIG_READ_PATH_ERROR_ID = Integer.MAX_VALUE;
 	private static final String CONFIG_READ_VALUE_ERROR_MSG = "ERROR IN VALUE READING !";
-	private static final int CONFIG_READ_VALUE_ERROR_ID = -2;
+	private static final int CONFIG_READ_VALUE_ERROR_ID = Integer.MIN_VALUE;
 	
 	private static final String CONFIG_WRITE_PATH_FORCE_ERROR_MSG = "ERROR IN PATH WRITING ! Force writing is disabled !";
 	private static final String CONFIG_WRITE_PATH_VALUE_ERROR_MSG = "ERROR IN PATH WRITING !";
@@ -63,11 +63,11 @@ public class Configuration {
 		}
 	}
 	
-	public String getString(String path) {
+	public String getString(String path, String replace) {
 		String[] nodes = path.split("\\.");
 		Object cur = root;
 		for(int i = 0 ; i < nodes.length ; i++) {
-			String realNode = nodes[i].replaceFirst("\\[", "");
+			String realNode = nodes[i].length() != 1 ? nodes[i].replaceFirst("\\[", "") : nodes[i];
 			if(i < nodes.length-1) {
 				if(cur instanceof JSONArray) {
 					cur = ((JSONArray) cur).get(Integer.parseInt(realNode));
@@ -75,36 +75,36 @@ public class Configuration {
 					cur = ((JSONObject)cur).get(realNode);
 				}else {
 					logger.warn("Error while reading path ! setting value to \""+CONFIG_READ_PATH_ERROR_MSG+"\" for path: "+path);
-					return CONFIG_READ_PATH_ERROR_MSG;
+					return replace;
 				}
 			}else {
 				if(cur instanceof JSONArray) {
 					Object val = ((JSONArray)cur).get(Integer.parseInt(realNode));
 					if(!(val instanceof String)) {
 						logger.warn("Error while getting value of path ! setting value to \""+CONFIG_READ_VALUE_ERROR_MSG+"\" for path:"+path);
-						return CONFIG_READ_VALUE_ERROR_MSG;
+						return replace;
 					}
 					return (String) val;
 				}else if(cur instanceof JSONObject) {
 					Object val = (String)((JSONObject)cur).get(realNode);
 					if(!(val instanceof String)) {
 						logger.warn("Error while getting value of path ! setting value to \""+CONFIG_READ_VALUE_ERROR_MSG+"\" for path:"+path);
-						return CONFIG_READ_VALUE_ERROR_MSG;
+						return replace;
 					}
 					return (String) val;
 				}else {
 					logger.warn("Error while reading path ! setting value to \""+CONFIG_READ_PATH_ERROR_MSG+"\" for path: "+path);
-					return CONFIG_READ_PATH_ERROR_MSG;
+					return replace;
 				}
 			}
 		}
 		return null;
 	}
-	public int getInt(String path) {
+	public int getInt(String path, int replace) {
 		String[] nodes = path.split("\\.");
 		Object cur = root;
 		for(int i = 0 ; i < nodes.length ; i++) {
-			String realNode = nodes[i].replaceFirst("\\[", "");
+			String realNode = nodes[i].length() != 1 ? nodes[i].replaceFirst("\\[", "") : nodes[i];
 			if(i < nodes.length-1) {
 				if(cur instanceof JSONArray) {
 					cur = ((JSONArray) cur).get(Integer.parseInt(realNode));
@@ -112,14 +112,14 @@ public class Configuration {
 					cur = ((JSONObject)cur).get(realNode);
 				}else {
 					logger.warn("Error while reading path ! setting value to \""+CONFIG_READ_PATH_ERROR_ID+"\" for path: "+path);
-					return CONFIG_READ_PATH_ERROR_ID;
+					return replace;
 				}
 			}else {
 				if(cur instanceof JSONArray) {
 					Object val = ((JSONArray)cur).get(Integer.parseInt(realNode));
 					if(!(val instanceof Long) && !(val instanceof Integer)) {
 						logger.warn("Error while getting value of path ! setting value to \""+CONFIG_READ_VALUE_ERROR_ID+"\" for path: "+path);
-						return CONFIG_READ_VALUE_ERROR_ID;
+						return replace;
 					}
 					if(val instanceof Long)return Math.toIntExact((long) val);
 					else return (int) val;
@@ -127,23 +127,23 @@ public class Configuration {
 					Object val = ((JSONObject)cur).get(realNode);
 					if(!(val instanceof Long) && !(val instanceof Integer)) {
 						logger.warn("Error while getting value of path ! setting value to \""+CONFIG_READ_VALUE_ERROR_ID+"\" for path: "+path);
-						return CONFIG_READ_VALUE_ERROR_ID;
+						return replace;
 					}
 					if(val instanceof Long)return Math.toIntExact((long) val);
 					else return (int) val;
 				}else {
 					logger.warn("Error while reading path ! setting value to \""+CONFIG_READ_PATH_ERROR_ID+"\" for path: "+path);
-					return CONFIG_READ_PATH_ERROR_ID;
+					return replace;
 				}
 			}
 		}
 		return 0;
 	}
-	public float getFloat(String path) {
+	public float getFloat(String path, float replace) {
 		String[] nodes = path.split("\\.");
 		Object cur = root;
 		for(int i = 0 ; i < nodes.length ; i++) {
-			String realNode = nodes[i].replaceFirst("\\[", "");
+			String realNode = nodes[i].length() != 1 ? nodes[i].replaceFirst("\\[", "") : nodes[i];
 			if(i < nodes.length-1) {
 				if(cur instanceof JSONArray) {
 					cur = ((JSONArray) cur).get(Integer.parseInt(realNode));
@@ -151,36 +151,36 @@ public class Configuration {
 					cur = ((JSONObject)cur).get(realNode);
 				}else {
 					logger.warn("Error while reading path ! setting value to \""+CONFIG_READ_PATH_ERROR_ID+"\" for path: "+path);
-					return CONFIG_READ_PATH_ERROR_ID;
+					return replace;
 				}
 			}else {
 				if(cur instanceof JSONArray) {
 					Object val = ((JSONArray)cur).get(Integer.parseInt(realNode));
 					if(!(val instanceof Double)) {
 						logger.warn("Error while getting value of path ! setting value to \""+CONFIG_READ_VALUE_ERROR_ID+"\" for path:"+path);
-						return CONFIG_READ_VALUE_ERROR_ID;
+						return replace;
 					}
 					return ((Double)val).floatValue();
 				}else if(cur instanceof JSONObject) {
 					Object val = ((JSONObject)cur).get(realNode);
 					if(!(val instanceof Double)) {
 						logger.warn("Error while getting value of path ! setting value to \""+CONFIG_READ_VALUE_ERROR_ID+"\" for path:"+path);
-						return CONFIG_READ_VALUE_ERROR_ID;
+						return replace;
 					}
 					return ((Double)val).floatValue();
 				}else {
 					logger.warn("Error while reading path ! setting value to \""+CONFIG_READ_PATH_ERROR_ID+"\" for path: "+path);
-					return CONFIG_READ_PATH_ERROR_ID;
+					return replace;
 				}
 			}
 		}
 		return 0;
 	}
-	public double getDouble(String path) {
+	public double getDouble(String path, double replace) {
 		String[] nodes = path.split("\\.");
 		Object cur = root;
 		for(int i = 0 ; i < nodes.length ; i++) {
-			String realNode = nodes[i].replaceFirst("\\[", "");
+			String realNode = nodes[i].length() != 1 ? nodes[i].replaceFirst("\\[", "") : nodes[i];
 			if(i < nodes.length-1) {
 				if(cur instanceof JSONArray) {
 					cur = ((JSONArray) cur).get(Integer.parseInt(realNode));
@@ -188,36 +188,36 @@ public class Configuration {
 					cur = ((JSONObject)cur).get(realNode);
 				}else {
 					logger.warn("Error while reading path ! setting value to \""+CONFIG_READ_PATH_ERROR_ID+"\" for path: "+path);
-					return CONFIG_READ_PATH_ERROR_ID;
+					return replace;
 				}
 			}else {
 				if(cur instanceof JSONArray) {
 					Object val = ((JSONArray)cur).get(Integer.parseInt(realNode));
 					if(!(val instanceof Double)) {
 						logger.warn("Error while getting value of path ! setting value to \""+CONFIG_READ_VALUE_ERROR_ID+"\" for path:"+path);
-						return CONFIG_READ_VALUE_ERROR_ID;
+						return replace;
 					}
 					return (double) val;
 				}else if(cur instanceof JSONObject) {
 					Object val = ((JSONObject)cur).get(realNode);
 					if(!(val instanceof Double)) {
 						logger.warn("Error while getting value of path ! setting value to \""+CONFIG_READ_VALUE_ERROR_ID+"\" for path:"+path);
-						return CONFIG_READ_VALUE_ERROR_ID;
+						return replace;
 					}
 					return (double) val;
 				}else {
 					logger.warn("Error while reading path ! setting value to \""+CONFIG_READ_PATH_ERROR_ID+"\" for path: "+path);
-					return CONFIG_READ_PATH_ERROR_ID;
+					return replace;
 				}
 			}
 		}
 		return 0;
 	}
-	public boolean getBoolean(String path) {
+	public boolean getBoolean(String path, boolean replace) {
 		String[] nodes = path.split("\\.");
 		Object cur = root;
 		for(int i = 0 ; i < nodes.length ; i++) {
-			String realNode = nodes[i].replaceFirst("\\[", "");
+			String realNode = nodes[i].length() != 1 ? nodes[i].replaceFirst("\\[", "") : nodes[i];
 			if(i < nodes.length-1) {
 				if(cur instanceof JSONArray) {
 					cur = ((JSONArray) cur).get(Integer.parseInt(realNode));
@@ -225,36 +225,36 @@ public class Configuration {
 					cur = ((JSONObject)cur).get(realNode);
 				}else {
 					logger.warn("Error while reading path ! setting value to \"false\" for path: "+path);
-					return false;
+					return replace;
 				}
 			}else {
 				if(cur instanceof JSONArray) {
 					Object val = ((JSONArray)cur).get(Integer.parseInt(realNode));
 					if(!(val instanceof Boolean)) {
 						logger.warn("Error while getting value of path ! setting value to \"false\" for path:"+path);
-						return false;
+						return replace;
 					}
 					return (boolean) val;
 				}else if(cur instanceof JSONObject) {
 					Object val = ((JSONObject)cur).get(realNode);
 					if(!(val instanceof Boolean)) {
 						logger.warn("Error while getting value of path ! setting value to \"false\" for path:"+path);
-						return false;
+						return replace;
 					}
 					return (boolean) val;
 				}else {
 					logger.warn("Error while reading path ! setting value to \"false\" for path: "+path);
-					return false;
+					return replace;
 				}
 			}
 		}
 		return false;
 	}
-	public JSONObject getJSONObject(String path) {
+	public JSONObject getJSONObject(String path, JSONObject replace) {
 		String[] nodes = path.split("\\.");
 		Object cur = root;
 		for(int i = 0 ; i < nodes.length ; i++) {
-			String realNode = nodes[i].replaceFirst("\\[", "");
+			String realNode = nodes[i].length() != 1 ? nodes[i].replaceFirst("\\[", "") : nodes[i];
 			if(i < nodes.length-1) {
 				if(cur instanceof JSONArray) {
 					cur = ((JSONArray) cur).get(Integer.parseInt(realNode));
@@ -262,36 +262,36 @@ public class Configuration {
 					cur = ((JSONObject)cur).get(realNode);
 				}else {
 					logger.warn("Error while reading path ! setting value to null for path: "+path);
-					return null;
+					return replace;
 				}
 			}else {
 				if(cur instanceof JSONArray) {
 					Object val = ((JSONArray)cur).get(Integer.parseInt(realNode));
 					if(!(val instanceof JSONObject)) {
 						logger.warn("Error while getting value of path ! setting value to null for path:"+path);
-						return null;
+						return replace;
 					}
 					return (JSONObject) val;
 				}else if(cur instanceof JSONObject) {
 					Object val = ((JSONObject)cur).get(realNode);
 					if(!(val instanceof JSONObject)) {
 						logger.warn("Error while getting value of path ! setting value to null for path:"+path);
-						return null;
+						return replace;
 					}
 					return (JSONObject) val;
 				}else {
 					logger.warn("Error while reading path ! setting value to null for path: "+path);
-					return null;
+					return replace;
 				}
 			}
 		}
 		return null;
 	}
-	public JSONArray getJSONArray(String path) {
+	public JSONArray getJSONArray(String path, JSONArray replace) {
 		String[] nodes = path.split("\\.");
 		Object cur = root;
 		for(int i = 0 ; i < nodes.length ; i++) {
-			String realNode = nodes[i].replaceFirst("\\[", "");
+			String realNode = nodes[i].length() != 1 ? nodes[i].replaceFirst("\\[", "") : nodes[i];
 			if(i < nodes.length-1) {
 				if(cur instanceof JSONArray) {
 					cur = ((JSONArray) cur).get(Integer.parseInt(realNode));
@@ -299,26 +299,26 @@ public class Configuration {
 					cur = ((JSONObject)cur).get(realNode);
 				}else {
 					logger.warn("Error while reading path ! setting value to null for path: "+path);
-					return null;
+					return replace;
 				}
 			}else {
 				if(cur instanceof JSONArray) {
 					Object val = ((JSONArray)cur).get(Integer.parseInt(realNode));
 					if(!(val instanceof JSONArray)) {
 						logger.warn("Error while getting value of path ! setting value to null for path:"+path);
-						return null;
+						return replace;
 					}
 					return (JSONArray) val;
 				}else if(cur instanceof JSONObject) {
 					Object val = ((JSONObject)cur).get(realNode);
 					if(!(val instanceof JSONArray)) {
 						logger.warn("Error while getting value of path ! setting value to null for path:"+path);
-						return null;
+						return replace;
 					}
 					return (JSONArray) val;
 				}else {
 					logger.warn("Error while reading path ! setting value to null for path: "+path);
-					return null;
+					return replace;
 				}
 			}
 		}
@@ -334,7 +334,7 @@ public class Configuration {
 		String[] nodes = path.split("\\.");
 		Object cur = root;
 		for(int i = 0 ; i < nodes.length ; i++) {
-			String realNode = nodes[i].replaceFirst("\\[", "");
+			String realNode = nodes[i].length() != 1 ? nodes[i].replaceFirst("\\[", "") : nodes[i];
 			if(i < nodes.length-1) {
 				if(cur instanceof JSONObject) {
 					Object val = ((JSONObject)cur).get(realNode);
@@ -343,7 +343,7 @@ public class Configuration {
 					}else {
 						if(forceCreation) {
 							Object nObj = null;
-							if(nodes[i].startsWith("[")) {
+							if(nodes[i].length() != 1 && nodes[i].startsWith("[")) {
 								nObj = new JSONArray();
 							}else {
 								nObj = new JSONObject();
@@ -361,7 +361,7 @@ public class Configuration {
 					}else {
 						if(forceCreation) {
 							Object nObj = null;
-							if(nodes[i].startsWith("[")) {
+							if(nodes[i].length() != 1 && nodes[i].startsWith("[")) {
 								nObj = new JSONArray();
 							}else {
 								nObj = new JSONObject();
@@ -401,7 +401,7 @@ public class Configuration {
 		String[] nodes = path.split("\\.");
 		Object cur = root;
 		for(int i = 0 ; i < nodes.length ; i++) {
-			String realNode = nodes[i].replaceFirst("\\[", "");
+			String realNode = nodes[i].length() != 1 ? nodes[i].replaceFirst("\\[", "") : nodes[i];
 			if(i < nodes.length-1) {
 				if(cur instanceof JSONObject) {
 					Object val = ((JSONObject)cur).get(realNode);
@@ -410,7 +410,7 @@ public class Configuration {
 					}else {
 						if(forceCreation) {
 							Object nObj = null;
-							if(nodes[i].startsWith("[")) {
+							if(nodes[i].length() != 1 && nodes[i].startsWith("[")) {
 								nObj = new JSONArray();
 							}else {
 								nObj = new JSONObject();
@@ -428,7 +428,7 @@ public class Configuration {
 					}else {
 						if(forceCreation) {
 							Object nObj = null;
-							if(nodes[i].startsWith("[")) {
+							if(nodes[i].length() != 1 && nodes[i].startsWith("[")) {
 								nObj = new JSONArray();
 							}else {
 								nObj = new JSONObject();
@@ -468,7 +468,7 @@ public class Configuration {
 		String[] nodes = path.split("\\.");
 		Object cur = root;
 		for(int i = 0 ; i < nodes.length ; i++) {
-			String realNode = nodes[i].replaceFirst("\\[", "");
+			String realNode = nodes[i].length() != 1 ? nodes[i].replaceFirst("\\[", "") : nodes[i];
 			if(i < nodes.length-1) {
 				if(cur instanceof JSONObject) {
 					Object val = ((JSONObject)cur).get(realNode);
@@ -477,7 +477,7 @@ public class Configuration {
 					}else {
 						if(forceCreation) {
 							Object nObj = null;
-							if(nodes[i].startsWith("[")) {
+							if(nodes[i].length() != 1 && nodes[i].startsWith("[")) {
 								nObj = new JSONArray();
 							}else {
 								nObj = new JSONObject();
@@ -495,7 +495,7 @@ public class Configuration {
 					}else {
 						if(forceCreation) {
 							Object nObj = null;
-							if(nodes[i].startsWith("[")) {
+							if(nodes[i].length() != 1 && nodes[i].startsWith("[")) {
 								nObj = new JSONArray();
 							}else {
 								nObj = new JSONObject();
@@ -535,7 +535,7 @@ public class Configuration {
 		String[] nodes = path.split("\\.");
 		Object cur = root;
 		for(int i = 0 ; i < nodes.length ; i++) {
-			String realNode = nodes[i].replaceFirst("\\[", "");
+			String realNode = nodes[i].length() != 1 ? nodes[i].replaceFirst("\\[", "") : nodes[i];
 			if(i < nodes.length-1) {
 				if(cur instanceof JSONObject) {
 					Object val = ((JSONObject)cur).get(realNode);
@@ -544,7 +544,7 @@ public class Configuration {
 					}else {
 						if(forceCreation) {
 							Object nObj = null;
-							if(nodes[i].startsWith("[")) {
+							if(nodes[i].length() != 1 && nodes[i].startsWith("[")) {
 								nObj = new JSONArray();
 							}else {
 								nObj = new JSONObject();
@@ -562,7 +562,7 @@ public class Configuration {
 					}else {
 						if(forceCreation) {
 							Object nObj = null;
-							if(nodes[i].startsWith("[")) {
+							if(nodes[i].length() != 1 && nodes[i].startsWith("[")) {
 								nObj = new JSONArray();
 							}else {
 								nObj = new JSONObject();
@@ -602,7 +602,7 @@ public class Configuration {
 		String[] nodes = path.split("\\.");
 		Object cur = root;
 		for(int i = 0 ; i < nodes.length ; i++) {
-			String realNode = nodes[i].replaceFirst("\\[", "");
+			String realNode = nodes[i].length() != 1 ? nodes[i].replaceFirst("\\[", "") : nodes[i];
 			if(i < nodes.length-1) {
 				if(cur instanceof JSONObject) {
 					Object val = ((JSONObject)cur).get(realNode);
@@ -611,7 +611,7 @@ public class Configuration {
 					}else {
 						if(forceCreation) {
 							Object nObj = null;
-							if(nodes[i].startsWith("[")) {
+							if(nodes[i].length() != 1 && nodes[i].startsWith("[")) {
 								nObj = new JSONArray();
 							}else {
 								nObj = new JSONObject();
@@ -629,7 +629,7 @@ public class Configuration {
 					}else {
 						if(forceCreation) {
 							Object nObj = null;
-							if(nodes[i].startsWith("[")) {
+							if(nodes[i].length() != 1 && nodes[i].startsWith("[")) {
 								nObj = new JSONArray();
 							}else {
 								nObj = new JSONObject();
@@ -669,7 +669,7 @@ public class Configuration {
 		String[] nodes = path.split("\\.");
 		Object cur = root;
 		for(int i = 0 ; i < nodes.length ; i++) {
-			String realNode = nodes[i].replaceFirst("\\[", "");
+			String realNode = nodes[i].length() != 1 ? nodes[i].replaceFirst("\\[", "") : nodes[i];
 			if(i < nodes.length-1) {
 				if(cur instanceof JSONObject) {
 					Object val = ((JSONObject)cur).get(realNode);
@@ -678,7 +678,7 @@ public class Configuration {
 					}else {
 						if(forceCreation) {
 							Object nObj = null;
-							if(nodes[i].startsWith("[")) {
+							if(nodes[i].length() != 1 && nodes[i].startsWith("[")) {
 								nObj = new JSONArray();
 							}else {
 								nObj = new JSONObject();
@@ -696,7 +696,7 @@ public class Configuration {
 					}else {
 						if(forceCreation) {
 							Object nObj = null;
-							if(nodes[i].startsWith("[")) {
+							if(nodes[i].length() != 1 && nodes[i].startsWith("[")) {
 								nObj = new JSONArray();
 							}else {
 								nObj = new JSONObject();
@@ -736,7 +736,7 @@ public class Configuration {
 		String[] nodes = path.split("\\.");
 		Object cur = root;
 		for(int i = 0 ; i < nodes.length ; i++) {
-			String realNode = nodes[i].replaceFirst("\\[", "");
+			String realNode = nodes[i].length() != 1 ? nodes[i].replaceFirst("\\[", "") : nodes[i];
 			if(i < nodes.length-1) {
 				if(cur instanceof JSONObject) {
 					Object val = ((JSONObject)cur).get(realNode);
@@ -745,7 +745,7 @@ public class Configuration {
 					}else {
 						if(forceCreation) {
 							Object nObj = null;
-							if(nodes[i].startsWith("[")) {
+							if(nodes[i].length() != 1 && nodes[i].startsWith("[")) {
 								nObj = new JSONArray();
 							}else {
 								nObj = new JSONObject();
@@ -763,7 +763,7 @@ public class Configuration {
 					}else {
 						if(forceCreation) {
 							Object nObj = null;
-							if(nodes[i].startsWith("[")) {
+							if(nodes[i].length() != 1 && nodes[i].startsWith("[")) {
 								nObj = new JSONArray();
 							}else {
 								nObj = new JSONObject();
@@ -820,12 +820,12 @@ public class Configuration {
 	}
 	
 	public Color getColor(String path, Color replaceValue) {
-		JSONArray colorRoot = getJSONArray(path);
+		JSONArray colorRoot = getJSONArray(path, null);
 		if(colorRoot != null) {
-			int r = getInt(path+".0");
-			int g = getInt(path+".1");
-			int b = getInt(path+".2");
-			int a = getInt(path+".3");
+			int r = getInt(path+".0",0);
+			int g = getInt(path+".1",0);
+			int b = getInt(path+".2",0);
+			int a = getInt(path+".3",0);
 			return new Color(r, g, b, a);
 		}
 		return replaceValue;
@@ -842,7 +842,7 @@ public class Configuration {
 	}
 	
 	public FontType getFontType(String path, FontType replaceValue) {
-		FontType type =  FontType.getFontType(getString(path));
+		FontType type =  FontType.getFontType(getString(path , null));
 		return type == null ? replaceValue : type;
 	}
 	
@@ -851,11 +851,11 @@ public class Configuration {
 	}
 	
 	public Vector3f getVector3f(String path, Vector3f replaceValue) {
-		JSONArray colorRoot = getJSONArray(path);
+		JSONArray colorRoot = getJSONArray(path, null);
 		if(colorRoot != null) {
-			float x = getFloat(path+".0");
-			float y = getFloat(path+".1");
-			float z = getFloat(path+".2");
+			float x = getFloat(path+".0", 0);
+			float y = getFloat(path+".1", 0);
+			float z = getFloat(path+".2", 0);
 			return new Vector3f(x, y, z);
 		}
 		return replaceValue;

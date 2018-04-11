@@ -40,7 +40,7 @@ public class FontType {
 	private Font f;
 	private Texture tex;
 	private int width, height;
-	private Map<Character, CharInfo> charMap;
+	private Map<String, CharInfo> charMap;
 	
 	public static void initalize(boolean recreate) {
 		fonts = new ArrayList<>();
@@ -70,7 +70,7 @@ public class FontType {
 	    CharsetEncoder ce = Charset.forName(charsetName).newEncoder();
 	    StringBuilder result = new StringBuilder();
 	    for (char c = 0; c < Character.MAX_VALUE; c++) {
-	        if (ce.canEncode(c)) {
+	    	if (ce.canEncode(c)) {
 	            result.append(c);
 	        }
 	    }
@@ -78,6 +78,7 @@ public class FontType {
 	}
 	
 	private void buildTexture(boolean recreate) throws Exception {
+		//TODO redo this
 		File charTextureFile = new File(FileManager.IMAGE_FOLDER_FILE, "charMap.png");
 		File charTextureConfigFile = new File(FileManager.CONFIG_FOLDER_FILE, "charTexture.json");
 		if(!charTextureFile.exists() || !charTextureConfigFile.exists() || recreate) {
@@ -96,9 +97,10 @@ public class FontType {
 		    for (char c : allChars.toCharArray()) {
 		        // Get the size for each character and update global image size
 		        CharInfo charInfo = new CharInfo(width, fontMetrics.charWidth(c));
-		        charMap.put(c, charInfo);
-		        charTextureConfig.setInt("chars."+c+".startX", charInfo.startX, true);
-		        charTextureConfig.setInt("chars."+c+".width", charInfo.width, true);
+		        String charval = String.valueOf(c);
+		        charMap.put(charval, charInfo);
+		        charTextureConfig.setInt("chars."+charval+".startX", charInfo.startX, true);
+		        charTextureConfig.setInt("chars."+charval+".width", charInfo.width, true);
 		        width += charInfo.width;
 		        height = Math.max(height, fontMetrics.getHeight());
 		    }
@@ -117,24 +119,24 @@ public class FontType {
 		    fontMetrics = g2D.getFontMetrics();
 		    g2D.setColor(java.awt.Color.WHITE);
 		    for(char c : allChars.toCharArray()) {
-		    	g2D.drawString(String.valueOf(c), charMap.get(c).startX, fontMetrics.getAscent());
+		    	g2D.drawString(String.valueOf(c), charMap.get(String.valueOf(c)).startX, fontMetrics.getAscent());
 		    }
 		    g2D.dispose();
 		    // Dump image to a byte buffer
 		    ImageIO.write(img, "PNG", charTextureFile);
-		    
 	    }else {
 	    	Configuration charTextureConfig = new Configuration(charTextureConfigFile);
-	    	width = charTextureConfig.getInt("global.width");
-	    	height = charTextureConfig.getInt("global.height");
-	    	JSONObject object = charTextureConfig.getJSONObject("chars");
+	    	width = charTextureConfig.getInt("global.width",0);
+	    	height = charTextureConfig.getInt("global.height",0);
+	    	JSONObject object = charTextureConfig.getJSONObject("chars",new JSONObject());
 	    	for(Object key : object.keySet()) {
 	    		if(key instanceof String) {
 	    			String skey = (String)key;
-	    			int startX = charTextureConfig.getInt("chars."+skey+".startX");
-	    			int width = charTextureConfig.getInt("chars."+skey+".width");
+	    			if(skey.length() < 1)continue;
+	    			int startX = charTextureConfig.getInt("chars."+skey+".startX",0);
+	    			int width = charTextureConfig.getInt("chars."+skey+".width",0);
 	    			CharInfo info = new CharInfo(startX, width);
-	    			if(skey.toCharArray().length > 0)charMap.put(skey.charAt(0), info);
+	    			if(skey.toCharArray().length > 0)charMap.put(skey, info);
 	    		}else {
 	    			System.out.println(key.getClass());
 	    		}
@@ -160,7 +162,7 @@ public class FontType {
 		return height;
 	}
 
-	public Map<Character, CharInfo> getCharMap() {
+	public Map<String, CharInfo> getCharMap() {
 		return charMap;
 	}
 

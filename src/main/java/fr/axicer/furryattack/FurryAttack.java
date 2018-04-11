@@ -72,10 +72,12 @@ public class FurryAttack implements Renderable, Updateable{
 		// will print the error message in System.err.
 		GLFWErrorCallback.createPrint(System.err).set();
 
+		logger.info("Initializing LWJGL...");
 		// Initialize GLFW. Most GLFW functions will not work before doing this.
 		if ( !glfwInit() )
 			throw new IllegalStateException("Unable to initialize GLFW");
-
+		logger.info("LWJGL initialized !");
+		
 		// Configure GLFW
 		glfwDefaultWindowHints(); // optional, the current window hints are already the default
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
@@ -227,8 +229,7 @@ public class FurryAttack implements Renderable, Updateable{
 	public static void main(String[] args) {
 		FileManager.initialize();
 		Constants.initialize(args);
-		screenid = Constants.MAIN_CONFIG.getInt("screenid");
-		
+		screenid = Constants.MAIN_CONFIG.getInt("screenid",0);
 		getInstance().run(args);
 	}
 }

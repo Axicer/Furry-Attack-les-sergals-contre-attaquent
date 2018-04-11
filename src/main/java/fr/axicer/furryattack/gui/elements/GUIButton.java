@@ -60,6 +60,7 @@ public class GUIButton extends GUIComponent{
 		this.hover_tex = Texture.loadTexture(hoverTexturePath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
 		this.width = width;
 		this.height = height;
+		System.out.println(text);
 		this.textG = new GUIText(text, pos, rot, type, textColor, textMul);
 		this.shader = new ButtonShader();
 		this.pos = pos;
@@ -69,7 +70,6 @@ public class GUIButton extends GUIComponent{
 		this.scale = scale;
 		this.modelMatrix = new Matrix4f().translate(pos).rotateZ(rot).scale(scale);
 		this.actionThread = new Thread(action);
-		
 		init();
 	}
 	
@@ -194,6 +194,7 @@ public class GUIButton extends GUIComponent{
 
 	public void setAction(Runnable action) {
 		this.action = action;
+		this.actionThread = new Thread(action);
 	}
 
 	public Texture getTexture() {
