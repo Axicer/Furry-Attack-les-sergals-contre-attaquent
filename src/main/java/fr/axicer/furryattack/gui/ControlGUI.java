@@ -61,7 +61,7 @@ public class ControlGUI extends GUI{
 						FurryAttack.getInstance().getGuiManager().setGUI(GUIManager.OPTIONS_MENU);
 					}
 				}));
-		components.add(new GUIText("Avancer:", //text
+		components.add(new GUIText("Haut:", //text
 				new Vector3f(-75f,(float)Constants.HEIGHT/4.25f,-0.5f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
@@ -69,7 +69,7 @@ public class ControlGUI extends GUI{
 				ratio*0.3f)); //scale
 		components.add(new GUIInputButton(c,
 				f,
-				"forward",
+				"up",
 				ratio*0.2f,
 				Constants.WIDTH/8f,
 				Constants.HEIGHT/12f,
@@ -93,7 +93,7 @@ public class ControlGUI extends GUI{
 				Color.WHITE,
 				new Vector3f(75f,(float)Constants.HEIGHT/7f,-0.5f),
 				0f));
-		components.add(new GUIText("Reculer:", //text
+		components.add(new GUIText("Bas:", //text
 				new Vector3f(-75f,(float)Constants.HEIGHT/20f,-0.5f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
@@ -101,7 +101,7 @@ public class ControlGUI extends GUI{
 				ratio*0.3f)); //scale
 		components.add(new GUIInputButton(c,
 				f,
-				"backward",
+				"down",
 				ratio*0.2f,
 				Constants.WIDTH/8f,
 				Constants.HEIGHT/12f,
