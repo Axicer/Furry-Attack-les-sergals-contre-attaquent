@@ -24,9 +24,7 @@ import fr.axicer.furryattack.util.font.FontType;
 public class Configuration {
 	
 	private static final String CONFIG_READ_PATH_ERROR_MSG = "ERROR IN PATH READING !";
-	private static final int CONFIG_READ_PATH_ERROR_ID = Integer.MAX_VALUE;
 	private static final String CONFIG_READ_VALUE_ERROR_MSG = "ERROR IN VALUE READING !";
-	private static final int CONFIG_READ_VALUE_ERROR_ID = Integer.MIN_VALUE;
 	
 	private static final String CONFIG_WRITE_PATH_FORCE_ERROR_MSG = "ERROR IN PATH WRITING ! Force writing is disabled !";
 	private static final String CONFIG_WRITE_PATH_VALUE_ERROR_MSG = "ERROR IN PATH WRITING !";
@@ -111,14 +109,14 @@ public class Configuration {
 				}else if(cur instanceof JSONObject) {
 					cur = ((JSONObject)cur).get(realNode);
 				}else {
-					logger.warn("Error while reading path ! setting value to \""+CONFIG_READ_PATH_ERROR_ID+"\" for path: "+path);
+					logger.warn("Error while reading path ! setting value to \""+replace+"\" for path: "+path);
 					return replace;
 				}
 			}else {
 				if(cur instanceof JSONArray) {
 					Object val = ((JSONArray)cur).get(Integer.parseInt(realNode));
 					if(!(val instanceof Long) && !(val instanceof Integer)) {
-						logger.warn("Error while getting value of path ! setting value to \""+CONFIG_READ_VALUE_ERROR_ID+"\" for path: "+path);
+						logger.warn("Error while getting value of path ! setting value to \""+replace+"\" for path: "+path);
 						return replace;
 					}
 					if(val instanceof Long)return Math.toIntExact((long) val);
@@ -126,13 +124,13 @@ public class Configuration {
 				}else if(cur instanceof JSONObject) {
 					Object val = ((JSONObject)cur).get(realNode);
 					if(!(val instanceof Long) && !(val instanceof Integer)) {
-						logger.warn("Error while getting value of path ! setting value to \""+CONFIG_READ_VALUE_ERROR_ID+"\" for path: "+path);
+						logger.warn("Error while getting value of path ! setting value to \""+replace+"\" for path: "+path);
 						return replace;
 					}
 					if(val instanceof Long)return Math.toIntExact((long) val);
 					else return (int) val;
 				}else {
-					logger.warn("Error while reading path ! setting value to \""+CONFIG_READ_PATH_ERROR_ID+"\" for path: "+path);
+					logger.warn("Error while reading path ! setting value to \""+replace+"\" for path: "+path);
 					return replace;
 				}
 			}
@@ -150,26 +148,26 @@ public class Configuration {
 				}else if(cur instanceof JSONObject) {
 					cur = ((JSONObject)cur).get(realNode);
 				}else {
-					logger.warn("Error while reading path ! setting value to \""+CONFIG_READ_PATH_ERROR_ID+"\" for path: "+path);
+					logger.warn("Error while reading path ! setting value to \""+replace+"\" for path: "+path);
 					return replace;
 				}
 			}else {
 				if(cur instanceof JSONArray) {
 					Object val = ((JSONArray)cur).get(Integer.parseInt(realNode));
 					if(!(val instanceof Double)) {
-						logger.warn("Error while getting value of path ! setting value to \""+CONFIG_READ_VALUE_ERROR_ID+"\" for path:"+path);
+						logger.warn("Error while getting value of path ! setting value to \""+replace+"\" for path:"+path);
 						return replace;
 					}
 					return ((Double)val).floatValue();
 				}else if(cur instanceof JSONObject) {
 					Object val = ((JSONObject)cur).get(realNode);
 					if(!(val instanceof Double)) {
-						logger.warn("Error while getting value of path ! setting value to \""+CONFIG_READ_VALUE_ERROR_ID+"\" for path:"+path);
+						logger.warn("Error while getting value of path ! setting value to \""+replace+"\" for path:"+path);
 						return replace;
 					}
 					return ((Double)val).floatValue();
 				}else {
-					logger.warn("Error while reading path ! setting value to \""+CONFIG_READ_PATH_ERROR_ID+"\" for path: "+path);
+					logger.warn("Error while reading path ! setting value to \""+replace+"\" for path: "+path);
 					return replace;
 				}
 			}
@@ -187,26 +185,26 @@ public class Configuration {
 				}else if(cur instanceof JSONObject) {
 					cur = ((JSONObject)cur).get(realNode);
 				}else {
-					logger.warn("Error while reading path ! setting value to \""+CONFIG_READ_PATH_ERROR_ID+"\" for path: "+path);
+					logger.warn("Error while reading path ! setting value to \""+replace+"\" for path: "+path);
 					return replace;
 				}
 			}else {
 				if(cur instanceof JSONArray) {
 					Object val = ((JSONArray)cur).get(Integer.parseInt(realNode));
 					if(!(val instanceof Double)) {
-						logger.warn("Error while getting value of path ! setting value to \""+CONFIG_READ_VALUE_ERROR_ID+"\" for path:"+path);
+						logger.warn("Error while getting value of path ! setting value to \""+replace+"\" for path:"+path);
 						return replace;
 					}
 					return (double) val;
 				}else if(cur instanceof JSONObject) {
 					Object val = ((JSONObject)cur).get(realNode);
 					if(!(val instanceof Double)) {
-						logger.warn("Error while getting value of path ! setting value to \""+CONFIG_READ_VALUE_ERROR_ID+"\" for path:"+path);
+						logger.warn("Error while getting value of path ! setting value to \""+replace+"\" for path:"+path);
 						return replace;
 					}
 					return (double) val;
 				}else {
-					logger.warn("Error while reading path ! setting value to \""+CONFIG_READ_PATH_ERROR_ID+"\" for path: "+path);
+					logger.warn("Error while reading path ! setting value to \""+replace+"\" for path: "+path);
 					return replace;
 				}
 			}

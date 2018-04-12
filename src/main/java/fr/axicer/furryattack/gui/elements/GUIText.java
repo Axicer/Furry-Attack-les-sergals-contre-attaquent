@@ -27,6 +27,7 @@ public class GUIText extends GUIComponent{
 	public int VERTICES_VBO;
 	public int TEXCOORD_VBO;
 	public Matrix4f modelMatrix;
+	private boolean canRender = false;
 	
 	public GUIText(String text, FontType type, Color color) {
 		super();
@@ -54,19 +55,28 @@ public class GUIText extends GUIComponent{
 	}
 	
 	private void initRender(){
-		FloatBuffer vertices = BufferUtils.createFloatBuffer(text.length()*6*3);
-	    FloatBuffer textures = BufferUtils.createFloatBuffer(text.length()*6*2);
-	    
 	    float startx = 0;
-	    
 	    float textWidth = 0;
+	    int removedChar = 0;
 	    for(char c : text.toCharArray()) {
 	    	CharInfo charInfo = type.getCharMap().get(String.valueOf(c));
-	    	textWidth+= charInfo.width;
+	    	if(charInfo != null)textWidth+= charInfo.width;
+	    	else{
+	    		removedChar++;
+	    	}
 	    }
+	    int vbufferSize = (text.length()-removedChar)*6*3;
+	    int tbufferSize = (text.length()-removedChar)*6*2;
+	    if(vbufferSize == 0 || tbufferSize == 0) {
+	    	canRender = false;
+	    	return;
+	    }
+	    FloatBuffer vertices = BufferUtils.createFloatBuffer(vbufferSize);
+	    FloatBuffer textures = BufferUtils.createFloatBuffer(tbufferSize);
 	    
 	    for(char c : text.toCharArray()) {
 	        CharInfo charInfo = type.getCharMap().get(String.valueOf(c));
+	        if(charInfo == null)continue;
 	        // Build a character tile composed by two triangles
 
 	        // Left Top vertex
@@ -114,10 +124,14 @@ public class GUIText extends GUIComponent{
 	    shader.setUniformvec3f("textColor", new Vector3f(color.x, color.y, color.z));
 	    shader.setUniformi("tex", 0);
 	    shader.unbind();
+	    
+	    canRender = true;
 	}
 	
 	@Override
 	public void render() {
+		//System.out.println(text+" -> "+canRender);
+		if(!canRender)return;
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		type.getTexture().bind(0);

@@ -60,7 +60,6 @@ public class GUIButton extends GUIComponent{
 		this.hover_tex = Texture.loadTexture(hoverTexturePath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
 		this.width = width;
 		this.height = height;
-		System.out.println(text);
 		this.textG = new GUIText(text, pos, rot, type, textColor, textMul);
 		this.shader = new ButtonShader();
 		this.pos = pos;
@@ -243,5 +242,13 @@ public class GUIButton extends GUIComponent{
 
 	public void setScale(float scale) {
 		this.scale = scale;
+	}
+	
+	public boolean isClickable() {
+		return this.clickable;
+	}
+	
+	public void setClickable(boolean clickable) {
+		this.clickable = clickable;
 	}
 }

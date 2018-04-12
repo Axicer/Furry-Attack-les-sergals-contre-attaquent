@@ -7,25 +7,26 @@ import java.util.List;
 public class EventManager {
 	
 	private List<EventListener> listeners;
+	private List<EventListener> toDel;
 	
 	public EventManager() {
 		listeners = new LinkedList<EventListener>();
+		toDel = new LinkedList<>();
 	}
 	
 	public boolean addListener(EventListener listener) {
-		if(!listeners.contains(listener)) {
-			listeners.add(listener);
-			return true;
-		}
-		return false;
+		if(listeners.contains(listener))return false;
+		return listeners.add(listener);
 	}
 	
 	public boolean removeListener(EventListener listener) {
-		if(listeners.contains(listener)) {
-			listeners.remove(listener);
-			return true;
-		}
-		return false;
+		if(!listeners.contains(listener))return false;
+		return listeners.remove(listener);
+	}
+	
+	public boolean addToDeletionList(EventListener listener) {
+		if(toDel.contains(listener))return false;
+		return toDel.add(listener);
 	}
 	
 	public void sendEvent(AbstractEvent e) {
@@ -48,5 +49,7 @@ public class EventManager {
 				}
 			}
 		});
+		listeners.removeAll(toDel);
+		toDel.clear();
 	}
 }

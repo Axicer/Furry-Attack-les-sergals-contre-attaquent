@@ -62,7 +62,7 @@ public class ControlGUI extends GUI{
 					}
 				}));
 		components.add(new GUIText("Avancer:", //text
-				new Vector3f((float)-Constants.WIDTH/2f+(float)Constants.WIDTH/5.5f,(float)Constants.HEIGHT/3.5f,-0.5f), //pos
+				new Vector3f(-75f,(float)Constants.HEIGHT/4.25f,-0.5f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				Color.WHITE, // color
@@ -75,7 +75,87 @@ public class ControlGUI extends GUI{
 				Constants.HEIGHT/12f,
 				ratio*0.5f,
 				Color.WHITE,
-				new Vector3f((float)-Constants.WIDTH/2f+(float)Constants.WIDTH/3.5f,(float)Constants.HEIGHT/3.5f,-0.5f),
+				new Vector3f(75f,(float)Constants.HEIGHT/4.25f,-0.5f),
+				0f));
+		components.add(new GUIText("Gauche:", //text
+				new Vector3f(-75f,(float)Constants.HEIGHT/7f,-0.5f), //pos
+				0f, //rot
+				FontType.CAPTAIN, //font
+				Color.WHITE, // color
+				ratio*0.3f)); //scale
+		components.add(new GUIInputButton(c,
+				f,
+				"left",
+				ratio*0.2f,
+				Constants.WIDTH/8f,
+				Constants.HEIGHT/12f,
+				ratio*0.5f,
+				Color.WHITE,
+				new Vector3f(75f,(float)Constants.HEIGHT/7f,-0.5f),
+				0f));
+		components.add(new GUIText("Reculer:", //text
+				new Vector3f(-75f,(float)Constants.HEIGHT/20f,-0.5f), //pos
+				0f, //rot
+				FontType.CAPTAIN, //font
+				Color.WHITE, // color
+				ratio*0.3f)); //scale
+		components.add(new GUIInputButton(c,
+				f,
+				"backward",
+				ratio*0.2f,
+				Constants.WIDTH/8f,
+				Constants.HEIGHT/12f,
+				ratio*0.5f,
+				Color.WHITE,
+				new Vector3f(75f,(float)Constants.HEIGHT/20f,-0.5f),
+				0f));
+		components.add(new GUIText("Droite:", //text
+				new Vector3f(-75f,(float)-Constants.HEIGHT/20f,-0.5f), //pos
+				0f, //rot
+				FontType.CAPTAIN, //font
+				Color.WHITE, // color
+				ratio*0.3f)); //scale
+		components.add(new GUIInputButton(c,
+				f,
+				"right",
+				ratio*0.2f,
+				Constants.WIDTH/8f,
+				Constants.HEIGHT/12f,
+				ratio*0.5f,
+				Color.WHITE,
+				new Vector3f(75f,(float)-Constants.HEIGHT/20f,-0.5f),
+				0f));
+		components.add(new GUIText("Sauter:", //text
+				new Vector3f(-75f,(float)-Constants.HEIGHT/7f,-0.5f), //pos
+				0f, //rot
+				FontType.CAPTAIN, //font
+				Color.WHITE, // color
+				ratio*0.3f)); //scale
+		components.add(new GUIInputButton(c,
+				f,
+				"jump",
+				ratio*0.2f,
+				Constants.WIDTH/8f,
+				Constants.HEIGHT/12f,
+				ratio*0.5f,
+				Color.WHITE,
+				new Vector3f(75f,(float)-Constants.HEIGHT/7f,-0.5f),
+				0f));
+		components.add(new GUIText("S'accroupir:", //text
+				new Vector3f(-100f,(float)-Constants.HEIGHT/4.25f,-0.5f), //pos
+				0f, //rot
+				FontType.CAPTAIN, //font
+				Color.WHITE, // color
+				ratio*0.3f)); //scale
+		components.add(new GUIInputButton(c,
+				f,
+				"shift",
+				ratio*0.2f,
+				Constants.WIDTH/8f,
+				Constants.HEIGHT/12f,
+				ratio*0.5f,
+				Color.WHITE,
+				new Vector3f(75f,(float)-Constants.HEIGHT/4.25f,-0.5f),
 				0f));
 	}
 
