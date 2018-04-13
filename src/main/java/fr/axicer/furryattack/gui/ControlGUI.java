@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFW;
 
 import fr.axicer.furryattack.FurryAttack;
+import fr.axicer.furryattack.generator.config.ControlConfigGenerator;
 import fr.axicer.furryattack.gui.elements.GUIButton;
 import fr.axicer.furryattack.gui.elements.GUIComponent;
 import fr.axicer.furryattack.gui.elements.GUIImage;
@@ -25,9 +25,7 @@ public class ControlGUI extends GUI{
 		File f = new File(FileManager.CONFIG_FOLDER_FILE, "control.json");
 		Configuration c = null;
 		if(!f.exists()) {
-			c = new Configuration();
-			//TODO add default keys
-			c.setInt("forward", GLFW.GLFW_KEY_W, true);
+			c = new ControlConfigGenerator().generate();
 		}else {
 			try {
 				c = new Configuration(f);
@@ -69,7 +67,7 @@ public class ControlGUI extends GUI{
 				ratio*0.3f)); //scale
 		components.add(new GUIInputButton(c,
 				f,
-				"up",
+				ControlConfigGenerator.UP_CONTROL_ID,
 				ratio*0.2f,
 				Constants.WIDTH/8f,
 				Constants.HEIGHT/12f,
@@ -85,7 +83,7 @@ public class ControlGUI extends GUI{
 				ratio*0.3f)); //scale
 		components.add(new GUIInputButton(c,
 				f,
-				"left",
+				ControlConfigGenerator.LEFT_CONTROL_ID,
 				ratio*0.2f,
 				Constants.WIDTH/8f,
 				Constants.HEIGHT/12f,
@@ -101,7 +99,7 @@ public class ControlGUI extends GUI{
 				ratio*0.3f)); //scale
 		components.add(new GUIInputButton(c,
 				f,
-				"down",
+				ControlConfigGenerator.DOWN_CONTROL_ID,
 				ratio*0.2f,
 				Constants.WIDTH/8f,
 				Constants.HEIGHT/12f,
@@ -117,7 +115,7 @@ public class ControlGUI extends GUI{
 				ratio*0.3f)); //scale
 		components.add(new GUIInputButton(c,
 				f,
-				"right",
+				ControlConfigGenerator.RIGHT_CONTROL_ID,
 				ratio*0.2f,
 				Constants.WIDTH/8f,
 				Constants.HEIGHT/12f,
@@ -133,7 +131,7 @@ public class ControlGUI extends GUI{
 				ratio*0.3f)); //scale
 		components.add(new GUIInputButton(c,
 				f,
-				"jump",
+				ControlConfigGenerator.JUMP_CONTROL_ID,
 				ratio*0.2f,
 				Constants.WIDTH/8f,
 				Constants.HEIGHT/12f,
@@ -149,7 +147,7 @@ public class ControlGUI extends GUI{
 				ratio*0.3f)); //scale
 		components.add(new GUIInputButton(c,
 				f,
-				"shift",
+				ControlConfigGenerator.SHIFT_CONTROL_ID,
 				ratio*0.2f,
 				Constants.WIDTH/8f,
 				Constants.HEIGHT/12f,

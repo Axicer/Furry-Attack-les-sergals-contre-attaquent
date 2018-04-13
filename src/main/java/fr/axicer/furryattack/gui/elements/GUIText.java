@@ -59,7 +59,7 @@ public class GUIText extends GUIComponent{
 	    float textWidth = 0;
 	    int removedChar = 0;
 	    for(char c : text.toCharArray()) {
-	    	CharInfo charInfo = type.getCharMap().get(String.valueOf(c));
+	    	CharInfo charInfo = type.getCharMap().get((int)c);
 	    	if(charInfo != null)textWidth+= charInfo.width;
 	    	else{
 	    		removedChar++;
@@ -75,7 +75,7 @@ public class GUIText extends GUIComponent{
 	    FloatBuffer textures = BufferUtils.createFloatBuffer(tbufferSize);
 	    
 	    for(char c : text.toCharArray()) {
-	        CharInfo charInfo = type.getCharMap().get(String.valueOf(c));
+	        CharInfo charInfo = type.getCharMap().get((int)c);
 	        if(charInfo == null)continue;
 	        // Build a character tile composed by two triangles
 
