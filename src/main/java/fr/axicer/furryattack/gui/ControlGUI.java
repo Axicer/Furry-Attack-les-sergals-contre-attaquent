@@ -22,6 +22,10 @@ public class ControlGUI extends GUI{
 
 	public ControlGUI() {
 		super("control");
+		init();
+	}
+	
+	private void init() {
 		File f = new File(FileManager.CONFIG_FOLDER_FILE, "control.json");
 		Configuration c = null;
 		if(!f.exists()) {
@@ -164,11 +168,19 @@ public class ControlGUI extends GUI{
 
 	@Override
 	public void update() {
-		for(GUIComponent comp : components)comp.update();
+		try {
+			for(GUIComponent comp : components)comp.update();
+		}catch(Exception e) {};
 	}
 	
 	@Override
 	public void destroy() {
 		for(GUIComponent comp : components)comp.destroy();
 	}
+	
+	public void recreate() {
+		destroy();
+		init();
+	}
+
 }

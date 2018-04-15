@@ -20,9 +20,13 @@ public class CharacterCustomisationMenuGUI extends GUI{
 
 	public Character character;
 	
-	@SuppressWarnings("unchecked")
 	public CharacterCustomisationMenuGUI() {
 		super("character-customisation-menu");
+		init();
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void init() {
 		float ratio = (float)Constants.WIDTH/(float)Constants.HEIGHT;
 		components.add(new GUIImage("/img/gui/background/menu-bg.png", //imgPath
 									Constants.WIDTH, //width
@@ -165,8 +169,10 @@ public class CharacterCustomisationMenuGUI extends GUI{
 
 	@Override
 	public void update() {
-		for(GUIComponent comp : components)comp.update();
-		character.update();
+		try {
+			for(GUIComponent comp : components)comp.update();
+			character.update();
+		}catch(Exception e) {};
 	}
 	
 	@Override
@@ -175,5 +181,8 @@ public class CharacterCustomisationMenuGUI extends GUI{
 		character.destroy();
 	}
 	
-	
+	public void recreate() {
+		destroy();
+		init();
+	}
 }

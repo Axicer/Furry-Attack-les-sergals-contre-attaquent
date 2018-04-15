@@ -143,9 +143,9 @@ public class GUIButton extends GUIComponent{
 		System.out.println(topR);
 		System.out.println(bottomR);
 		System.out.println(bottomL);
-		System.out.println((float)posX[0]-Constants.WIDTH/2+","+-((float)posY[0]-Constants.HEIGHT/2));*/
+		System.out.println((float)MouseHandler.getPosX()-Constants.WIDTH/2f+","+-((float)MouseHandler.getPosY()-Constants.HEIGHT/2f));*/
 
-		hover = box.isInside((float)MouseHandler.getPosX()-Constants.WIDTH/2, -((float)MouseHandler.getPosY()-Constants.HEIGHT/2));
+		hover = box.isInside((float)MouseHandler.getPosX()-Constants.WIDTH/2f, -((float)MouseHandler.getPosY()-Constants.HEIGHT/2f));
 		
 		if(hover && MouseButtonHandler.isPressedL()) {
 			onClick();

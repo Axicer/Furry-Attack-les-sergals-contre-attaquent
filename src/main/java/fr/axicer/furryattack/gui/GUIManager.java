@@ -12,6 +12,7 @@ public class GUIManager implements Renderable,Updateable,Destroyable{
 	public static GUI CHARACTER_CUSTOMISATION_MENU;
 	public static GUI OPTIONS_MENU;
 	public static GUI CONTROL_MENU;
+	public static GUI VIDEO_OPTION_MENU;
 	
 	private GUI actualGUI;
 	
@@ -20,6 +21,7 @@ public class GUIManager implements Renderable,Updateable,Destroyable{
 		CHARACTER_CUSTOMISATION_MENU = new CharacterCustomisationMenuGUI();
 		OPTIONS_MENU = new OptionsMenu();
 		CONTROL_MENU = new ControlGUI();
+		VIDEO_OPTION_MENU = new VideoOptionsGUI();
 		//TODO add GUIs
 		this.actualGUI = MENU;
 	}
@@ -63,6 +65,15 @@ public class GUIManager implements Renderable,Updateable,Destroyable{
 		CHARACTER_CUSTOMISATION_MENU.destroy();
 		OPTIONS_MENU.destroy();
 		CONTROL_MENU.destroy();
+		VIDEO_OPTION_MENU.destroy();
 	}
 	
+	public void recreate() {
+		MENU.recreate();
+		CHARACTER_CUSTOMISATION_MENU.recreate();
+		OPTIONS_MENU.recreate();
+		CONTROL_MENU.recreate();
+		VIDEO_OPTION_MENU.recreate();
+	}
+
 }

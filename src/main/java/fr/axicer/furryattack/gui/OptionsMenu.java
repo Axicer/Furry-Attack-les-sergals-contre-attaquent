@@ -15,6 +15,10 @@ public class OptionsMenu extends GUI{
 
 	public OptionsMenu() {
 		super("options");
+		init();
+	}
+	
+	private void init() {
 		float ratio = (float)Constants.WIDTH/(float)Constants.HEIGHT;
 		components.add(new GUIImage("/img/gui/background/menu-bg.png", //imgPath
 				Constants.WIDTH, //width
@@ -40,7 +44,7 @@ public class OptionsMenu extends GUI{
 						FurryAttack.getInstance().getGuiManager().setGUI(GUIManager.MENU);
 					}
 				}));
-		components.add(new GUIButton("Resolution",
+		components.add(new GUIButton("Vidéo",
 				ratio*0.2f,
 				Constants.WIDTH/3f,
 				Constants.HEIGHT/10f,
@@ -49,7 +53,12 @@ public class OptionsMenu extends GUI{
 				Color.WHITE,
 				new Vector3f(0, (float)Constants.HEIGHT/6.5f, -1f),
 				0f,
-				null));
+				new Runnable() {
+					@Override
+					public void run() {
+						FurryAttack.getInstance().getGuiManager().setGUI(GUIManager.VIDEO_OPTION_MENU);
+					}
+				}));
 		components.add(new GUIButton("Controles",
 				ratio*0.2f,
 				Constants.WIDTH/3f,
@@ -94,12 +103,21 @@ public class OptionsMenu extends GUI{
 
 	@Override
 	public void update() {
-		for(GUIComponent comp : components)comp.update();
+		try {
+			for(GUIComponent comp : components)comp.update();
+		}catch(Exception e) {};
 	}
 	
 	@Override
 	public void destroy() {
-		for(GUIComponent comp : components)comp.destroy();
+		for(GUIComponent comp : components) {
+			comp.destroy();
+		}
+		components.clear();
 	}
 
+	public void recreate() {
+		destroy();
+		init();
+	}
 }

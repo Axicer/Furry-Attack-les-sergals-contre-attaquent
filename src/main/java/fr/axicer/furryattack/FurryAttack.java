@@ -9,11 +9,9 @@ import java.nio.IntBuffer;
 
 import org.joml.Matrix4f;
 import org.lwjgl.Version;
-import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 import org.slf4j.Logger;
@@ -33,22 +31,18 @@ import fr.axicer.furryattack.util.font.FontType;
 
 public class FurryAttack implements Renderable, Updateable{
 	
-	// The window handle
-	public long window;
-	public boolean running = true;
-	private static int screenid;
+	String[] args;
 	
+	// The window handle
+	public long window = -1;
+	public boolean running = true;
+	public static int screenid;
 	@SuppressWarnings("unused")
 	private KeyboardHandler keyhandler;
 	@SuppressWarnings("unused")
 	private MouseHandler mousehandler;
 	@SuppressWarnings("unused")
 	private GLFWMouseButtonCallback mousebuttoncallback;
-	@SuppressWarnings("unused")
-	private GLFWWindowSizeCallback windowSizeCallback;
-	@SuppressWarnings("unused")
-	private GLFWCursorPosCallback cursorposcallback;
-	
 	public Matrix4f projectionMatrix;
 	public Matrix4f viewMatrix;
 
@@ -57,16 +51,26 @@ public class FurryAttack implements Renderable, Updateable{
 	
 	private Logger logger = LoggerFactory.getLogger(FurryAttack.class);
 	
-	public void run(String[] args) {
+	public void run() {
 		logger.debug("Hello LWJGL " + Version.getVersion() + "!");
-		init(args);
+		initFrame();
+		setupGame();
+		
 		loop();
 		exit();
 	}
 
-	private void init(String[] args) {
+	private void setupGame() {
+		projectionMatrix = new Matrix4f().ortho(-Constants.WIDTH/2, Constants.WIDTH/2, -Constants.HEIGHT/2, Constants.HEIGHT/2, 0.1f, 1000.0f);
+		viewMatrix = new Matrix4f().identity();
+
+		guiManager = new GUIManager();
+		eventManager = new EventManager();
+	}
+	
+	private void initFrame() {
 		//because OSX don't like awt fonts ><
-		System.setProperty("java.awt.headless", "true");
+		System.setProperty("java.awt.headless", "false");
 		
 		// Setup an error callback. The default implementation
 		// will print the error message in System.err.
@@ -128,12 +132,6 @@ public class FurryAttack implements Renderable, Updateable{
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		
 		FontType.initalize(Util.contains(args, "-forcechars"));
-		
-		projectionMatrix = new Matrix4f().ortho(-Constants.WIDTH/2, Constants.WIDTH/2, -Constants.HEIGHT/2, Constants.HEIGHT/2, 0.1f, 1000.0f);
-		viewMatrix = new Matrix4f().identity();
-
-		guiManager = new GUIManager();
-		eventManager = new EventManager();
 		
 		glfwSetKeyCallback(window, keyhandler = new KeyboardHandler());
 		glfwSetCursorPosCallback(window, mousehandler = new MouseHandler());
@@ -227,9 +225,10 @@ public class FurryAttack implements Renderable, Updateable{
 	}
 	
 	public static void main(String[] args) {
+		getInstance().args = args;
 		FileManager.initialize();
 		Constants.initialize(args);
 		screenid = Constants.MAIN_CONFIG.getInt("screenid",0);
-		getInstance().run(args);
+		getInstance().run();
 	}
 }

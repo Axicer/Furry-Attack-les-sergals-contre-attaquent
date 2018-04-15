@@ -15,6 +15,10 @@ public class MenuGUI extends GUI{
 
 	public MenuGUI() {
 		super("menu");
+		init();
+	}
+	
+	private void init() {
 		float ratio = (float)Constants.WIDTH/(float)Constants.HEIGHT;
 		
 		components.add(new GUIImage("/img/gui/background/menu-bg.png", //imgPath
@@ -117,7 +121,9 @@ public class MenuGUI extends GUI{
 
 	@Override
 	public void update() {
-		for(GUIComponent comp : components)comp.update();
+		try {
+			for(GUIComponent comp : components)comp.update();
+		}catch(Exception e) {};
 	}
 	
 	@Override
@@ -125,4 +131,9 @@ public class MenuGUI extends GUI{
 		for(GUIComponent comp : components)comp.destroy();
 	}
 
+	
+	public void recreate() {
+		destroy();
+		init();
+	}
 }

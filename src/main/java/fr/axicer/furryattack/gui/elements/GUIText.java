@@ -168,6 +168,7 @@ public class GUIText extends GUIComponent{
 	
 	@Override
 	public void destroy() {
+		canRender = false;
 		GL15.glDeleteBuffers(TEXCOORD_VBO);
 		GL15.glDeleteBuffers(VERTICES_VBO);
 	}
@@ -213,6 +214,10 @@ public class GUIText extends GUIComponent{
 		this.type = type;
 		if(VERTICES_VBO != 0 || TEXCOORD_VBO != 0) destroy();
 		initRender();
+	}
+
+	public void allowRender(boolean val) {
+		this.canRender = val;
 	}
 
 }

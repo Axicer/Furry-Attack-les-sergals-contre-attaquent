@@ -47,6 +47,20 @@ public class GUISelector<T> extends GUIComponent{
 		this.bg = new GUIImage("/img/gui/background/gray-back-bg.png", width, height, pos);
 	}
 	
+	public GUISelectorItem<T> getActalItem() {
+		return items[selectedIndex];
+	}
+	
+	public void setActualItem(GUISelectorItem<T> item) {
+		for(int i = 0 ; i < items.length ; i++) {
+			if(items[i].equals(item)) {
+				selectedIndex = i;
+				updateText();
+				break;
+			}
+		}
+	}
+	
 	public void getNextItem() {
 		selectedIndex++;
 		if(selectedIndex == this.items.length)selectedIndex = 0;
