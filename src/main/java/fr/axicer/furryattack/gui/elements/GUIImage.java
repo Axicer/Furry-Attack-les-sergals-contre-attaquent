@@ -23,22 +23,6 @@ public class GUIImage extends GUIComponent{
 	private Matrix4f modelMatrix;
 	private float scale;
 	
-	public GUIImage(String imgPath, Vector3f pos) {
-		this(imgPath, 128, 128, pos);
-	}
-	
-	public GUIImage(String imgPath, float width, float height, Vector3f pos) {
-		this(imgPath, height, width, pos, 0f, 1f);
-	}
-	
-	public GUIImage(String imgPath, float width, float height, Vector3f pos, float rot) {
-		this(imgPath, height, width, pos, rot, 1f);
-	}
-	
-	public GUIImage(String imgPath, float width, float height, Vector3f pos, float rot, float scale) {
-		this(imgPath, false, new Vector2f(), height, width, pos, rot, scale);
-	}
-	
 	public GUIImage(String imgPath, boolean blur, Vector2f blurDirection, float width, float height, Vector3f pos, float rot, float scale) {
 		shader = new BackgroundShader();
 		tex = Texture.loadTexture(imgPath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_LINEAR);

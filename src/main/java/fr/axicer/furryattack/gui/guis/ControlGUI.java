@@ -7,10 +7,8 @@ import org.joml.Vector3f;
 
 import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.generator.config.ControlConfigGenerator;
-import fr.axicer.furryattack.gui.elements.GUIButton;
+import fr.axicer.furryattack.gui.elements.ComponentFactory;
 import fr.axicer.furryattack.gui.elements.GUIComponent;
-import fr.axicer.furryattack.gui.elements.GUIImage;
-import fr.axicer.furryattack.gui.elements.GUIInputButton;
 import fr.axicer.furryattack.gui.elements.GUIText;
 import fr.axicer.furryattack.gui.render.GUIs;
 import fr.axicer.furryattack.util.Color;
@@ -40,7 +38,7 @@ public class ControlGUI extends GUI{
 		}
 		c.save(f);
 		float ratio = (float)Constants.WIDTH/(float)Constants.HEIGHT;
-		components.add(new GUIImage("/img/gui/background/menu-bg.png", //imgPath
+		components.add(ComponentFactory.generateImage("/img/gui/background/menu-bg.png", //imgPath
 				Constants.WIDTH, //width
 				Constants.HEIGHT, //height
 				new Vector3f(0,0,-1f))); //pos
@@ -50,18 +48,17 @@ public class ControlGUI extends GUI{
 				FontType.CAPTAIN, //font
 				new Color(50, 70, 120, 255), // color
 				ratio*0.5f)); //scale
-		components.add(new GUIButton("Retour",
+		components.add(ComponentFactory.generateButton(this,
+				"Retour",
 				ratio*0.2f,
-				Constants.WIDTH/6f,
-				Constants.HEIGHT/10f,
+				(int)(Constants.WIDTH/6f),
+				(int)(Constants.HEIGHT/10f),
 				ratio*0.5f,
-				FontType.CAPTAIN,
-				Color.WHITE,
 				new Vector3f((float)Constants.WIDTH/2.5f, (float)-Constants.HEIGHT/2.5f, -1f),
 				0f,
 				new Runnable() {
 					public void run() {
-						FurryAttack.getInstance().getRenderer().getGUIRenderer().setCurrentGUI(GUIs.OPTION_MENU);
+						FurryAttack.getInstance().getRenderer().getGUIRenderer().setCurrentGUI(GUIs.MAIN_MENU);
 					}
 				}));
 		components.add(new GUIText("Haut:", //text
@@ -70,14 +67,14 @@ public class ControlGUI extends GUI{
 				FontType.CAPTAIN, //font
 				Color.WHITE, // color
 				ratio*0.3f)); //scale
-		components.add(new GUIInputButton(c,
+		components.add(ComponentFactory.generateInputButton(this,
+				c,
 				f,
 				ControlConfigGenerator.UP_CONTROL_ID,
 				ratio*0.2f,
-				Constants.WIDTH/8f,
-				Constants.HEIGHT/12f,
+				(int)(Constants.WIDTH/8f),
+				(int)(Constants.HEIGHT/12f),
 				ratio*0.5f,
-				Color.WHITE,
 				new Vector3f(75f,(float)Constants.HEIGHT/4.25f,-0.5f),
 				0f));
 		components.add(new GUIText("Gauche:", //text
@@ -86,14 +83,14 @@ public class ControlGUI extends GUI{
 				FontType.CAPTAIN, //font
 				Color.WHITE, // color
 				ratio*0.3f)); //scale
-		components.add(new GUIInputButton(c,
+		components.add(ComponentFactory.generateInputButton(this,
+				c,
 				f,
 				ControlConfigGenerator.LEFT_CONTROL_ID,
 				ratio*0.2f,
-				Constants.WIDTH/8f,
-				Constants.HEIGHT/12f,
+				(int)(Constants.WIDTH/8f),
+				(int)(Constants.HEIGHT/12f),
 				ratio*0.5f,
-				Color.WHITE,
 				new Vector3f(75f,(float)Constants.HEIGHT/7f,-0.5f),
 				0f));
 		components.add(new GUIText("Bas:", //text
@@ -102,14 +99,14 @@ public class ControlGUI extends GUI{
 				FontType.CAPTAIN, //font
 				Color.WHITE, // color
 				ratio*0.3f)); //scale
-		components.add(new GUIInputButton(c,
+		components.add(ComponentFactory.generateInputButton(this,
+				c,
 				f,
 				ControlConfigGenerator.DOWN_CONTROL_ID,
 				ratio*0.2f,
-				Constants.WIDTH/8f,
-				Constants.HEIGHT/12f,
+				(int)(Constants.WIDTH/8f),
+				(int)(Constants.HEIGHT/12f),
 				ratio*0.5f,
-				Color.WHITE,
 				new Vector3f(75f,(float)Constants.HEIGHT/20f,-0.5f),
 				0f));
 		components.add(new GUIText("Droite:", //text
@@ -118,14 +115,14 @@ public class ControlGUI extends GUI{
 				FontType.CAPTAIN, //font
 				Color.WHITE, // color
 				ratio*0.3f)); //scale
-		components.add(new GUIInputButton(c,
+		components.add(ComponentFactory.generateInputButton(this,
+				c,
 				f,
 				ControlConfigGenerator.RIGHT_CONTROL_ID,
 				ratio*0.2f,
-				Constants.WIDTH/8f,
-				Constants.HEIGHT/12f,
+				(int)(Constants.WIDTH/8f),
+				(int)(Constants.HEIGHT/12f),
 				ratio*0.5f,
-				Color.WHITE,
 				new Vector3f(75f,(float)-Constants.HEIGHT/20f,-0.5f),
 				0f));
 		components.add(new GUIText("Sauter:", //text
@@ -134,14 +131,14 @@ public class ControlGUI extends GUI{
 				FontType.CAPTAIN, //font
 				Color.WHITE, // color
 				ratio*0.3f)); //scale
-		components.add(new GUIInputButton(c,
+		components.add(ComponentFactory.generateInputButton(this,
+				c,
 				f,
 				ControlConfigGenerator.JUMP_CONTROL_ID,
 				ratio*0.2f,
-				Constants.WIDTH/8f,
-				Constants.HEIGHT/12f,
+				(int)(Constants.WIDTH/8f),
+				(int)(Constants.HEIGHT/12f),
 				ratio*0.5f,
-				Color.WHITE,
 				new Vector3f(75f,(float)-Constants.HEIGHT/7f,-0.5f),
 				0f));
 		components.add(new GUIText("S'accroupir:", //text
@@ -150,14 +147,14 @@ public class ControlGUI extends GUI{
 				FontType.CAPTAIN, //font
 				Color.WHITE, // color
 				ratio*0.3f)); //scale
-		components.add(new GUIInputButton(c,
+		components.add(ComponentFactory.generateInputButton(this,
+				c,
 				f,
 				ControlConfigGenerator.SHIFT_CONTROL_ID,
 				ratio*0.2f,
-				Constants.WIDTH/8f,
-				Constants.HEIGHT/12f,
+				(int)(Constants.WIDTH/8f),
+				(int)(Constants.HEIGHT/12f),
 				ratio*0.5f,
-				Color.WHITE,
 				new Vector3f(75f,(float)-Constants.HEIGHT/4.25f,-0.5f),
 				0f));
 	}

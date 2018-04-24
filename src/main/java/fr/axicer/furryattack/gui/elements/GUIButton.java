@@ -12,62 +12,66 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
 import fr.axicer.furryattack.FurryAttack;
+import fr.axicer.furryattack.gui.guis.GUI;
 import fr.axicer.furryattack.render.shader.ButtonShader;
 import fr.axicer.furryattack.render.textures.Texture;
 import fr.axicer.furryattack.util.Color;
 import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.collision.CollisionBoxM;
-import fr.axicer.furryattack.util.control.MouseButtonHandler;
 import fr.axicer.furryattack.util.control.MouseHandler;
+import fr.axicer.furryattack.util.control.events.MousePressedEvent;
+import fr.axicer.furryattack.util.control.events.MouseReleasedEvent;
+import fr.axicer.furryattack.util.events.EventListener;
 import fr.axicer.furryattack.util.font.FontType;
 
-public class GUIButton extends GUIComponent{
+public class GUIButton extends GUIComponent implements EventListener{
 
 	private Vector3f pos;
 	private float rot;
 	private float width, height;
-	private CollisionBoxM box;
+	private float scale;
+	private GUI gui;
 	
-	private Runnable action;
+	private CollisionBoxM box;
+	private boolean hover;
+	private boolean clicked;
+	private boolean clickable = true;
+	
 	private Thread actionThread;
 	
 	private GUIText textG;
-	private boolean hover;
+	
 	private Texture tex;
 	private Texture hover_tex;
+	private Texture click_tex;
+	
 	private Matrix4f modelMatrix;
 	private ButtonShader shader;
 	private int VBO_ID;
-	private float scale;
-	private boolean clickable = true;
 	
-	public GUIButton(String text, Color color, FontType type, float width, float height, Vector3f pos, float rot, Runnable action) {
-		this(text, 1f, width, height, "/img/gui/button/button.png", "/img/gui/button/button_hover.png", 1f, type, color, pos, rot, action);
-	}
-	
-	public GUIButton(String text, float width, float heigth, Color textColor, Runnable action) {
-		this(text, 1f, width, heigth, "/img/gui/button/button.png", "/img/gui/button/button_hover.png", 1f, FontType.CAPTAIN, textColor, new Vector3f(), 0f, action);
-	}
-	
-	public GUIButton(String text, float textMul ,float width, float height, float scale, FontType type, Color textColor, Vector3f pos, float rot, Runnable action) {
-		this(text, textMul, width, height, "/img/gui/button/button.png", "/img/gui/button/button_hover.png", scale, type, textColor, pos, rot, action);
-	}
-	
-	public GUIButton(String text, float textMul ,float width, float height, String texturePath, String hoverTexturePath, float scale, FontType type, Color textColor, Vector3f pos, float rot, Runnable action) {
-		this.action = action;
+	public GUIButton(GUI gui, String text, float textMul ,float width, float height, String texturePath, String hoverTexturePath, String clickTexturePath, float scale, FontType type, Color textColor, Vector3f pos, float rot, Runnable action) {
 		this.tex = Texture.loadTexture(texturePath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
 		this.hover_tex = Texture.loadTexture(hoverTexturePath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
+		this.click_tex = Texture.loadTexture(clickTexturePath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
+
+		this.actionThread = new Thread(action);
+
 		this.width = width;
 		this.height = height;
-		this.textG = new GUIText(text, pos, rot, type, textColor, textMul);
-		this.shader = new ButtonShader();
 		this.pos = pos;
 		this.rot = rot;
 		this.hover = false;
-		this.box = new CollisionBoxM();
 		this.scale = scale;
+		this.gui = gui;
+
+		this.textG = new GUIText(text, pos, rot, type, textColor, textMul);
+		this.shader = new ButtonShader();
+		this.box = new CollisionBoxM();
 		this.modelMatrix = new Matrix4f().translate(pos).rotateZ(rot).scale(scale);
-		this.actionThread = new Thread(action);
+		
+		//register this button to the event System
+		FurryAttack.getInstance().getEventManager().addListener(this);
+		
 		init();
 	}
 	
@@ -98,7 +102,9 @@ public class GUIButton extends GUIComponent{
 	@Override
 	public void render() {
 		shader.bind();
-		if(hover) {
+		if(clicked) {
+			click_tex.bind(0);
+		}else if(hover) {
 			hover_tex.bind(0);
 		}else {
 			tex.bind(0);
@@ -145,10 +151,7 @@ public class GUIButton extends GUIComponent{
 		System.out.println((float)MouseHandler.getPosX()-Constants.WIDTH/2f+","+-((float)MouseHandler.getPosY()-Constants.HEIGHT/2f));*/
 
 		hover = box.isInside((float)MouseHandler.getPosX()-Constants.WIDTH/2f, -((float)MouseHandler.getPosY()-Constants.HEIGHT/2f));
-		
-		if(hover && MouseButtonHandler.isPressedL() && clickable) {
-			onClick();
-		}
+		//if(hover && clicked && clickable)onClick();
 		
 		textG.setPosition(pos);
 		textG.setRotation(rot);
@@ -157,6 +160,7 @@ public class GUIButton extends GUIComponent{
 	
 	@Override
 	public void destroy() {
+		FurryAttack.getInstance().getEventManager().removeListener(this);
 		GL15.glDeleteBuffers(VBO_ID);
 		tex.delete();
 		hover_tex.delete();
@@ -164,6 +168,22 @@ public class GUIButton extends GUIComponent{
 		textG.destroy();
 	}
 
+	// EVENTS LISTENING //
+	
+	public void onKeyPressed(MousePressedEvent ev) {
+		//if the gui is shown and hover
+		if(FurryAttack.getInstance().getRenderer().getGUIRenderer().getCurrentGUI().getGUI().equals(gui) && hover) {
+			clicked = true;
+		}
+	}
+	
+	public void onKeyReleased(MouseReleasedEvent ev) {
+		if(hover && clickable && FurryAttack.getInstance().getRenderer().getGUIRenderer().getCurrentGUI().getGUI().equals(gui))onClick();
+		clicked = false;
+	}
+	
+	// GETTERS AND SETTERS //
+	
 	public Vector3f getPosition() {
 		return pos;
 	}
@@ -180,12 +200,7 @@ public class GUIButton extends GUIComponent{
 		this.rot = rot;
 	}
 	
-	public Runnable getAction() {
-		return action;
-	}
-
 	public void setAction(Runnable action) {
-		this.action = action;
 		this.actionThread = new Thread(action);
 	}
 

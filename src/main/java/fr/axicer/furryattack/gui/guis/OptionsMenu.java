@@ -3,9 +3,8 @@ package fr.axicer.furryattack.gui.guis;
 import org.joml.Vector3f;
 
 import fr.axicer.furryattack.FurryAttack;
-import fr.axicer.furryattack.gui.elements.GUIButton;
+import fr.axicer.furryattack.gui.elements.ComponentFactory;
 import fr.axicer.furryattack.gui.elements.GUIComponent;
-import fr.axicer.furryattack.gui.elements.GUIImage;
 import fr.axicer.furryattack.gui.elements.GUIText;
 import fr.axicer.furryattack.gui.render.GUIs;
 import fr.axicer.furryattack.util.Color;
@@ -21,7 +20,7 @@ public class OptionsMenu extends GUI{
 	
 	private void init() {
 		float ratio = (float)Constants.WIDTH/(float)Constants.HEIGHT;
-		components.add(new GUIImage("/img/gui/background/menu-bg.png", //imgPath
+		components.add(ComponentFactory.generateImage("/img/gui/background/menu-bg.png", //imgPath
 				Constants.WIDTH, //width
 				Constants.HEIGHT, //height
 				new Vector3f(0,0,-1f))); //pos
@@ -31,13 +30,12 @@ public class OptionsMenu extends GUI{
 				FontType.CAPTAIN, //font
 				new Color(50, 70, 120, 255), // color
 				ratio*0.5f)); //scale
-		components.add(new GUIButton("Retour",
+		components.add(ComponentFactory.generateButton(this,
+				"Retour",
 				ratio*0.2f,
-				Constants.WIDTH/6f,
-				Constants.HEIGHT/10f,
+				(int)(Constants.WIDTH/6f),
+				(int)(Constants.HEIGHT/10f),
 				ratio*0.5f,
-				FontType.CAPTAIN,
-				Color.WHITE,
 				new Vector3f((float)Constants.WIDTH/2.5f, (float)-Constants.HEIGHT/2.5f, -1f),
 				0f,
 				new Runnable() {
@@ -45,13 +43,12 @@ public class OptionsMenu extends GUI{
 						FurryAttack.getInstance().getRenderer().getGUIRenderer().setCurrentGUI(GUIs.MAIN_MENU);
 					}
 				}));
-		components.add(new GUIButton("Vidéo",
+		components.add(ComponentFactory.generateButton(this,
+				"Vidéo",
 				ratio*0.2f,
-				Constants.WIDTH/3f,
-				Constants.HEIGHT/10f,
+				(int)(Constants.WIDTH/3f),
+				(int)(Constants.HEIGHT/10f),
 				ratio*0.5f,
-				FontType.CAPTAIN,
-				Color.WHITE,
 				new Vector3f(0, (float)Constants.HEIGHT/6.5f, -1f),
 				0f,
 				new Runnable() {
@@ -60,13 +57,12 @@ public class OptionsMenu extends GUI{
 						FurryAttack.getInstance().getRenderer().getGUIRenderer().setCurrentGUI(GUIs.VIDEO_OPTIONS);
 					}
 				}));
-		components.add(new GUIButton("Controles",
+		components.add(ComponentFactory.generateButton(this,
+				"Controles",
 				ratio*0.2f,
-				Constants.WIDTH/3f,
-				Constants.HEIGHT/10f,
+				(int)(Constants.WIDTH/3f),
+				(int)(Constants.HEIGHT/10f),
 				ratio*0.5f,
-				FontType.CAPTAIN,
-				Color.WHITE,
 				new Vector3f(0, (float)Constants.HEIGHT/20f, -1f),
 				0f,
 				new Runnable() {
@@ -75,23 +71,21 @@ public class OptionsMenu extends GUI{
 						FurryAttack.getInstance().getRenderer().getGUIRenderer().setCurrentGUI(GUIs.CONTROL_MENU);
 					}
 				}));
-		components.add(new GUIButton("Langue",
+		components.add(ComponentFactory.generateButton(this,
+				"Langue",
 				ratio*0.2f,
-				Constants.WIDTH/3f,
-				Constants.HEIGHT/10f,
+				(int)(Constants.WIDTH/3f),
+				(int)(Constants.HEIGHT/10f),
 				ratio*0.5f,
-				FontType.CAPTAIN,
-				Color.WHITE,
 				new Vector3f(0, (float)-Constants.HEIGHT/20f, -1f),
 				0f,
 				null));
-		components.add(new GUIButton("Credits",
+		components.add(ComponentFactory.generateButton(this,
+				"Credits",
 				ratio*0.2f,
-				Constants.WIDTH/3f,
-				Constants.HEIGHT/10f,
+				(int)(Constants.WIDTH/3f),
+				(int)(Constants.HEIGHT/10f),
 				ratio*0.5f,
-				FontType.CAPTAIN,
-				Color.WHITE,
 				new Vector3f(0, (float)-Constants.HEIGHT/6.5f, -1f),
 				0f,
 				null));

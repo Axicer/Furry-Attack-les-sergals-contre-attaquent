@@ -6,7 +6,7 @@ import java.util.List;
 
 public class EventManager {
 	
-	private List<EventListener> listeners;
+	public List<EventListener> listeners;
 	private List<EventListener> toDel;
 	
 	public EventManager() {

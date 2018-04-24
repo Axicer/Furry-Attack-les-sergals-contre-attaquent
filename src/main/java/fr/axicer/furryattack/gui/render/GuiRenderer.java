@@ -73,6 +73,10 @@ public class GuiRenderer implements Renderable,Updateable,Destroyable{
 		}, 250).start();
 	}
 	
+	public GUIs getCurrentGUI() {
+		return currentGUI;
+	}
+
 	@Override
 	public void destroy() {
 		guiFBO.cleanUp();

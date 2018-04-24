@@ -15,9 +15,8 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL11;
 
 import fr.axicer.furryattack.FurryAttack;
-import fr.axicer.furryattack.gui.elements.GUIButton;
+import fr.axicer.furryattack.gui.elements.ComponentFactory;
 import fr.axicer.furryattack.gui.elements.GUIComponent;
-import fr.axicer.furryattack.gui.elements.GUIImage;
 import fr.axicer.furryattack.gui.elements.GUIText;
 import fr.axicer.furryattack.gui.elements.items.GUIResolution;
 import fr.axicer.furryattack.gui.elements.selector.GUISelector;
@@ -36,7 +35,7 @@ public class VideoOptionsGUI extends GUI{
 
 	private void init() {
 		float ratio = (float)Constants.WIDTH/(float)Constants.HEIGHT;
-		components.add(new GUIImage("/img/gui/background/menu-bg.png", //imgPath
+		components.add(ComponentFactory.generateImage("/img/gui/background/menu-bg.png", //imgPath
 				Constants.WIDTH, //width
 				Constants.HEIGHT, //height
 				new Vector3f(0,0,-1f))); //pos
@@ -46,13 +45,12 @@ public class VideoOptionsGUI extends GUI{
 				FontType.CAPTAIN, //font
 				new Color(50, 70, 120, 255), // color
 				ratio*0.5f)); //scale
-		components.add(new GUIButton("Retour",
+		components.add(ComponentFactory.generateButton(this,
+				"Retour",
 				ratio*0.2f,
-				Constants.WIDTH/6f,
-				Constants.HEIGHT/10f,
+				(int)(Constants.WIDTH/6f),
+				(int)(Constants.HEIGHT/10f),
 				ratio*0.5f,
-				FontType.CAPTAIN,
-				Color.WHITE,
 				new Vector3f((float)Constants.WIDTH/2.5f, (float)-Constants.HEIGHT/2.5f, -1f),
 				0f,
 				new Runnable() {
@@ -61,21 +59,21 @@ public class VideoOptionsGUI extends GUI{
 					}
 				}));
 		//resolution selector
-			GUISelector<Resolution> selector = new GUISelector<Resolution>(new Vector3f((float)-Constants.WIDTH/12f, (float)Constants.HEIGHT/6.5f, -1f),
-					Constants.WIDTH/6f,
-					Constants.HEIGHT/10f,
+			GUISelector<Resolution> selector = new GUISelector<Resolution>(this,
+					new Vector3f((float)-Constants.WIDTH/12f, (float)Constants.HEIGHT/6.5f, -1f),
+					(int)(Constants.WIDTH/6f),
+					(int)(Constants.HEIGHT/10f),
 					FontType.CAPTAIN,
 					Color.WHITE,
 					getAllResolutions());
 			selector.setActualItem(getActual());
 			components.add(selector);
-			components.add(new GUIButton("Appliquer résolution",
+			components.add(ComponentFactory.generateButton(this,
+					"Appliquer résolution",
 					ratio*0.175f,
-					Constants.WIDTH/6f,
-					Constants.HEIGHT/10f,
+					(int)(Constants.WIDTH/6f),
+					(int)(Constants.HEIGHT/10f),
 					ratio*0.5f,
-					FontType.CAPTAIN,
-					Color.WHITE,
 					new Vector3f((float)Constants.WIDTH/12f, (float)Constants.HEIGHT/6.5f, -1f),
 					0f,
 					new Runnable() {
