@@ -1,4 +1,4 @@
-package fr.axicer.furryattack.gui;
+package fr.axicer.furryattack.gui.guis;
 
 import org.joml.Vector3f;
 
@@ -7,6 +7,7 @@ import fr.axicer.furryattack.gui.elements.GUIButton;
 import fr.axicer.furryattack.gui.elements.GUIComponent;
 import fr.axicer.furryattack.gui.elements.GUIImage;
 import fr.axicer.furryattack.gui.elements.GUIText;
+import fr.axicer.furryattack.gui.render.GUIs;
 import fr.axicer.furryattack.util.Color;
 import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.font.FontType;
@@ -70,7 +71,7 @@ public class MenuGUI extends GUI{
 									0f,
 									new Runnable() {
 										public void run() {
-											FurryAttack.getInstance().getGuiManager().setGUI(GUIManager.CHARACTER_CUSTOMISATION_MENU);
+											FurryAttack.getInstance().getRenderer().getGUIRenderer().setCurrentGUI(GUIs.CHARACTER_CHOICE_MENU);
 										}
 									}));
 		components.add(new GUIButton("Personnalisation de l'arme",
@@ -109,7 +110,7 @@ public class MenuGUI extends GUI{
 									0f,
 									new Runnable() {
 										public void run() {
-											FurryAttack.getInstance().getGuiManager().setGUI(GUIManager.OPTIONS_MENU);
+											FurryAttack.getInstance().getRenderer().getGUIRenderer().setCurrentGUI(GUIs.OPTION_MENU);
 										}
 									}));
 	}

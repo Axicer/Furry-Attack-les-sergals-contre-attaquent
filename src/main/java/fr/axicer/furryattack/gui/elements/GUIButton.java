@@ -16,7 +16,6 @@ import fr.axicer.furryattack.render.shader.ButtonShader;
 import fr.axicer.furryattack.render.textures.Texture;
 import fr.axicer.furryattack.util.Color;
 import fr.axicer.furryattack.util.Constants;
-import fr.axicer.furryattack.util.DelayableTask;
 import fr.axicer.furryattack.util.collision.CollisionBoxM;
 import fr.axicer.furryattack.util.control.MouseButtonHandler;
 import fr.axicer.furryattack.util.control.MouseHandler;
@@ -147,14 +146,8 @@ public class GUIButton extends GUIComponent{
 
 		hover = box.isInside((float)MouseHandler.getPosX()-Constants.WIDTH/2f, -((float)MouseHandler.getPosY()-Constants.HEIGHT/2f));
 		
-		if(hover && MouseButtonHandler.isPressedL()) {
+		if(hover && MouseButtonHandler.isPressedL() && clickable) {
 			onClick();
-			clickable = false;
-			new DelayableTask(new Runnable() {
-				public void run() {
-					clickable = true;
-				}
-			}, 100L).start();
 		}
 		
 		textG.setPosition(pos);

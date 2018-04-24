@@ -17,8 +17,8 @@ import org.lwjgl.system.MemoryStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fr.axicer.furryattack.gui.GUIManager;
 import fr.axicer.furryattack.render.Renderable;
+import fr.axicer.furryattack.render.Renderer;
 import fr.axicer.furryattack.render.Updateable;
 import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.Util;
@@ -46,7 +46,7 @@ public class FurryAttack implements Renderable, Updateable{
 	public Matrix4f projectionMatrix;
 	public Matrix4f viewMatrix;
 
-	private GUIManager guiManager;
+	private Renderer renderer;
 	private EventManager eventManager;
 	
 	private Logger logger = LoggerFactory.getLogger(FurryAttack.class);
@@ -64,8 +64,8 @@ public class FurryAttack implements Renderable, Updateable{
 		projectionMatrix = new Matrix4f().ortho(-Constants.WIDTH/2, Constants.WIDTH/2, -Constants.HEIGHT/2, Constants.HEIGHT/2, 0.1f, 1000.0f);
 		viewMatrix = new Matrix4f().identity();
 
-		guiManager = new GUIManager();
 		eventManager = new EventManager();
+		renderer = new Renderer();
 	}
 	
 	private void initFrame() {
@@ -181,7 +181,7 @@ public class FurryAttack implements Renderable, Updateable{
 	}
 	
 	public void exit() {
-		guiManager.destroy();
+		renderer.destroy();
 		// Free the window callbacks and destroy the window
 		glfwFreeCallbacks(window);
 		glfwDestroyWindow(window);
@@ -197,18 +197,18 @@ public class FurryAttack implements Renderable, Updateable{
 	
 	@Override
 	public void update() {
-		guiManager.update();
+		renderer.update();
 	}
 
 	@Override
 	public void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-		guiManager.render();
+		renderer.render();
 		glfwSwapBuffers(window); // swap the color buffers
 	}
 	
-	public GUIManager getGuiManager() {
-		return guiManager;
+	public Renderer getRenderer() {
+		return renderer;
 	}
 	
 	public EventManager getEventManager() {

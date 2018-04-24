@@ -8,6 +8,7 @@ import fr.axicer.furryattack.gui.elements.GUIImage;
 import fr.axicer.furryattack.gui.elements.GUIText;
 import fr.axicer.furryattack.util.Color;
 import fr.axicer.furryattack.util.Constants;
+import fr.axicer.furryattack.util.DelayableTask;
 import fr.axicer.furryattack.util.font.FontType;
 
 public class GUISelector<T> extends GUIComponent{
@@ -65,12 +66,24 @@ public class GUISelector<T> extends GUIComponent{
 		selectedIndex++;
 		if(selectedIndex == this.items.length)selectedIndex = 0;
 		updateText();
+		this.right.setClickable(false);
+		new DelayableTask(new Runnable() {
+			public void run() {
+				right.setClickable(true);
+			}
+		}, 250).start();
 	}
 	
 	public void getPreviousItem() {
 		selectedIndex--;
 		if(selectedIndex == -1)selectedIndex = this.items.length-1;
 		updateText();
+		this.left.setClickable(false);
+		new DelayableTask(new Runnable() {
+			public void run() {
+				left.setClickable(true);
+			}
+		}, 250).start();
 	}
 	
 	private void updateText() {

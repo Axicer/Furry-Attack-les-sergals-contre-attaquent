@@ -1,4 +1,4 @@
-package fr.axicer.furryattack.gui;
+package fr.axicer.furryattack.gui.guis;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -21,6 +21,7 @@ import fr.axicer.furryattack.gui.elements.GUIImage;
 import fr.axicer.furryattack.gui.elements.GUIText;
 import fr.axicer.furryattack.gui.elements.items.GUIResolution;
 import fr.axicer.furryattack.gui.elements.selector.GUISelector;
+import fr.axicer.furryattack.gui.render.GUIs;
 import fr.axicer.furryattack.util.Color;
 import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.Resolution;
@@ -56,7 +57,7 @@ public class VideoOptionsGUI extends GUI{
 				0f,
 				new Runnable() {
 					public void run() {
-						FurryAttack.getInstance().getGuiManager().setGUI(GUIManager.OPTIONS_MENU);
+						FurryAttack.getInstance().getRenderer().getGUIRenderer().setCurrentGUI(GUIs.OPTION_MENU);
 					}
 				}));
 		//resolution selector
@@ -80,6 +81,7 @@ public class VideoOptionsGUI extends GUI{
 					new Runnable() {
 						@Override
 						public void run() {
+							System.out.println("called");
 							Constants.WIDTH = selector.getActalItem().getVal().getWidth();
 							Constants.HEIGHT = selector.getActalItem().getVal().getHeight();
 							Constants.MAIN_CONFIG.setInt("width", Constants.WIDTH, true);
@@ -88,8 +90,8 @@ public class VideoOptionsGUI extends GUI{
 							GLFW.glfwSetWindowSize(FurryAttack.getInstance().window, Constants.WIDTH, Constants.HEIGHT);
 							GL11.glViewport(0, 0, Constants.WIDTH, Constants.HEIGHT);
 							FurryAttack.getInstance().projectionMatrix = new Matrix4f().ortho(-Constants.WIDTH/2, Constants.WIDTH/2, -Constants.HEIGHT/2, Constants.HEIGHT/2, 0.1f, 1000.0f);
-							FurryAttack.getInstance().getGuiManager().recreate();
-							FurryAttack.getInstance();
+							System.out.println("resizing to "+Constants.WIDTH+"x"+Constants.HEIGHT);
+							FurryAttack.getInstance().getRenderer().recreate();
 							GLFWVidMode vidmode = glfwGetVideoMode(glfwGetMonitors().get(FurryAttack.screenid));
 							GLFW.glfwSetWindowPos(
 									FurryAttack.getInstance().window,

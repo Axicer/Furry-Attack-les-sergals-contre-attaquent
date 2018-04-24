@@ -68,6 +68,44 @@ public class GUIImage extends GUIComponent{
 		shader.unbind();
 	}
 	
+	/**
+	 * Create a GUIImage from a given textureId
+	 * @param textureId
+	 * @param width
+	 * @param height
+	 * @param pos
+	 * @param rot
+	 * @param scale
+	 */
+	public GUIImage(int textureId, int width, int height, Vector3f pos, float rot, float scale) {
+		this.tex = new Texture(textureId, width, height, GL12.GL_CLAMP_TO_EDGE, GL11.GL_LINEAR);
+		shader = new BackgroundShader();
+		this.pos = pos;
+		this.rot = rot;
+		this.scale = scale;
+		
+		FloatBuffer vertices = BufferUtils.createFloatBuffer(3);
+		vertices.put(new float[] {0f,0f,0f});
+		vertices.flip();
+		vbo = GL15.glGenBuffers();
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertices, GL15.GL_STATIC_DRAW);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		
+		modelMatrix = new Matrix4f().identity().translate(pos).rotateZ(rot).scale(scale);
+		
+		shader.bind();
+		shader.setUniformi("tex", 0);
+		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
+		shader.setUniformMat4f("viewMatrix", FurryAttack.getInstance().viewMatrix);
+		shader.setUniformMat4f("modelMatrix", modelMatrix);
+		shader.setUniformf("screenWidth", (float)width);
+		shader.setUniformf("screenHeight", (float)height);
+		shader.setUniformi("blur", 0);
+		shader.setUniformvec2f("blurDir", new Vector2f());
+		shader.unbind();
+	}
+	
 	@Override
 	public void render() {
 		GL11.glEnable(GL11.GL_BLEND);

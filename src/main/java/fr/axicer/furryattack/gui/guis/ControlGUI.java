@@ -1,4 +1,4 @@
-package fr.axicer.furryattack.gui;
+package fr.axicer.furryattack.gui.guis;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,6 +12,7 @@ import fr.axicer.furryattack.gui.elements.GUIComponent;
 import fr.axicer.furryattack.gui.elements.GUIImage;
 import fr.axicer.furryattack.gui.elements.GUIInputButton;
 import fr.axicer.furryattack.gui.elements.GUIText;
+import fr.axicer.furryattack.gui.render.GUIs;
 import fr.axicer.furryattack.util.Color;
 import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.config.Configuration;
@@ -60,7 +61,7 @@ public class ControlGUI extends GUI{
 				0f,
 				new Runnable() {
 					public void run() {
-						FurryAttack.getInstance().getGuiManager().setGUI(GUIManager.OPTIONS_MENU);
+						FurryAttack.getInstance().getRenderer().getGUIRenderer().setCurrentGUI(GUIs.OPTION_MENU);
 					}
 				}));
 		components.add(new GUIText("Haut:", //text

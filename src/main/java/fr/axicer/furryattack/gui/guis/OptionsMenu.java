@@ -1,4 +1,4 @@
-package fr.axicer.furryattack.gui;
+package fr.axicer.furryattack.gui.guis;
 
 import org.joml.Vector3f;
 
@@ -7,6 +7,7 @@ import fr.axicer.furryattack.gui.elements.GUIButton;
 import fr.axicer.furryattack.gui.elements.GUIComponent;
 import fr.axicer.furryattack.gui.elements.GUIImage;
 import fr.axicer.furryattack.gui.elements.GUIText;
+import fr.axicer.furryattack.gui.render.GUIs;
 import fr.axicer.furryattack.util.Color;
 import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.font.FontType;
@@ -41,7 +42,7 @@ public class OptionsMenu extends GUI{
 				0f,
 				new Runnable() {
 					public void run() {
-						FurryAttack.getInstance().getGuiManager().setGUI(GUIManager.MENU);
+						FurryAttack.getInstance().getRenderer().getGUIRenderer().setCurrentGUI(GUIs.MAIN_MENU);
 					}
 				}));
 		components.add(new GUIButton("Vidéo",
@@ -56,7 +57,7 @@ public class OptionsMenu extends GUI{
 				new Runnable() {
 					@Override
 					public void run() {
-						FurryAttack.getInstance().getGuiManager().setGUI(GUIManager.VIDEO_OPTION_MENU);
+						FurryAttack.getInstance().getRenderer().getGUIRenderer().setCurrentGUI(GUIs.VIDEO_OPTIONS);
 					}
 				}));
 		components.add(new GUIButton("Controles",
@@ -71,7 +72,7 @@ public class OptionsMenu extends GUI{
 				new Runnable() {
 					@Override
 					public void run() {
-						FurryAttack.getInstance().getGuiManager().setGUI(GUIManager.CONTROL_MENU);
+						FurryAttack.getInstance().getRenderer().getGUIRenderer().setCurrentGUI(GUIs.CONTROL_MENU);
 					}
 				}));
 		components.add(new GUIButton("Langue",

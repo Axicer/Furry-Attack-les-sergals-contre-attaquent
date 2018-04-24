@@ -1,4 +1,4 @@
-package fr.axicer.furryattack.gui;
+package fr.axicer.furryattack.gui.guis;
 
 import java.util.ArrayList;
 import java.util.List;
