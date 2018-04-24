@@ -95,7 +95,7 @@ public class GUISelector<T> extends GUIComponent{
 	
 	@Override
 	public void render() {
-		bg.render();
+		//bg.render();
 		left.render();
 		text.render();
 		right.render();

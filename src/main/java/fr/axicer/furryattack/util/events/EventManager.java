@@ -30,7 +30,8 @@ public class EventManager {
 	}
 	
 	public void sendEvent(AbstractEvent e) {
-		listeners.forEach(l -> {
+		for(int i = listeners.size()-1 ; i >= 0 ; i--) {
+			EventListener l = listeners.get(i);
 			for(Method method : l.getClass().getMethods()){
 				if(method.getParameterTypes().length != 1)continue;
 				boolean found = false;
@@ -48,7 +49,7 @@ public class EventManager {
 					}
 				}
 			}
-		});
+		}
 		listeners.removeAll(toDel);
 		toDel.clear();
 	}

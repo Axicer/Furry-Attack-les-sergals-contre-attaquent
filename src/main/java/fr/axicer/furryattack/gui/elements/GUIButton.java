@@ -26,11 +26,8 @@ import fr.axicer.furryattack.util.font.FontType;
 
 public class GUIButton extends GUIComponent implements EventListener{
 
-	private Vector3f pos;
-	private float rot;
 	private float width, height;
 	private float scale;
-	private GUI gui;
 	
 	private CollisionBoxM box;
 	private boolean hover;
@@ -160,7 +157,7 @@ public class GUIButton extends GUIComponent implements EventListener{
 	
 	@Override
 	public void destroy() {
-		FurryAttack.getInstance().getEventManager().removeListener(this);
+		FurryAttack.getInstance().getEventManager().addToDeletionList(this);
 		GL15.glDeleteBuffers(VBO_ID);
 		tex.delete();
 		hover_tex.delete();

@@ -16,6 +16,7 @@ import org.lwjgl.opengl.GL11;
 
 import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.gui.elements.ComponentFactory;
+import fr.axicer.furryattack.gui.elements.GUICheckBox;
 import fr.axicer.furryattack.gui.elements.GUIComponent;
 import fr.axicer.furryattack.gui.elements.GUIText;
 import fr.axicer.furryattack.gui.elements.items.GUIResolution;
@@ -59,46 +60,62 @@ public class VideoOptionsGUI extends GUI{
 					}
 				}));
 		//resolution selector
-			GUISelector<Resolution> selector = new GUISelector<Resolution>(this,
-					new Vector3f((float)-Constants.WIDTH/12f, (float)Constants.HEIGHT/6.5f, -1f),
-					(int)(Constants.WIDTH/6f),
-					(int)(Constants.HEIGHT/10f),
-					FontType.CAPTAIN,
-					Color.WHITE,
-					getAllResolutions());
-			selector.setActualItem(getActual());
-			components.add(selector);
-			components.add(ComponentFactory.generateButton(this,
-					"Appliquer résolution",
-					ratio*0.175f,
-					(int)(Constants.WIDTH/6f),
-					(int)(Constants.HEIGHT/10f),
-					ratio*0.5f,
-					new Vector3f((float)Constants.WIDTH/12f, (float)Constants.HEIGHT/6.5f, -1f),
-					0f,
-					new Runnable() {
-						@Override
-						public void run() {
-							System.out.println("called");
-							Constants.WIDTH = selector.getActalItem().getVal().getWidth();
-							Constants.HEIGHT = selector.getActalItem().getVal().getHeight();
-							Constants.MAIN_CONFIG.setInt("width", Constants.WIDTH, true);
-							Constants.MAIN_CONFIG.setInt("height", Constants.HEIGHT, true);
-							Constants.MAIN_CONFIG.save(Constants.MAIN_CONFIG_FILE);
-							GLFW.glfwSetWindowSize(FurryAttack.getInstance().window, Constants.WIDTH, Constants.HEIGHT);
-							GL11.glViewport(0, 0, Constants.WIDTH, Constants.HEIGHT);
-							FurryAttack.getInstance().projectionMatrix = new Matrix4f().ortho(-Constants.WIDTH/2, Constants.WIDTH/2, -Constants.HEIGHT/2, Constants.HEIGHT/2, 0.1f, 1000.0f);
-							System.out.println("resizing to "+Constants.WIDTH+"x"+Constants.HEIGHT);
-							FurryAttack.getInstance().getRenderer().recreate();
-							GLFWVidMode vidmode = glfwGetVideoMode(glfwGetMonitors().get(FurryAttack.screenid));
-							GLFW.glfwSetWindowPos(
-									FurryAttack.getInstance().window,
-									(vidmode.width() - Constants.WIDTH) / 2,
-									(vidmode.height() - Constants.HEIGHT) / 2
-								);
-						}
-					}));
-			
+		GUISelector<Resolution> selector = new GUISelector<Resolution>(this,
+				new Vector3f(0f, (float)Constants.HEIGHT/6.5f, -1f),
+				(int)(Constants.WIDTH/6f),
+				(int)(Constants.HEIGHT/10f),
+				FontType.CAPTAIN,
+				Color.WHITE,
+				getAllResolutions());
+		selector.setActualItem(getActual());
+		components.add(selector);
+		components.add(ComponentFactory.generateButton(this,
+				"Appliquer",
+				ratio*0.175f,
+				(int)(Constants.WIDTH/6f),
+				(int)(Constants.HEIGHT/10f),
+				ratio*0.5f,
+				new Vector3f(0f, (float)-Constants.HEIGHT/6.5f, -1f),
+				0f,
+				new Runnable() {
+					@Override
+					public void run() {
+						Constants.WIDTH = selector.getActalItem().getVal().getWidth();
+						Constants.HEIGHT = selector.getActalItem().getVal().getHeight();
+						Constants.MAIN_CONFIG.setInt("width", Constants.WIDTH, true);
+						Constants.MAIN_CONFIG.setInt("height", Constants.HEIGHT, true);
+						Constants.MAIN_CONFIG.save(Constants.MAIN_CONFIG_FILE);
+						System.out.println(Constants.FULLSCREEN);
+						Constants.FULLSCREEN = Constants.MAIN_CONFIG.getBoolean("fullscreen", false);
+						GLFW.glfwSetWindowSize(FurryAttack.getInstance().window, Constants.WIDTH, Constants.HEIGHT);
+						GL11.glViewport(0, 0, Constants.WIDTH, Constants.HEIGHT);
+						FurryAttack.getInstance().projectionMatrix = new Matrix4f().ortho(-Constants.WIDTH/2, Constants.WIDTH/2, -Constants.HEIGHT/2, Constants.HEIGHT/2, 0.1f, 1000.0f);
+						FurryAttack.getInstance().getRenderer().recreate();
+						GLFWVidMode vidmode = glfwGetVideoMode(glfwGetMonitors().get(FurryAttack.screenid));
+						GLFW.glfwSetWindowPos(
+								FurryAttack.getInstance().window,
+								(vidmode.width() - Constants.WIDTH) / 2,
+								(vidmode.height() - Constants.HEIGHT) / 2
+							);
+					}
+				}));
+		components.add(new GUIText("Plein Ecran",
+				new Vector3f(-Constants.WIDTH/30f, 0f, -1f),
+				0f,
+				FontType.CAPTAIN,
+				Color.WHITE,
+				ratio*0.25f));
+		components.add(new GUICheckBox(this,
+				Constants.MAIN_CONFIG,
+				Constants.MAIN_CONFIG_FILE,
+				"fullscreen",
+				30,
+				30,
+				1f,
+				new Vector3f(Constants.WIDTH/30f,0f,-1f),
+				0f,
+				"/img/gui/checkbox/checkbox.png",
+				"/img/gui/checkbox/checkbox_checked.png"));
 	}
 	
 	private GUIResolution getActual() {

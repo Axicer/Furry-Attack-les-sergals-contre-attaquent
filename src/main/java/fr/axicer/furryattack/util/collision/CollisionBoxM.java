@@ -54,8 +54,6 @@ public class CollisionBoxM {
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 	}
 	
-	
-	
 	public void render() {
 		GL11.glLineWidth(2f);
 		shader.bind();
