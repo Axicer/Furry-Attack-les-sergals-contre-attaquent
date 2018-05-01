@@ -2,6 +2,7 @@ package fr.axicer.furryattack.gui.elements;
 
 import java.io.File;
 import java.nio.FloatBuffer;
+import java.util.UUID;
 
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -38,6 +39,7 @@ public class GUICheckBox extends GUIComponent implements EventListener{
 	private Texture tex_checked;
 	private boolean hover;
 	private boolean clickable = true;
+	private UUID listenerId;
 	
 	private CollisionBoxM box;
 	private Matrix4f modelMatrix;
@@ -62,7 +64,7 @@ public class GUICheckBox extends GUIComponent implements EventListener{
 		this.modelMatrix = new Matrix4f().identity().translate(pos).rotateZ(rot).scale(scale);
 		this.box = new CollisionBoxM();
 		this.shader = new CheckBoxShader();
-		FurryAttack.getInstance().getEventManager().addListener(this);
+		this.listenerId = FurryAttack.getInstance().getEventManager().addListener(this);
 
 		FloatBuffer vertices = BufferUtils.createFloatBuffer(3);
 		vertices.put(new float[] {0f,0f,0f});
@@ -128,7 +130,7 @@ public class GUICheckBox extends GUIComponent implements EventListener{
 
 	@Override
 	public void destroy() {
-		FurryAttack.getInstance().getEventManager().addToDeletionList(this);
+		FurryAttack.getInstance().getEventManager().removeListener(listenerId);
 		GL15.glDeleteBuffers(VBO_ID);
 		tex.delete();
 		tex_checked.delete();

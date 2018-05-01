@@ -14,6 +14,7 @@ import fr.axicer.furryattack.util.control.events.KeyTypedEvent;
 import fr.axicer.furryattack.util.events.EventListener;
 import fr.axicer.furryattack.util.font.FontType;
 
+//TODO remake the whole class
 public class GUIInputButton extends GUIButton implements EventListener{
 
 	private static final int DEFAULT_KEY = 0;
@@ -53,6 +54,6 @@ public class GUIInputButton extends GUIButton implements EventListener{
 			setValue(DEFAULT_KEY);
 		}
 		config.save(configFile);
-		FurryAttack.getInstance().getEventManager().addToDeletionList(this);
+//		FurryAttack.getInstance().getEventManager().addToDeletionList(this);
 	}
 }

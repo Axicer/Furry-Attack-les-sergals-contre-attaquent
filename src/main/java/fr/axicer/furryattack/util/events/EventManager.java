@@ -1,56 +1,50 @@
 package fr.axicer.furryattack.util.events;
 
 import java.lang.reflect.Method;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class EventManager {
 	
-	public List<EventListener> listeners;
-	private List<EventListener> toDel;
+	private Map<UUID, EventListener> listeners;
 	
 	public EventManager() {
-		listeners = new LinkedList<EventListener>();
-		toDel = new LinkedList<>();
+		listeners = new HashMap<>();
 	}
 	
-	public boolean addListener(EventListener listener) {
-		if(listeners.contains(listener))return false;
-		return listeners.add(listener);
+	public UUID addListener(EventListener listener) {
+		UUID id = UUID.randomUUID();
+		listeners.put(id, listener);
+		return id;
 	}
 	
-	public boolean removeListener(EventListener listener) {
-		if(!listeners.contains(listener))return false;
-		return listeners.remove(listener);
-	}
-	
-	public boolean addToDeletionList(EventListener listener) {
-		if(toDel.contains(listener))return false;
-		return toDel.add(listener);
+	public boolean removeListener(UUID id) {
+		return listeners.remove(id) != null;
 	}
 	
 	public void sendEvent(AbstractEvent e) {
-		for(int i = listeners.size()-1 ; i >= 0 ; i--) {
-			EventListener l = listeners.get(i);
+		//creating a new map to avoid concurrent modification
+		Map<UUID, EventListener> runningMap = new HashMap<>(listeners);
+		for(EventListener l : runningMap.values()) {
+			//iterating through all methods
 			for(Method method : l.getClass().getMethods()){
+				//keeping only methods with 1 argument (which should be the event type)
 				if(method.getParameterTypes().length != 1)continue;
-				boolean found = false;
+				//iterating through each parameter (only one parameter)
 				for(Class<?> c : method.getParameterTypes()){
+					//check if the type is the same
 					if(c.isAssignableFrom(e.getClass())){
-						found = true;
+						//invoking the method
+						try {
+							method.invoke(l, e);
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
 						break;
-					}
-				}
-				if(found){
-					try {
-						method.invoke(l, e);
-					} catch (Exception ex) {
-						ex.printStackTrace();
 					}
 				}
 			}
 		}
-		listeners.removeAll(toDel);
-		toDel.clear();
 	}
 }

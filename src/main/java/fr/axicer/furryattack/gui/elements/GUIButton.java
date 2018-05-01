@@ -1,6 +1,7 @@
 package fr.axicer.furryattack.gui.elements;
 
 import java.nio.FloatBuffer;
+import java.util.UUID;
 
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -35,7 +36,7 @@ public class GUIButton extends GUIComponent implements EventListener{
 	private boolean clickable = true;
 	
 	private Thread actionThread;
-	
+	private UUID listenerId;
 	private GUIText textG;
 	
 	private Texture tex;
@@ -67,7 +68,7 @@ public class GUIButton extends GUIComponent implements EventListener{
 		this.modelMatrix = new Matrix4f().translate(pos).rotateZ(rot).scale(scale);
 		
 		//register this button to the event System
-		FurryAttack.getInstance().getEventManager().addListener(this);
+		this.listenerId = FurryAttack.getInstance().getEventManager().addListener(this);
 		
 		init();
 	}
@@ -157,7 +158,7 @@ public class GUIButton extends GUIComponent implements EventListener{
 	
 	@Override
 	public void destroy() {
-		FurryAttack.getInstance().getEventManager().addToDeletionList(this);
+		FurryAttack.getInstance().getEventManager().removeListener(listenerId);
 		GL15.glDeleteBuffers(VBO_ID);
 		tex.delete();
 		hover_tex.delete();
