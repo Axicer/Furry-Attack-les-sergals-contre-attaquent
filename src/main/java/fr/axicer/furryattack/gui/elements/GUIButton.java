@@ -36,7 +36,7 @@ public class GUIButton extends GUIComponent implements EventListener{
 	private boolean clickable = true;
 	
 	private Thread actionThread;
-	private UUID listenerId;
+	protected UUID listenerId;
 	private GUIText textG;
 	
 	private Texture tex;
