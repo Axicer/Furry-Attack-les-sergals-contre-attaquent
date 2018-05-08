@@ -1,4 +1,4 @@
-package fr.axicer.furryattack.util.config.lang;
+package fr.axicer.furryattack.util.lang;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

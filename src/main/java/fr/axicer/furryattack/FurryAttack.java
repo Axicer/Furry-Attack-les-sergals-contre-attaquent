@@ -66,6 +66,10 @@ public class FurryAttack implements Renderable, Updateable{
 
 		eventManager = new EventManager();
 		renderer = new Renderer();
+		
+		//only show GUI at first launch
+		renderer.getGUIRenderer().setActivated(true);
+		renderer.getMapRenderer().setActivated(false);
 	}
 	
 	private void initFrame() {
@@ -191,9 +195,7 @@ public class FurryAttack implements Renderable, Updateable{
 		glfwSetErrorCallback(null).free();
 	}
 	
-	public void updatesec() {
-		
-	}
+	public void updatesec() {}
 	
 	@Override
 	public void update() {

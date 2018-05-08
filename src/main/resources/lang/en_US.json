@@ -1,13 +1,58 @@
 {
 	"name":"English (US)",
 	"translation":{
+		"generic":{
+			"todo":"//TODO",
+			"apply":"Apply",
+			"back":"Back"
+		},
 		"menu":{
-			"singleplayer":"Singleplayer",
-			"multiplayer":"Multiplayer",
-			"characterCustom":"Character Customisation",
-			"GunCustom":"Gun Customisation",
-			"quit":"Quit game",
-			"options":"Options"
+			"main":{
+				"singleplayer":"Singleplayer",
+				"multiplayer":"Multiplayer",
+				"characterCustom":"Character Customisation",
+				"GunCustom":"Gun Customisation",
+				"quit":"Quit Game",
+				"options":"Options"
+			},
+			"options":{
+				"optionsTitle":"Options",
+				"video":"Video",
+				"control":"Control",
+				"language":"Language",
+				"credits":"Credits",
+				"back":"@translation.generic.back"
+			},
+			"video":{
+				"videoTitle":"Video Options",
+				"fullscreen":"Fullscreen",
+				"apply":"@translation.generic.apply",
+				"back":"Back"
+			},
+			"control":{
+				"controlTitle":"Controls",
+				"up":"Up",
+				"down":"Down",
+				"left":"Left",
+				"right":"Right",
+				"jump":"Jump",
+				"shift":"Shift",
+				"back":"@translation.generic.back"
+			},
+			"custom":{
+				"character":{
+					"race":"Race",
+					"color":{
+						"primary":"Primary Color",
+						"secondary":"Secondary Color"
+					},
+					"import":"Import",
+					"export":"Export",
+					"reset":"Reset",
+					"apply":"@translation.generic.apply",
+					"back":"@translation.generic.back"
+				}
+			}
 		}
 	}
 }

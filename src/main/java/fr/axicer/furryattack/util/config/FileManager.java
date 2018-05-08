@@ -21,6 +21,9 @@ public class FileManager {
 	public static final String IMAGE_FOLDER_NAME = "img";
 	public static String IMAGE_FOLDER;
 	public static File IMAGE_FOLDER_FILE;
+	public static final String LANG_FOLDER_NAME = "lang";
+	public static String LANG_FOLDER;
+	public static File LANG_FOLDER_FILE;
 	
 	public static void initialize() {
 		String OSname = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
@@ -53,7 +56,8 @@ public class FileManager {
 		ANIMATION_FOLDER = GAME_FOLDER+ANIMATION_FOLDER_NAME+File.separator;
 		MAPS_FOLDER = GAME_FOLDER+MAPS_FOLDER_NAME+File.separator;
 		IMAGE_FOLDER = GAME_FOLDER+IMAGE_FOLDER_NAME+File.separator;
-
+		LANG_FOLDER = GAME_FOLDER+LANG_FOLDER_NAME+File.separator;
+		
 		GAME_FOLDER_FILE = new File(GAME_FOLDER);
 		GAME_FOLDER_FILE.mkdirs();
 		CONFIG_FOLDER_FILE = new File(CONFIG_FOLDER);
@@ -64,6 +68,8 @@ public class FileManager {
 		MAPS_FOLDER_FILE.mkdirs();
 		IMAGE_FOLDER_FILE = new File(IMAGE_FOLDER);
 		IMAGE_FOLDER_FILE.mkdirs();
+		LANG_FOLDER_FILE = new File(LANG_FOLDER);
+		LANG_FOLDER_FILE.mkdirs();
 	}
 
 	public static OSType getOS() {
