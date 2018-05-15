@@ -16,6 +16,7 @@ import org.lwjgl.opengl.GL11;
 
 import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.gui.elements.ComponentFactory;
+import fr.axicer.furryattack.gui.elements.GUIAlignement;
 import fr.axicer.furryattack.gui.elements.GUICheckBox;
 import fr.axicer.furryattack.gui.elements.GUIComponent;
 import fr.axicer.furryattack.gui.elements.GUIText;
@@ -39,13 +40,15 @@ public class VideoOptionsGUI extends GUI{
 		components.add(ComponentFactory.generateImage("/img/gui/background/menu-bg.png", //imgPath
 				Constants.WIDTH, //width
 				Constants.HEIGHT, //height
-				new Vector3f(0,0,-1f))); //pos
+				new Vector3f(0,0,-1f), //pos
+				GUIAlignement.CENTER));
 		components.add(new GUIText("Options vidéo", //text
 				new Vector3f(0f, (float)Constants.HEIGHT/2.5f, -1f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				new Color(50, 70, 120, 255), // color
-				ratio*0.5f)); //scale
+				ratio*0.5f, //scale
+				GUIAlignement.CENTER));
 		components.add(ComponentFactory.generateButton(this,
 				"Retour",
 				ratio*0.2f,
@@ -54,6 +57,7 @@ public class VideoOptionsGUI extends GUI{
 				ratio*0.5f,
 				new Vector3f((float)Constants.WIDTH/2.5f, (float)-Constants.HEIGHT/2.5f, -1f),
 				0f,
+				GUIAlignement.CENTER,
 				new Runnable() {
 					public void run() {
 						FurryAttack.getInstance().getRenderer().getGUIRenderer().setCurrentGUI(GUIs.OPTION_MENU);
@@ -66,6 +70,7 @@ public class VideoOptionsGUI extends GUI{
 				(int)(Constants.HEIGHT/10f),
 				FontType.CAPTAIN,
 				Color.WHITE,
+				GUIAlignement.CENTER,
 				getAllResolutions());
 		selector.setActualItem(getActual());
 		components.add(selector);
@@ -77,6 +82,7 @@ public class VideoOptionsGUI extends GUI{
 				ratio*0.5f,
 				new Vector3f(0f, (float)-Constants.HEIGHT/6.5f, -1f),
 				0f,
+				GUIAlignement.CENTER,
 				new Runnable() {
 					@Override
 					public void run() {
@@ -104,7 +110,8 @@ public class VideoOptionsGUI extends GUI{
 				0f,
 				FontType.CAPTAIN,
 				Color.WHITE,
-				ratio*0.25f));
+				ratio*0.25f,
+				GUIAlignement.CENTER));
 		components.add(new GUICheckBox(this,
 				Constants.MAIN_CONFIG,
 				Constants.MAIN_CONFIG_FILE,
@@ -115,7 +122,8 @@ public class VideoOptionsGUI extends GUI{
 				new Vector3f(Constants.WIDTH/30f,0f,-1f),
 				0f,
 				"/img/gui/checkbox/checkbox.png",
-				"/img/gui/checkbox/checkbox_checked.png"));
+				"/img/gui/checkbox/checkbox_checked.png",
+				GUIAlignement.CENTER));
 	}
 	
 	private GUIResolution getActual() {

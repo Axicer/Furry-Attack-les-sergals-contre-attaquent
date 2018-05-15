@@ -23,31 +23,96 @@ import fr.axicer.furryattack.util.control.MouseHandler;
 import fr.axicer.furryattack.util.control.events.MousePressedEvent;
 import fr.axicer.furryattack.util.control.events.MouseReleasedEvent;
 import fr.axicer.furryattack.util.events.EventListener;
+import fr.axicer.furryattack.util.events.EventManager;
 import fr.axicer.furryattack.util.font.FontType;
 
+/**
+ * A simple button component
+ * @author Axicer
+ *
+ */
 public class GUIButton extends GUIComponent implements EventListener{
 
-	private float width, height;
+	/**
+	 * button width and height
+	 */
+	private int width, height;
+	/**
+	 * float scale
+	 */
 	private float scale;
-	
+	/**
+	 * collision box used
+	 */
 	private CollisionBoxM box;
+	/**
+	 * whether the button is hovered
+	 */
 	private boolean hover;
+	/**
+	 * whether the button is clicked
+	 */
 	private boolean clicked;
+	/**
+	 * whether the button is clickable
+	 */
 	private boolean clickable = true;
-	
+	/**
+	 * the action thread when clicked
+	 */
 	private Thread actionThread;
+	/**
+	 * event system listener id given by {@link EventManager}
+	 */
 	protected UUID listenerId;
+	/**
+	 * text component used to render text
+	 */
 	private GUIText textG;
-	
+	/**
+	 * base texture
+	 */
 	private Texture tex;
+	/**
+	 * hovered texture
+	 */
 	private Texture hover_tex;
+	/**
+	 * clicked texture
+	 */
 	private Texture click_tex;
-	
+	/**
+	 * button's model matrix
+	 */
 	private Matrix4f modelMatrix;
+	/**
+	 * shader used to render
+	 */
 	private ButtonShader shader;
+	/**
+	 * vertex buffer id
+	 */
 	private int VBO_ID;
 	
-	public GUIButton(GUI gui, String text, float textMul ,float width, float height, String texturePath, String hoverTexturePath, String clickTexturePath, float scale, FontType type, Color textColor, Vector3f pos, float rot, Runnable action) {
+	/**
+	 * A {@link GUIButton} constructor
+	 * @param gui {@link GUI} parent gui
+	 * @param text {@link String} text to render
+	 * @param textMul float text scale
+	 * @param width int button's width
+	 * @param height int button's height
+	 * @param texturePath {@link String} base texture path
+	 * @param hoverTexturePath {@link String} hovered texture path
+	 * @param clickTexturePath {@link String} clicked texture path
+	 * @param scale float scale of the button
+	 * @param type {@link FontType} to used
+	 * @param textColor {@link Color} color to use
+	 * @param pos {@link Vector3f} position of the button
+	 * @param rot float rotation of the button
+	 * @param alignement {@link GUIAlignement} alignement
+	 * @param action {@link Runnable} action to do
+	 */
+	public GUIButton(GUI gui, String text, float textMul ,int width, int height, String texturePath, String hoverTexturePath, String clickTexturePath, float scale, FontType type, Color textColor, Vector3f pos, float rot, GUIAlignement alignement, Runnable action) {
 		this.tex = Texture.loadTexture(texturePath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
 		this.hover_tex = Texture.loadTexture(hoverTexturePath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
 		this.click_tex = Texture.loadTexture(clickTexturePath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
@@ -61,11 +126,22 @@ public class GUIButton extends GUIComponent implements EventListener{
 		this.hover = false;
 		this.scale = scale;
 		this.gui = gui;
+		this.alignement = alignement;
 
-		this.textG = new GUIText(text, pos, rot, type, textColor, textMul);
+		this.textG = new GUIText(text, new Vector3f(
+				pos.x+alignement.getOffsetXfromCenter(width),
+				pos.y+alignement.getOffsetYfromCenter(height),
+				pos.z
+		), rot, type, textColor, textMul, GUIAlignement.CENTER);
 		this.shader = new ButtonShader();
 		this.box = new CollisionBoxM();
-		this.modelMatrix = new Matrix4f().translate(pos).rotateZ(rot).scale(scale);
+		this.modelMatrix = new Matrix4f().translate(
+				new Vector3f(
+						pos.x+alignement.getOffsetXfromCenter(width),
+						pos.y+alignement.getOffsetYfromCenter(height),
+						pos.z
+				)
+		).rotateZ(rot).scale(scale);
 		
 		//register this button to the event System
 		this.listenerId = FurryAttack.getInstance().getEventManager().addListener(this);
@@ -73,6 +149,9 @@ public class GUIButton extends GUIComponent implements EventListener{
 		init();
 	}
 	
+	/**
+	 * Init rendering values
+	 */
 	private void init(){
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(3);
 		buffer.put(new float[] {0,0,0});
@@ -93,6 +172,9 @@ public class GUIButton extends GUIComponent implements EventListener{
 		shader.unbind();
 	}
 	
+	/**
+	 * when the button is clicked
+	 */
 	public void onClick() {
 		if(!actionThread.isAlive() && clickable)actionThread.run();
 	}
@@ -125,7 +207,14 @@ public class GUIButton extends GUIComponent implements EventListener{
 
 	@Override
 	public void update() {
-		modelMatrix.identity().translate(pos).rotateZ(rot).scale(scale);
+		System.out.println("update button");
+		modelMatrix.identity().translate(
+				new Vector3f(
+						pos.x+alignement.getOffsetXfromCenter(width),
+						pos.y+alignement.getOffsetYfromCenter(height),
+						pos.z
+				)
+		).rotateZ(rot).scale(scale);
 		shader.bind();
 		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 		shader.setUniformMat4f("modelMatrix", modelMatrix);
@@ -151,7 +240,11 @@ public class GUIButton extends GUIComponent implements EventListener{
 		hover = box.isInside((float)MouseHandler.getPosX()-Constants.WIDTH/2f, -((float)MouseHandler.getPosY()-Constants.HEIGHT/2f));
 		//if(hover && clicked && clickable)onClick();
 		
-		textG.setPosition(pos);
+		textG.setPosition(new Vector3f(
+				pos.x+alignement.getOffsetXfromCenter(width),
+				pos.y+alignement.getOffsetYfromCenter(height),
+				pos.z
+		));
 		textG.setRotation(rot);
 		textG.update();
 	}
@@ -168,6 +261,9 @@ public class GUIButton extends GUIComponent implements EventListener{
 
 	// EVENTS LISTENING //
 	
+	/**
+	 * when a key is pressed
+	 */
 	public void onKeyPressed(MousePressedEvent ev) {
 		//if the gui is shown and hover
 		if(FurryAttack.getInstance().getRenderer().getGUIRenderer().getCurrentGUI().getGUI().equals(gui) && hover) {
@@ -175,6 +271,9 @@ public class GUIButton extends GUIComponent implements EventListener{
 		}
 	}
 	
+	/**
+	 * when a key is released
+	 */
 	public void onKeyReleased(MouseReleasedEvent ev) {
 		if(hover && clickable && FurryAttack.getInstance().getRenderer().getGUIRenderer().getCurrentGUI().getGUI().equals(gui))onClick();
 		clicked = false;
@@ -182,79 +281,128 @@ public class GUIButton extends GUIComponent implements EventListener{
 	
 	// GETTERS AND SETTERS //
 	
-	public Vector3f getPosition() {
-		return pos;
-	}
-
-	public void setPosition(Vector3f pos) {
-		this.pos = pos;
-	}
-
-	public float getRotation() {
-		return rot;
-	}
-
-	public void setRotation(float rot) {
-		this.rot = rot;
-	}
-	
+	/**
+	 * set the action to do
+	 * @param action {@link Runnable} action to do
+	 */
 	public void setAction(Runnable action) {
 		this.actionThread = new Thread(action);
 	}
-
+	/**
+	 * get the base texture
+	 * @return {@link Texture} base texture
+	 */
 	public Texture getTexture() {
 		return tex;
 	}
-
+	/**
+	 * set the base texture
+	 * @param tex {@link Texture} base texture to used
+	 */
 	public void setTexture(Texture tex) {
 		this.tex = tex;
 	}
-
+	/**
+	 * get the hovered texture
+	 * @return {@link Texture} hovered texture
+	 */
 	public Texture getHoverTexture() {
 		return hover_tex;
 	}
-
+	/**
+	 * set the hovered texture
+	 * @param hover_tex {@link Texture} hovered texture
+	 */
 	public void setHoverTexture(Texture hover_tex) {
 		this.hover_tex = hover_tex;
 	}
-
+	/**
+	 * get the clicked texture
+	 * @return {@link Texture} clicked texture
+	 */
+	public Texture getClickTexture() {
+		return click_tex;
+	}
+	/**
+	 * set the click texture
+	 * @param click_tex {@link Texture} click texture
+	 */
+	public void setClickTexture(Texture click_tex) {
+		this.click_tex = click_tex;
+	}
+	/**
+	 * get the button's width
+	 * @return int width
+	 */
 	public float getButtonWidth() {
 		return width;
 	}
-
+	/**
+	 * get the button's height
+	 * @return int height
+	 */
 	public float getButtonHeight() {
 		return height;
 	}
-
+	/**
+	 * get the collision box
+	 * @return {@link CollisionBoxM} collision box
+	 */
 	public CollisionBoxM getColisionBox() {
 		return box;
 	}
-
+	/**
+	 * get text component
+	 * @return {@link GUIText} text component
+	 */
 	public GUIText getTextGUI() {
 		return textG;
 	}
-
+	/**
+	 * whether the button is hovered
+	 * @return boolean hovered
+	 */
 	public boolean isHover() {
 		return hover;
 	}
-
+	/**
+	 * get the button's model matrix
+	 * @return {@link Matrix4f} mdoel matrix
+	 */
 	public Matrix4f getModelMatrix() {
 		return modelMatrix;
 	}
-
+	/**
+	 * get the button's scale
+	 * @return float scale
+	 */
 	public float getScale() {
 		return scale;
 	}
-
+	/**
+	 * set the button's scale
+	 * @param scale float scale to used
+	 */
 	public void setScale(float scale) {
 		this.scale = scale;
 	}
-	
+	/**
+	 * get whether the button is clickable
+	 * @return boolean clickable
+	 */
 	public boolean isClickable() {
 		return this.clickable;
 	}
-	
+	/**
+	 * set whether the button is clickable or not
+	 * @param clickable boolean clickable
+	 */
 	public void setClickable(boolean clickable) {
 		this.clickable = clickable;
+	}
+
+	@Override
+	public void setGUIAlignement(GUIAlignement alignement) {
+		this.alignement = alignement;
 	}
 }

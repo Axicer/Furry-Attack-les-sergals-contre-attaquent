@@ -2,6 +2,8 @@ package fr.axicer.furryattack.gui.elements;
 
 import java.nio.FloatBuffer;
 
+import javax.swing.GroupLayout.Alignment;
+
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
@@ -16,47 +18,112 @@ import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.font.CharInfo;
 import fr.axicer.furryattack.util.font.FontType;
 
+/**
+ * A text component
+ * @author Axicer
+ *
+ */
 public class GUIText extends GUIComponent{
 
-	public String text;
-	public Color color;
-	public FontType type;
-	
+	/**
+	 * the text to display
+	 */
+	private String text;
+	/**
+	 * the color of the text
+	 */
+	private Color color;
+	/**
+	 * the font to display
+	 */
+	private FontType type;
+	/**
+	 * the scale of the text
+	 */
 	public float scale;
+	/**
+	 * the shader used to render text
+	 */
 	public TextShader shader;
+	/**
+	 * vertex buffer id of the component
+	 */
 	public int VERTICES_VBO;
+	/**
+	 * texture coordinate id of the component
+	 */
 	public int TEXCOORD_VBO;
+	/**
+	 * model matrix of the text
+	 */
 	public Matrix4f modelMatrix;
+	/**
+	 * whether the component is ready to be rendered or not
+	 */
 	private boolean canRender = false;
+	/**
+	 * the component's width
+	 */
+	private float textWidth = 0;
 	
-	public GUIText(String text, FontType type, Color color) {
+	/**
+	 * A {@link GUIText} constructor
+	 * @param text {@link String} to render
+	 * @param type {@link FontType} font to use
+	 * @param color {@link Color} color of the text
+	 * @param alignement {@link Alignment} where is the component aligned
+	 */
+	public GUIText(String text, FontType type, Color color, GUIAlignement alignement) {
 		super();
 		this.text = text;
 		this.type = type;
 		this.color = color;
 		this.scale = 1f;
+		this.alignement = alignement;
 		init();
 		initRender();
 	}
 	
-	public GUIText(String text, Vector3f pos, float rot, FontType type, Color color, float scale) {
+	/**
+	 * A {@link GUIText} constructor
+	 * @param text {@link String} to render
+	 * @param pos {@link Vector3f} position of the component
+	 * @param rot float rotation of the component
+	 * @param type {@link FontType} font to use
+	 * @param color {@link Color} color of the text
+	 * @param scale float scale of the text
+	 * @param alignement {@link Alignment} where is the component aligned
+	 */
+	public GUIText(String text, Vector3f pos, float rot, FontType type, Color color, float scale, GUIAlignement alignement) {
 		super(pos, rot);
 		this.text = text;
 		this.type = type;
 		this.color = color;
 		this.scale = scale;
+		this.alignement = alignement;
 		init();
 		initRender();
 	}
 	
+	/**
+	 * Init the component matrix and shader
+	 */
 	private void init() {
-		modelMatrix = new Matrix4f().translate(pos).rotateZ(rot).scale((scale/((float)Constants.WIDTH/(float)Constants.HEIGHT))*1.4f);
+		modelMatrix = new Matrix4f().translate(
+				new Vector3f(
+						pos.x+alignement.getOffsetXfromCenter((int) textWidth),
+						pos.y+alignement.getOffsetYfromCenter(type.getHeight()),
+						pos.z)
+				).rotateZ(rot).scale((scale/((float)Constants.WIDTH/(float)Constants.HEIGHT))*1.4f);
 		shader = new TextShader();
 	}
 	
+	/**
+	 * Init the component render elements
+	 */
 	private void initRender(){
 	    float startx = 0;
-	    float textWidth = 0;
+	    textWidth = 0;
 	    int removedChar = 0;
 	    for(char c : text.toCharArray()) {
 	    	CharInfo charInfo = type.getCharMap().get((int)c);
@@ -130,7 +197,6 @@ public class GUIText extends GUIComponent{
 	
 	@Override
 	public void render() {
-		//System.out.println(text+" -> "+canRender);
 		if(!canRender)return;
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -159,7 +225,15 @@ public class GUIText extends GUIComponent{
 
 	@Override
 	public void update() {
-		modelMatrix.identity().translate(pos).rotateZ(rot).scale((scale/((float)Constants.WIDTH/(float)Constants.HEIGHT))*1.4f);
+		modelMatrix.identity()
+				.translate(
+						new Vector3f(
+								pos.x+alignement.getOffsetXfromCenter((int) textWidth),
+								pos.y+alignement.getOffsetYfromCenter(type.getHeight()),
+								pos.z)
+						)
+				.rotateZ(rot)
+				.scale((scale/((float)Constants.WIDTH/(float)Constants.HEIGHT))*1.4f);
 		shader.bind();
 		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 		shader.setUniformMat4f("modelMatrix", modelMatrix);
@@ -173,18 +247,32 @@ public class GUIText extends GUIComponent{
 		GL15.glDeleteBuffers(VERTICES_VBO);
 	}
 
+	/**
+	 * @return float component scale
+	 */
 	public float getScale() {
 		return scale;
 	}
 
+	/**
+	 * set component scale
+	 * @param scale float scale to use
+	 */
 	public void setScale(float scale) {
 		this.scale = scale;
 	}
 	
+	/**
+	 * @return {@link Color} text color
+	 */
 	public Color getColor() {
 		return color;
 	}
 
+	/**
+	 * set the text's color
+	 * @param color {@link Color} to use
+	 */
 	public void setColor(Color color) {
 		this.color = color;
 		shader.bind();
@@ -192,32 +280,58 @@ public class GUIText extends GUIComponent{
 		shader.unbind();
 	}
 
+	/**
+	 * @return {@link String} text
+	 */
 	public String getText() {
 		return text;
 	}
 
+	/**
+	 * define the text
+	 * @param text {@link String} text to draw
+	 */
 	public void setText(String text) {
 		this.text = text;
 		if(VERTICES_VBO != 0 || TEXCOORD_VBO != 0) destroy();
 		initRender();
 	}
 
+	/**
+	 * @return {@link Matrix4f} model matrix
+	 */
 	public Matrix4f getModelMatrix() {
 		return modelMatrix;
 	}
 
+	/**
+	 * @return {@link FontType} font used to render
+	 */
 	public FontType getType() {
 		return type;
 	}
 
+	/**
+	 * define the font to render
+	 * @param type {@link FontType} to use
+	 */
 	public void setType(FontType type) {
 		this.type = type;
 		if(VERTICES_VBO != 0 || TEXCOORD_VBO != 0) destroy();
 		initRender();
 	}
 
+	/**
+	 * Whether the component can be drawn
+	 * @param val boolean can be drawn
+	 */
 	public void allowRender(boolean val) {
 		this.canRender = val;
+	}
+
+	@Override
+	public void setGUIAlignement(GUIAlignement alignement) {
+		this.alignement = alignement;
 	}
 
 }

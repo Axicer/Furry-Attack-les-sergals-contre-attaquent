@@ -1,5 +1,6 @@
 package fr.axicer.furryattack.gui.elements;
 
+import java.awt.Font;
 import java.io.File;
 import java.nio.FloatBuffer;
 import java.util.UUID;
@@ -28,38 +29,116 @@ import fr.axicer.furryattack.util.control.events.KeyTypedEvent;
 import fr.axicer.furryattack.util.control.events.MousePressedEvent;
 import fr.axicer.furryattack.util.control.events.MouseReleasedEvent;
 import fr.axicer.furryattack.util.events.EventListener;
+import fr.axicer.furryattack.util.events.EventManager;
 import fr.axicer.furryattack.util.font.FontType;
 
+/**
+ * A input button component
+ * @author Axicer
+ *
+ */
 public class GUIInputButton extends GUIComponent implements EventListener{
 
+	/**
+	 * default key if not defined
+	 */
 	private static final int DEFAULT_KEY = 0;
-	
-	private float width, height;
+	/**
+	 * component width and height
+	 */
+	private int width, height;
+	/**
+	 * component scale
+	 */
 	private float scale;
-	
+	/**
+	 * Colision box used
+	 */
 	private CollisionBoxM box;
+	/**
+	 * whether the input button is hovered
+	 */
 	private boolean hover;
+	/**
+	 * whether the input button is clicked
+	 */
 	private boolean clicked;
+	/**
+	 * whether the button is clickable
+	 */
 	private boolean clickable = true;
-	
+	/**
+	 * thread to execute when clicked
+	 */
 	private Thread actionThread;
+	/**
+	 * event system listener id given by {@link EventManager} when registering this as an event
+	 */
 	private UUID listenerId;
+	/**
+	 * whether this input button is listening for a key
+	 */
 	private boolean listening;
+	/**
+	 * the text component inside
+	 */
 	private GUIText textG;
-	
+	/**
+	 * base texture
+	 */
 	private Texture tex;
+	/**
+	 * texture when hovered
+	 */
 	private Texture hover_tex;
+	/**
+	 * texture when clicked
+	 */
 	private Texture click_tex;
-	
+	/**
+	 * input button's model matrix
+	 */
 	private Matrix4f modelMatrix;
+	/**
+	 * shader used to render this input button
+	 */
 	private ButtonShader shader;
+	/**
+	 * vertex buffer id
+	 */
 	private int VBO_ID;
-	
+	/**
+	 * Configuration to modify
+	 */
 	private Configuration config;
+	/**
+	 * path to the key storage
+	 */
 	private String path;
+	/**
+	 * file used to save the configuration
+	 */
 	private File configFile;
 	
-	public GUIInputButton(GUI gui, Configuration config, File configFile, String path, float textMul, FontType type, int width, int height, float scale, Color color, Vector3f pos, float rot, String texturePath, String textureHoverPath, String textureClickPath) {
+	/**
+	 * Constructor of an input button
+	 * @param gui the parent gui
+	 * @param config configuration to modify
+	 * @param configFile file used to save the config
+	 * @param path path to the key storage
+	 * @param textMul text scale
+	 * @param type {@link Font} used to render
+	 * @param width int button width
+	 * @param height int button height
+	 * @param scale button's scale
+	 * @param color {@link Color} of the text
+	 * @param pos {@link Vector3f} position of the text
+	 * @param rot float rotation
+	 * @param texturePath base texture path
+	 * @param textureHoverPath path for hovered texture
+	 * @param textureClickPath path for clicked texture
+	 */
+	public GUIInputButton(GUI gui, Configuration config, File configFile, String path, float textMul, FontType type, int width, int height, float scale, Color color, Vector3f pos, float rot, String texturePath, String textureHoverPath, String textureClickPath, GUIAlignement alignement) {
 		this.tex = Texture.loadTexture(texturePath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
 		this.hover_tex = Texture.loadTexture(textureHoverPath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
 		this.click_tex = Texture.loadTexture(textureClickPath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
@@ -71,15 +150,26 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 		this.hover = false;
 		this.scale = scale;
 		this.gui = gui;
+		this.alignement = alignement;
 
-		this.textG = new GUIText(Util.getKeyRepresentation(config.getInt(path, DEFAULT_KEY)), pos, rot, type, color, textMul);
+		this.textG = new GUIText(Util.getKeyRepresentation(config.getInt(path, DEFAULT_KEY)), new Vector3f(
+				pos.x+alignement.getOffsetXfromCenter(width),
+				pos.y+alignement.getOffsetYfromCenter(height),
+				pos.z
+		), rot, type, color, textMul, GUIAlignement.CENTER);
 		this.shader = new ButtonShader();
 		this.box = new CollisionBoxM();
-		this.modelMatrix = new Matrix4f().translate(pos).rotateZ(rot).scale(scale);
+		this.modelMatrix = new Matrix4f().translate(
+				new Vector3f(
+						pos.x+alignement.getOffsetXfromCenter(width),
+						pos.y+alignement.getOffsetYfromCenter(height),
+						pos.z
+				)
+		).rotateZ(rot).scale(scale);
 		
 		listenerId = FurryAttack.getInstance().getEventManager().addListener(this);
 		
-		setAction(new Runnable() {
+		this.actionThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				getTextGUI().setText("<entrez une valeur>");
@@ -93,6 +183,9 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 		init();
 	}
 	
+	/**
+	 * init rendering values
+	 */
 	private void init(){
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(3);
 		buffer.put(new float[] {0,0,0});
@@ -113,6 +206,9 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 		shader.unbind();
 	}
 	
+	/**
+	 * when click
+	 */
 	public void onClick() {
 		if(!actionThread.isAlive() && clickable)actionThread.run();
 	}
@@ -145,7 +241,16 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 
 	@Override
 	public void update() {
-		modelMatrix.identity().translate(pos).rotateZ(rot).scale(scale);
+		modelMatrix.identity()
+			.translate(
+					new Vector3f(
+							pos.x+alignement.getOffsetXfromCenter((int) width),
+							pos.y+alignement.getOffsetYfromCenter((int) height),
+							pos.z
+					)
+			)
+			.rotateZ(rot)
+			.scale(scale);
 		shader.bind();
 		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 		shader.setUniformMat4f("modelMatrix", modelMatrix);
@@ -164,7 +269,11 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 		
 		hover = box.isInside((float)MouseHandler.getPosX()-Constants.WIDTH/2f, -((float)MouseHandler.getPosY()-Constants.HEIGHT/2f));
 		
-		textG.setPosition(pos);
+		textG.setPosition(new Vector3f(
+				pos.x+alignement.getOffsetXfromCenter(width),
+				pos.y+alignement.getOffsetYfromCenter(height),
+				pos.z
+		));
 		textG.setRotation(rot);
 		textG.update();
 	}
@@ -179,6 +288,10 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 		textG.destroy();
 	}
 	
+	/**
+	 * Set the button value
+	 * @param val int key value
+	 */
 	public void setValue(int val) {
 		if(val <= 0) {
 			getTextGUI().setText("[unbind]");
@@ -190,6 +303,9 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 
 	// EVENTS LISTENING //
 	
+	/**
+	 * When a key is pressed
+	 */
 	public void onKeyPressed(MousePressedEvent ev) {
 		//if the gui is shown and hover
 		if(FurryAttack.getInstance().getRenderer().getGUIRenderer().getCurrentGUI().getGUI().equals(gui) && hover) {
@@ -197,12 +313,18 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 		}
 	}
 	
+	/**
+	 * When a key is released
+	 */
 	public void onKeyReleased(MouseReleasedEvent ev) {
 		if(hover && clickable && FurryAttack.getInstance().getRenderer().getGUIRenderer().getCurrentGUI().getGUI().equals(gui))onClick();
 		clicked = false;
 	}
 	
-	public void onKeyPressed(KeyTypedEvent ev) {
+	/**
+	 * When a key is typed
+	 */
+	public void onKeyTyped(KeyTypedEvent ev) {
 		if(!listening)return;
 		if(ev.getKey() != GLFW.GLFW_KEY_ESCAPE) {
 			setValue(ev.getKey());
@@ -215,79 +337,122 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 	
 	// GETTERS AND SETTERS //
 	
-	public Vector3f getPosition() {
-		return pos;
-	}
-
-	public void setPosition(Vector3f pos) {
-		this.pos = pos;
-	}
-
-	public float getRotation() {
-		return rot;
-	}
-
-	public void setRotation(float rot) {
-		this.rot = rot;
-	}
-	
-	public void setAction(Runnable action) {
-		this.actionThread = new Thread(action);
-	}
-
+	/**
+	 * get the base texture
+	 * @return {@link Texture} base texture
+	 */
 	public Texture getTexture() {
 		return tex;
 	}
-
+	/**
+	 * set the base texture
+	 * @param tex {@link Texture} base texture to use
+	 */
 	public void setTexture(Texture tex) {
 		this.tex = tex;
 	}
-
+	/**
+	 * get the hovered texture
+	 * @return {@link Texture} hovered texture
+	 */
 	public Texture getHoverTexture() {
 		return hover_tex;
 	}
-
+	/**
+	 * set the hovered texture
+	 * @param hover_tex {@link Texture} hovered texture to use
+	 */
 	public void setHoverTexture(Texture hover_tex) {
 		this.hover_tex = hover_tex;
 	}
-
+	/**
+	 * get the clicked texture
+	 * @return {@link Texture} clicked texture
+	 */
+	public Texture getClickedTexture() {
+		return click_tex;
+	}
+	/**
+	 * set the clicked texture
+	 * @param click_tex {@link Texture} click texture to use
+	 */
+	public void setClickTexture(Texture click_tex) {
+		this.click_tex = click_tex;
+	}
+	
+	/**
+	 * get the input button's width
+	 * @return int width
+	 */
 	public float getButtonWidth() {
 		return width;
 	}
-
+	/**
+	 * get the input button's height
+	 * @return int height
+	 */
 	public float getButtonHeight() {
 		return height;
 	}
-
+	/**
+	 * get the collision box
+	 * @return {@link CollisionBoxM} collision box
+	 */
 	public CollisionBoxM getColisionBox() {
 		return box;
 	}
-
+	/**
+	 * get the text gui component used to render the text
+	 * @return {@link GUIText} text component
+	 */
 	public GUIText getTextGUI() {
 		return textG;
 	}
-
+	/**
+	 * whether the inout button is hovered
+	 * @return boolean hovered
+	 */
 	public boolean isHover() {
 		return hover;
 	}
-
+	/**
+	 * get this input button's model matrix
+	 * @return {@link Matrix4f} model matrix
+	 */
 	public Matrix4f getModelMatrix() {
 		return modelMatrix;
 	}
-
+	/**
+	 * get this input button's scale
+	 * @return float scale
+	 */
 	public float getScale() {
 		return scale;
 	}
-
+	/**
+	 * set this input button's scale
+	 * @param scale float scale to used
+	 */
 	public void setScale(float scale) {
 		this.scale = scale;
 	}
-	
+	/**
+	 * whether the input button is clickable
+	 * @return boolean clickable
+	 */
 	public boolean isClickable() {
 		return this.clickable;
 	}
-	
+	/**
+	 * set whether the button is clickable or not
+	 * @param clickable boolean clickable
+	 */
 	public void setClickable(boolean clickable) {
 		this.clickable = clickable;
+	}
+
+	@Override
+	public void setGUIAlignement(GUIAlignement alignement) {
+		this.alignement = alignement;
 	}
 }

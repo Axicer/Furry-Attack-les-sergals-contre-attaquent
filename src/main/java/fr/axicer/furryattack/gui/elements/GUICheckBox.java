@@ -24,29 +24,94 @@ import fr.axicer.furryattack.util.control.MouseHandler;
 import fr.axicer.furryattack.util.control.events.MouseReleasedEvent;
 import fr.axicer.furryattack.util.events.EventListener;
 
+/**
+ * A checkbox component
+ * @author Axicer
+ *
+ */
 public class GUICheckBox extends GUIComponent implements EventListener{
-
+	
+	/**
+	 * default status is unchecked
+	 */
 	public static final boolean DEFAULT_VALUE = false;
-	
+	/**
+	 * config where the value is modified
+	 */
 	private Configuration config;
+	/**
+	 * path to the value
+	 */
 	private String path;
+	/**
+	 * configuration path
+	 */
 	private File configFile;
-	
-	private float width, height;
+	/**
+	 * component width and height
+	 */
+	private int width, height;
+	/**
+	 * checkbox scale
+	 */
 	private float scale;
+	/**
+	 * parent gui
+	 */
 	private GUI gui;
+	/**
+	 * base texture
+	 */
 	private Texture tex;
+	/**
+	 * checked texture
+	 */
 	private Texture tex_checked;
+	/**
+	 * whether the checkbox is hovered
+	 */
 	private boolean hover;
+	/**
+	 * whether the checkbox is clickable
+	 */
 	private boolean clickable = true;
+	/**
+	 * event system listener id used to get this listener
+	 */
 	private UUID listenerId;
-	
+	/**
+	 * collision box of the checkbox
+	 */
 	private CollisionBoxM box;
+	/**
+	 * checkbox's model matrix
+	 */
 	private Matrix4f modelMatrix;
+	/**
+	 * shader used to render
+	 */
 	private CheckBoxShader shader;
+	/**
+	 * vertex buffer id
+	 */
 	private int VBO_ID;
 	
-	public GUICheckBox(GUI gui, Configuration config, File configFile, String path, int width, int height, float scale, Vector3f pos, float rot, String texturePath, String textureCheckedPath) {
+	/**
+	 * A {@link GUICheckBox} component
+	 * @param gui {@link GUI} parent gui
+	 * @param config {@link Configuration} used
+	 * @param configFile {@link File} configuration file
+	 * @param path {@link String} path to the value
+	 * @param width int checkbox's width
+	 * @param height int checkbox's height
+	 * @param scale float checkbox's scale
+	 * @param pos {@link Vector3f} checkbox's position
+	 * @param rot float checkbox's rotation
+	 * @param texturePath {@link String} base texture path
+	 * @param textureCheckedPath {@link String} checked texture path
+	 * @param alignement {@link GUIAlignement} alignement
+	 */
+	public GUICheckBox(GUI gui, Configuration config, File configFile, String path, int width, int height, float scale, Vector3f pos, float rot, String texturePath, String textureCheckedPath, GUIAlignement alignement) {
 		this.config = config;
 		this.configFile = configFile;
 		this.path = path;
@@ -55,13 +120,20 @@ public class GUICheckBox extends GUIComponent implements EventListener{
 		this.height = height;
 		this.scale = scale;
 		this.gui = gui;
+		this.alignement = alignement;
 
 		this.pos = pos;
 		this.rot = rot;
 		this.tex = Texture.loadTexture(texturePath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_LINEAR);
 		this.tex_checked = Texture.loadTexture(textureCheckedPath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_LINEAR);
 		
-		this.modelMatrix = new Matrix4f().identity().translate(pos).rotateZ(rot).scale(scale);
+		this.modelMatrix = new Matrix4f().identity().translate(
+				new Vector3f(
+						pos.x+alignement.getOffsetXfromCenter(width),
+						pos.y+alignement.getOffsetYfromCenter(height),
+						pos.z
+				)
+		).rotateZ(rot).scale(scale);
 		this.box = new CollisionBoxM();
 		this.shader = new CheckBoxShader();
 		this.listenerId = FurryAttack.getInstance().getEventManager().addListener(this);
@@ -109,7 +181,13 @@ public class GUICheckBox extends GUIComponent implements EventListener{
 
 	@Override
 	public void update() {
-		modelMatrix.identity().translate(pos).rotateZ(rot).scale(scale);
+		modelMatrix.identity().translate(
+				new Vector3f(
+						pos.x+alignement.getOffsetXfromCenter(width),
+						pos.y+alignement.getOffsetYfromCenter(height),
+						pos.z
+				)
+		).rotateZ(rot).scale(scale);
 		shader.bind();
 		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 		shader.setUniformMat4f("modelMatrix", modelMatrix);
@@ -137,6 +215,11 @@ public class GUICheckBox extends GUIComponent implements EventListener{
 		box.destroy();
 	}
 	
+	// EVENTS LISTENING //
+	
+	/**
+	 * When a key is released
+	 */
 	public void onKeyReleased(MouseReleasedEvent ev) {
 		if(hover && clickable && FurryAttack.getInstance().getRenderer().getGUIRenderer().getCurrentGUI().getGUI().equals(gui)) {
 			config.setBoolean(path, !config.getBoolean(path, DEFAULT_VALUE), true);
@@ -146,71 +229,93 @@ public class GUICheckBox extends GUIComponent implements EventListener{
 	
 	// GETTERS AND SETTERS //
 	
-	public Vector3f getPosition() {
-		return pos;
-	}
-
-	public void setPosition(Vector3f pos) {
-		this.pos = pos;
-	}
-
-	public float getRotation() {
-		return rot;
-	}
-
-	public void setRotation(float rot) {
-		this.rot = rot;
-	}
-	
+	/**
+	 * get the base texture
+	 * @return {@link Texture} base texture
+	 */
 	public Texture getTexture() {
 		return tex;
 	}
-
+	/**
+	 * set the base texture
+	 * @param tex {@link Texture} base texture
+	 */
 	public void setTexture(Texture tex) {
 		this.tex = tex;
 	}
-
+	/**
+	 * get the checked texture
+	 * @return {@link Texture} checked texture
+	 */
 	public Texture getCheckedTexture() {
 		return tex_checked;
 	}
-
-	public void setHoverTexture(Texture texChecked) {
-		this.tex_checked = texChecked;
-	}
-
+	/**
+	 * get the checkbox's width
+	 * @return int width
+	 */
 	public float getButtonWidth() {
 		return width;
 	}
-
+	/**
+	 * get the checkbox's height
+	 * @return int height
+	 */
 	public float getButtonHeight() {
 		return height;
 	}
-
+	/**
+	 * get the collision box
+	 * @return {@link CollisionBoxM} collision box
+	 */
 	public CollisionBoxM getColisionBox() {
 		return box;
 	}
-
+	/**
+	 * get whether the checkbox is hovered
+	 * @return boolean hovered
+	 */
 	public boolean isHover() {
 		return hover;
 	}
-
+	/**
+	 * get the checkbox's model matrix
+	 * @return {@link Matrix4f} model matrix
+	 */
 	public Matrix4f getModelMatrix() {
 		return modelMatrix;
 	}
-
+	/**
+	 * get the checkbox's scale
+	 * @return float scale
+	 */
 	public float getScale() {
 		return scale;
 	}
-
+	/**
+	 * set the checkbox's scale
+	 * @param scale float scale to use
+	 */
 	public void setScale(float scale) {
 		this.scale = scale;
 	}
-	
+	/**
+	 * get whether the checkbox is clickable
+	 * @return boolean clickable
+	 */
 	public boolean isClickable() {
 		return this.clickable;
 	}
-	
+	/**
+	 * set whether the checkbox is clickable
+	 * @param clickable boolean clickable
+	 */
 	public void setClickable(boolean clickable) {
 		this.clickable = clickable;
+	}
+
+	@Override
+	public void setGUIAlignement(GUIAlignement alignement) {
+		this.alignement = alignement;
 	}
 }

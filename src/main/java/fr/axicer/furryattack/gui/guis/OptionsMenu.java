@@ -4,6 +4,7 @@ import org.joml.Vector3f;
 
 import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.gui.elements.ComponentFactory;
+import fr.axicer.furryattack.gui.elements.GUIAlignement;
 import fr.axicer.furryattack.gui.elements.GUIComponent;
 import fr.axicer.furryattack.gui.elements.GUIText;
 import fr.axicer.furryattack.gui.render.GUIs;
@@ -23,13 +24,15 @@ public class OptionsMenu extends GUI{
 		components.add(ComponentFactory.generateImage("/img/gui/background/menu-bg.png", //imgPath
 				Constants.WIDTH, //width
 				Constants.HEIGHT, //height
-				new Vector3f(0,0,-1f))); //pos
+				new Vector3f(0,0,-1f), //pos
+				GUIAlignement.CENTER)); 
 		components.add(new GUIText("Options", //text
 				new Vector3f(0f, (float)Constants.HEIGHT/2.5f, -1f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				new Color(50, 70, 120, 255), // color
-				ratio*0.5f)); //scale
+				ratio*0.5f, //scale
+				GUIAlignement.CENTER));
 		components.add(ComponentFactory.generateButton(this,
 				"Retour",
 				ratio*0.2f,
@@ -38,6 +41,7 @@ public class OptionsMenu extends GUI{
 				ratio*0.5f,
 				new Vector3f((float)Constants.WIDTH/2.5f, (float)-Constants.HEIGHT/2.5f, -1f),
 				0f,
+				GUIAlignement.CENTER,
 				new Runnable() {
 					public void run() {
 						FurryAttack.getInstance().getRenderer().getGUIRenderer().setCurrentGUI(GUIs.MAIN_MENU);
@@ -51,6 +55,7 @@ public class OptionsMenu extends GUI{
 				ratio*0.5f,
 				new Vector3f(0, (float)Constants.HEIGHT/6.5f, -1f),
 				0f,
+				GUIAlignement.CENTER,
 				new Runnable() {
 					@Override
 					public void run() {
@@ -65,6 +70,7 @@ public class OptionsMenu extends GUI{
 				ratio*0.5f,
 				new Vector3f(0, (float)Constants.HEIGHT/20f, -1f),
 				0f,
+				GUIAlignement.CENTER,
 				new Runnable() {
 					@Override
 					public void run() {
@@ -79,6 +85,7 @@ public class OptionsMenu extends GUI{
 				ratio*0.5f,
 				new Vector3f(0, (float)-Constants.HEIGHT/20f, -1f),
 				0f,
+				GUIAlignement.CENTER,
 				null));
 		components.add(ComponentFactory.generateButton(this,
 				"Credits",
@@ -88,6 +95,7 @@ public class OptionsMenu extends GUI{
 				ratio*0.5f,
 				new Vector3f(0, (float)-Constants.HEIGHT/6.5f, -1f),
 				0f,
+				GUIAlignement.CENTER,
 				null));
 	}
 

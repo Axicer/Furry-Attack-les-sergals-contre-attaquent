@@ -15,20 +15,58 @@ import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.render.shader.BackgroundShader;
 import fr.axicer.furryattack.render.textures.Texture;
 
+/**
+ * A image component
+ * @author Axicer
+ *
+ */
 public class GUIImage extends GUIComponent{
 
+	/**
+	 * image texture
+	 */
 	private Texture tex;
+	/**
+	 * vertex buffer id
+	 */
 	private int vbo;
+	/**
+	 * shader used to render
+	 */
 	private BackgroundShader shader;
+	/**
+	 * component's model matrix
+	 */
 	private Matrix4f modelMatrix;
+	/**
+	 * component's scale
+	 */
 	private float scale;
+	/**
+	 * image width and height
+	 */
+	private int width,height;
 	
-	public GUIImage(String imgPath, boolean blur, Vector2f blurDirection, float width, float height, Vector3f pos, float rot, float scale) {
+	/**
+	 * A {@link GUIImage} constructor
+	 * @param imgPath {@link String} texture path
+	 * @param blur boolean whether to blur the image
+	 * @param blurDirection {@link Vector2f} blur direction (ignored if blur = false)
+	 * @param width int image width
+	 * @param height int image height
+	 * @param pos {@link Vector3f} position of the image
+	 * @param rot float rotation of the image
+	 * @param scale float scale of the image
+	 */
+	public GUIImage(String imgPath, boolean blur, Vector2f blurDirection, int width, int height, Vector3f pos, float rot, float scale, GUIAlignement alignement) {
 		shader = new BackgroundShader();
 		tex = Texture.loadTexture(imgPath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_LINEAR);
 		this.pos = pos;
 		this.rot = rot;
 		this.scale = scale;
+		this.width = width;
+		this.height = height;
+		this.alignement = alignement;
 		
 		FloatBuffer vertices = BufferUtils.createFloatBuffer(3);
 		vertices.put(new float[] {0f,0f,0f});
@@ -38,7 +76,13 @@ public class GUIImage extends GUIComponent{
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertices, GL15.GL_STATIC_DRAW);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 		
-		modelMatrix = new Matrix4f().identity().translate(pos).rotateZ(rot).scale(scale);
+		modelMatrix = new Matrix4f().identity().translate(
+				new Vector3f(
+						pos.x+alignement.getOffsetXfromCenter(width),
+						pos.y+alignement.getOffsetYfromCenter(height),
+						pos.z
+				)
+		).rotateZ(rot).scale(scale);
 		
 		shader.bind();
 		shader.setUniformi("tex", 0);
@@ -67,6 +111,8 @@ public class GUIImage extends GUIComponent{
 		this.pos = pos;
 		this.rot = rot;
 		this.scale = scale;
+		this.width = width;
+		this.height = height;
 		
 		FloatBuffer vertices = BufferUtils.createFloatBuffer(3);
 		vertices.put(new float[] {0f,0f,0f});
@@ -76,7 +122,13 @@ public class GUIImage extends GUIComponent{
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertices, GL15.GL_STATIC_DRAW);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 		
-		modelMatrix = new Matrix4f().identity().translate(pos).rotateZ(rot).scale(scale);
+		modelMatrix = new Matrix4f().identity().translate(
+				new Vector3f(
+						pos.x+alignement.getOffsetXfromCenter(width),
+						pos.y+alignement.getOffsetYfromCenter(height),
+						pos.z
+				)
+		).rotateZ(rot).scale(scale);
 		
 		shader.bind();
 		shader.setUniformi("tex", 0);
@@ -114,10 +166,18 @@ public class GUIImage extends GUIComponent{
 	
 	@Override
 	public void update() {
-		modelMatrix.identity().translate(pos).rotateZ(rot).scale(scale);
+		modelMatrix.identity().translate(
+				new Vector3f(
+						pos.x+alignement.getOffsetXfromCenter(width),
+						pos.y+alignement.getOffsetYfromCenter(height),
+						pos.z
+				)
+		).rotateZ(rot).scale(scale);
 		shader.bind();
 		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 		shader.setUniformMat4f("modelMatrix", modelMatrix);
+		shader.setUniformf("screenWidth", (float)width);
+		shader.setUniformf("screenHeight", (float)height);
 		shader.unbind();
 	}
 
@@ -127,18 +187,24 @@ public class GUIImage extends GUIComponent{
 		tex.delete();
 		shader.destroy();
 	}
-
-	public void setPos(Vector3f pos) {
-		this.pos = pos;
-	}
-	public Vector3f getPos() {
-		return this.pos;
-	}
 	
+	/**
+	 * set the image's scale
+	 * @param scale float scale
+	 */
 	public void setScale(float scale) {
 		this.scale = scale;
 	}
+	/**
+	 * get the image's scale
+	 * @return float scale
+	 */
 	public float getScale() {
 		return this.scale;
+	}
+
+	@Override
+	public void setGUIAlignement(GUIAlignement alignement) {
+		this.alignement = alignement;
 	}
 }
