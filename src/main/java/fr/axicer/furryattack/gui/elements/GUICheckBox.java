@@ -109,7 +109,8 @@ public class GUICheckBox extends GUIComponent implements EventListener{
 	 * @param rot float checkbox's rotation
 	 * @param texturePath {@link String} base texture path
 	 * @param textureCheckedPath {@link String} checked texture path
-	 * @param alignement {@link GUIAlignement} alignement
+	 * @param alignement {@link GUIAlignement} component alignement
+	 * @param guialignement {@link GUIAlignement} gui alignement
 	 */
 	public GUICheckBox(GUI gui, Configuration config, File configFile, String path, int width, int height, float scale, Vector3f pos, float rot, String texturePath, String textureCheckedPath, GUIAlignement alignement, GUIAlignement guialignement) {
 		this.config = config;
@@ -313,10 +314,5 @@ public class GUICheckBox extends GUIComponent implements EventListener{
 	 */
 	public void setClickable(boolean clickable) {
 		this.clickable = clickable;
-	}
-
-	@Override
-	public void setComponentAlignement(GUIAlignement alignement) {
-		this.alignement = alignement;
 	}
 }

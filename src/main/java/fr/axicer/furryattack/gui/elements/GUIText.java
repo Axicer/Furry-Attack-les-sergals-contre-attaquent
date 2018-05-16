@@ -2,8 +2,6 @@ package fr.axicer.furryattack.gui.elements;
 
 import java.nio.FloatBuffer;
 
-import javax.swing.GroupLayout.Alignment;
-
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
@@ -71,7 +69,8 @@ public class GUIText extends GUIComponent{
 	 * @param text {@link String} to render
 	 * @param type {@link FontType} font to use
 	 * @param color {@link Color} color of the text
-	 * @param alignement {@link Alignment} where is the component aligned
+	 * @param alignement {@link GUIAlignement} component alignement
+	 * @param guialignement {@link GUIAlignement} gui alignement
 	 */
 	public GUIText(String text, FontType type, Color color, GUIAlignement alignement, GUIAlignement guialignement) {
 		super();
@@ -92,7 +91,8 @@ public class GUIText extends GUIComponent{
 	 * @param type {@link FontType} font to use
 	 * @param color {@link Color} color of the text
 	 * @param scale float scale of the text
-	 * @param alignement {@link Alignment} where is the component aligned
+	 * @param alignement {@link GUIAlignement} component alignement
+	 * @param guialignement {@link GUIAlignement} gui alignement
 	 */
 	public GUIText(String text, Vector3f pos, float rot, FontType type, Color color, float scale, GUIAlignement alignement, GUIAlignement guialignement) {
 		super(pos, rot);

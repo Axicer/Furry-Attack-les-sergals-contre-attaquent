@@ -58,6 +58,8 @@ public class GUIImage extends GUIComponent{
 	 * @param pos {@link Vector3f} position of the image
 	 * @param rot float rotation of the image
 	 * @param scale float scale of the image
+	 * @param alignement {@link GUIAlignement} component alignement
+	 * @param guialignement {@link GUIAlignement} gui alignement
 	 */
 	public GUIImage(String imgPath, boolean blur, Vector2f blurDirection, int width, int height, Vector3f pos, float rot, float scale, GUIAlignement alignement, GUIAlignement guialignement) {
 		shader = new BackgroundShader();
@@ -205,8 +207,4 @@ public class GUIImage extends GUIComponent{
 		return this.scale;
 	}
 
-	@Override
-	public void setComponentAlignement(GUIAlignement alignement) {
-		this.alignement = alignement;
-	}
 }

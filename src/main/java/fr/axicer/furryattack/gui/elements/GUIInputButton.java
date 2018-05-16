@@ -137,6 +137,8 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 	 * @param texturePath base texture path
 	 * @param textureHoverPath path for hovered texture
 	 * @param textureClickPath path for clicked texture
+	 * @param alignement {@link GUIAlignement} component alignement
+	 * @param guialignement {@link GUIAlignement} gui alignement
 	 */
 	public GUIInputButton(GUI gui, Configuration config, File configFile, String path, float textMul, FontType type, int width, int height, float scale, Color color, Vector3f pos, float rot, String texturePath, String textureHoverPath, String textureClickPath, GUIAlignement alignement, GUIAlignement guialignement) {
 		this.tex = Texture.loadTexture(texturePath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
@@ -449,10 +451,5 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 	 */
 	public void setClickable(boolean clickable) {
 		this.clickable = clickable;
-	}
-
-	@Override
-	public void setComponentAlignement(GUIAlignement alignement) {
-		this.alignement = alignement;
 	}
 }

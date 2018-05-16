@@ -3,21 +3,26 @@ package fr.axicer.furryattack.gui.elements.items;
 import fr.axicer.furryattack.gui.elements.selector.GUISelectorItem;
 import fr.axicer.furryattack.util.Resolution;
 
+/**
+ * A resolution-name tuple
+ * @author Axicer
+ *
+ */
 public class GUIResolution extends GUISelectorItem<Resolution>{
 
+	/**
+	 * Constructor of a {@link GUIResolution}
+	 * @param val {@link Resolution} to set
+	 * @param name {@link String} name associated
+	 */
 	public GUIResolution(Resolution val, String name) {
 		super(val, name);
 	}
 	
-	public boolean equals(GUIResolution resolution) {
-		return getVal().equals(resolution.getVal());
-	}
-
 	@Override
 	public String toString() {
 		return "GUIResolution [getName()=" + getName() + ", getVal()=" + getVal() + "]";
 	}
-	
 	
 	public boolean equals(Object obj) {
 		if (this == obj)

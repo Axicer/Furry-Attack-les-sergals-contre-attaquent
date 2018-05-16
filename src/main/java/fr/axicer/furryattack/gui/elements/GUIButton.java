@@ -109,7 +109,8 @@ public class GUIButton extends GUIComponent implements EventListener{
 	 * @param textColor {@link Color} color to use
 	 * @param pos {@link Vector3f} position of the button
 	 * @param rot float rotation of the button
-	 * @param alignement {@link GUIAlignement} alignement
+	 * @param alignement {@link GUIAlignement} component alignement
+	 * @param guialignement {@link GUIAlignement} gui alignement
 	 * @param action {@link Runnable} action to do
 	 */
 	public GUIButton(GUI gui, String text, float textMul ,int width, int height, String texturePath, String hoverTexturePath, String clickTexturePath, float scale, FontType type, Color textColor, Vector3f pos, float rot, GUIAlignement alignement, GUIAlignement guialignement, Runnable action) {
@@ -400,8 +401,4 @@ public class GUIButton extends GUIComponent implements EventListener{
 		this.clickable = clickable;
 	}
 
-	@Override
-	public void setComponentAlignement(GUIAlignement alignement) {
-		this.alignement = alignement;
-	}
 }

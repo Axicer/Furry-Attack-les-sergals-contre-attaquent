@@ -51,6 +51,18 @@ public class GUISelector<T> extends GUIComponent{
 	 */
 	private int width, height;
 	
+	/**
+	 * Constructor of a {@link GUISelector}
+	 * @param gui parent gui
+	 * @param pos {@link Vector3f} position relative to alignements
+	 * @param width int width
+	 * @param height int height
+	 * @param type {@link FontType} text font used
+	 * @param textColor {@link Color} text color
+	 * @param alignement {@link GUIAlignement} component alignement
+	 * @param guialignement {@link GUIAlignement} gui alignement
+	 * @param items {@link GUISelectorItem}[] array of all items
+	 */
 	@SuppressWarnings("unchecked")
 	public GUISelector(GUI gui, Vector3f pos, int width, int height, FontType type, Color textColor, GUIAlignement alignement, GUIAlignement guialignement, GUISelectorItem<T>... items) {
 		this.items = items;
@@ -178,11 +190,6 @@ public class GUISelector<T> extends GUIComponent{
 	 */
 	public int getHeight() {
 		return height;
-	}
-	
-	@Override
-	public void setComponentAlignement(GUIAlignement alignement) {
-		this.alignement = alignement;
 	}
 
 }
