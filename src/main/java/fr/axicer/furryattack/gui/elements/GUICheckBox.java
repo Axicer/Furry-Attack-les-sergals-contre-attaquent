@@ -111,7 +111,7 @@ public class GUICheckBox extends GUIComponent implements EventListener{
 	 * @param textureCheckedPath {@link String} checked texture path
 	 * @param alignement {@link GUIAlignement} alignement
 	 */
-	public GUICheckBox(GUI gui, Configuration config, File configFile, String path, int width, int height, float scale, Vector3f pos, float rot, String texturePath, String textureCheckedPath, GUIAlignement alignement) {
+	public GUICheckBox(GUI gui, Configuration config, File configFile, String path, int width, int height, float scale, Vector3f pos, float rot, String texturePath, String textureCheckedPath, GUIAlignement alignement, GUIAlignement guialignement) {
 		this.config = config;
 		this.configFile = configFile;
 		this.path = path;
@@ -121,6 +121,7 @@ public class GUICheckBox extends GUIComponent implements EventListener{
 		this.scale = scale;
 		this.gui = gui;
 		this.alignement = alignement;
+		this.guialignement = guialignement;
 
 		this.pos = pos;
 		this.rot = rot;
@@ -129,8 +130,8 @@ public class GUICheckBox extends GUIComponent implements EventListener{
 		
 		this.modelMatrix = new Matrix4f().identity().translate(
 				new Vector3f(
-						pos.x+alignement.getOffsetXfromCenter(width),
-						pos.y+alignement.getOffsetYfromCenter(height),
+						pos.x+alignement.getOffsetXfromCenter(width)*scale+guialignement.getReverseOffsetXfromCenter(Constants.WIDTH),
+						pos.y+alignement.getOffsetYfromCenter(height)*scale+guialignement.getReverseOffsetYfromCenter(Constants.HEIGHT),
 						pos.z
 				)
 		).rotateZ(rot).scale(scale);
@@ -183,8 +184,8 @@ public class GUICheckBox extends GUIComponent implements EventListener{
 	public void update() {
 		modelMatrix.identity().translate(
 				new Vector3f(
-						pos.x+alignement.getOffsetXfromCenter(width),
-						pos.y+alignement.getOffsetYfromCenter(height),
+						pos.x+alignement.getOffsetXfromCenter(width)*scale+guialignement.getReverseOffsetXfromCenter(Constants.WIDTH),
+						pos.y+alignement.getOffsetYfromCenter(height)*scale+guialignement.getReverseOffsetYfromCenter(Constants.HEIGHT),
 						pos.z
 				)
 		).rotateZ(rot).scale(scale);
@@ -315,7 +316,7 @@ public class GUICheckBox extends GUIComponent implements EventListener{
 	}
 
 	@Override
-	public void setGUIAlignement(GUIAlignement alignement) {
+	public void setComponentAlignement(GUIAlignement alignement) {
 		this.alignement = alignement;
 	}
 }

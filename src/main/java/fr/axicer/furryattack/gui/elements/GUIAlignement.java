@@ -1,18 +1,41 @@
 package fr.axicer.furryattack.gui.elements;
 
+import org.joml.Matrix3f;
+
 /**
  * Alignement of a component
  * @author Axicer
  *
  */
 public enum GUIAlignement {
-	TOP_LEFT,	TOP,	TOP_RIGHT,
-	LEFT,		CENTER,	RIGHT,
-	BOTTOM_LEFT,BOTTOM,	BOTTOM_RIGHT;
+	TOP_LEFT(0,0),		TOP(0,1),		TOP_RIGHT(0,2),
+	LEFT(1,0),			CENTER(1,1),	RIGHT(1,2),
+	BOTTOM_LEFT(2,0),	BOTTOM(2,1),	BOTTOM_RIGHT(2,2);
+	
+	private static final Matrix3f centerOffsetXmul = new Matrix3f(0.5f, 	0f, 	-0.5f,
+																  0.5f, 	0f, 	-0.5f,
+																  0.5f, 	0f, 	-0.5f);
+	private final static Matrix3f centerOffsetYmul = new Matrix3f(-0.5f, 	-0.5f,	-0.5f,
+																  0f, 		0f, 	0f,
+																  0.5f, 	0.5f, 	0.5f);
+	private static final Matrix3f reverseCenterOffsetXmul = new Matrix3f(-0.5f, 	0f, 	0.5f,
+			  															 -0.5f, 	0f, 	0.5f,
+			  															 -0.5f, 	0f, 	0.5f);
+	private static final Matrix3f reverseCenterOffsetYmul = new Matrix3f(0.5f, 		0.5f,	0.5f,
+			  															 0f, 		0f, 	0f,
+			  															 -0.5f, 	-0.5f, 	-0.5f);
+	/**
+	 * matrices position
+	 */
+	private int x,y;
+	
 	/**
 	 * Empty constructor
 	 */
-	private GUIAlignement() {}
+	private GUIAlignement(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
 	
 	/**
 	 * Get the x offset from center depending of the component width
@@ -20,57 +43,23 @@ public enum GUIAlignement {
 	 * @return int offset x
 	 */
 	public int getOffsetXfromCenter(int originalComponentWidth) {
-		switch(this) {
-		case BOTTOM:
-			return 0;
-		case CENTER:
-			return 0;
-		case TOP:
-			return 0;
-		case BOTTOM_LEFT:
-			return originalComponentWidth/2;
-		case BOTTOM_RIGHT:
-			return -originalComponentWidth/2;
-		case LEFT:
-			return originalComponentWidth/2;
-		case RIGHT:
-			return -originalComponentWidth/2;
-		case TOP_LEFT:
-			return originalComponentWidth/2;
-		case TOP_RIGHT:
-			return -originalComponentWidth/2;
-		default:
-			return 0;
-		}
+		return (int) (centerOffsetXmul.get(x, y)*originalComponentWidth);
 	}
 	
 	/**
 	 * Get the y offset from center depending of the component height
-	 * @param originalComponentHeight int component's width
+	 * @param originalComponentHeight int component's height
 	 * @return int offset y
 	 */
 	public int getOffsetYfromCenter(int originalComponentHeight) {
-		switch(this) {
-		case BOTTOM:
-			return originalComponentHeight/2;
-		case BOTTOM_LEFT:
-			return originalComponentHeight/2;
-		case BOTTOM_RIGHT:
-			return originalComponentHeight/2;
-		case CENTER:
-			return 0;
-		case LEFT:
-			return 0;
-		case RIGHT:
-			return 0;
-		case TOP:
-			return -originalComponentHeight/2;
-		case TOP_LEFT:
-			return -originalComponentHeight/2;
-		case TOP_RIGHT:
-			return -originalComponentHeight/2;
-		default:
-			return 0;
-		}
+		return (int) (centerOffsetYmul.get(x, y)*originalComponentHeight);
+	}
+	
+	public int getReverseOffsetXfromCenter(int width) {
+		return (int) (reverseCenterOffsetXmul.get(x, y)*width);
+	}
+	
+	public int getReverseOffsetYfromCenter(int height) {
+		return (int) (reverseCenterOffsetYmul.get(x, y)*height);
 	}
 }

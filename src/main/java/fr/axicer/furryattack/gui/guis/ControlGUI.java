@@ -43,34 +43,38 @@ public class ControlGUI extends GUI{
 				Constants.WIDTH, //width
 				Constants.HEIGHT, //height
 				new Vector3f(0,0,-1f), //pos
+				GUIAlignement.CENTER,
 				GUIAlignement.CENTER)); 
 		components.add(new GUIText("Contrôles", //text
-				new Vector3f(0f, (float)Constants.HEIGHT/2.5f, -1f), //pos
+				new Vector3f(0f, -Constants.HEIGHT/10f, -1f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				new Color(50, 70, 120, 255), // color
 				ratio*0.5f, //scale
-				GUIAlignement.CENTER));
+				GUIAlignement.TOP,
+				GUIAlignement.TOP));
 		components.add(ComponentFactory.generateButton(this,
 				"Retour",
 				ratio*0.2f,
-				(int)(Constants.WIDTH/6f),
-				(int)(Constants.HEIGHT/10f),
+				(int)(Constants.WIDTH/8f),
+				(int)(Constants.HEIGHT/12f),
 				ratio*0.5f,
-				new Vector3f((float)Constants.WIDTH/2.5f, (float)-Constants.HEIGHT/2.5f, -1f),
+				new Vector3f(50f, 50f, -1f),
 				0f,
-				GUIAlignement.CENTER,
+				GUIAlignement.BOTTOM_LEFT,
+				GUIAlignement.BOTTOM_LEFT,
 				new Runnable() {
 					public void run() {
-						FurryAttack.getInstance().getRenderer().getGUIRenderer().setCurrentGUI(GUIs.MAIN_MENU);
+						FurryAttack.getInstance().getRenderer().getGUIRenderer().setCurrentGUI(GUIs.OPTION_MENU);
 					}
 				}));
 		components.add(new GUIText("Haut:", //text
-				new Vector3f(-75f,(float)Constants.HEIGHT/4.25f,-0.5f), //pos
+				new Vector3f(-20f, 2*Constants.HEIGHT/10f,-0.5f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				Color.WHITE, // color
 				ratio*0.3f, //scale
+				GUIAlignement.RIGHT,
 				GUIAlignement.CENTER));
 		components.add(ComponentFactory.generateInputButton(this,
 				c,
@@ -80,15 +84,17 @@ public class ControlGUI extends GUI{
 				(int)(Constants.WIDTH/8f),
 				(int)(Constants.HEIGHT/12f),
 				ratio*0.5f,
-				new Vector3f(75f,(float)Constants.HEIGHT/4.25f,-0.5f),
+				new Vector3f(20f,2*Constants.HEIGHT/10f,-0.5f),
 				0f,
+				GUIAlignement.LEFT,
 				GUIAlignement.CENTER));
 		components.add(new GUIText("Gauche:", //text
-				new Vector3f(-75f,(float)Constants.HEIGHT/7f,-0.5f), //pos
+				new Vector3f(-20f,Constants.HEIGHT/10f,-0.5f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				Color.WHITE, // color
 				ratio*0.3f, //scale
+				GUIAlignement.RIGHT,
 				GUIAlignement.CENTER));
 		components.add(ComponentFactory.generateInputButton(this,
 				c,
@@ -98,15 +104,17 @@ public class ControlGUI extends GUI{
 				(int)(Constants.WIDTH/8f),
 				(int)(Constants.HEIGHT/12f),
 				ratio*0.5f,
-				new Vector3f(75f,(float)Constants.HEIGHT/7f,-0.5f),
+				new Vector3f(20f,Constants.HEIGHT/10f,-0.5f),
 				0f,
+				GUIAlignement.LEFT,
 				GUIAlignement.CENTER));
 		components.add(new GUIText("Bas:", //text
-				new Vector3f(-75f,(float)Constants.HEIGHT/20f,-0.5f), //pos
+				new Vector3f(-20f, 0f,-0.5f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				Color.WHITE, // color
 				ratio*0.3f, //scale
+				GUIAlignement.RIGHT,
 				GUIAlignement.CENTER));
 		components.add(ComponentFactory.generateInputButton(this,
 				c,
@@ -116,15 +124,17 @@ public class ControlGUI extends GUI{
 				(int)(Constants.WIDTH/8f),
 				(int)(Constants.HEIGHT/12f),
 				ratio*0.5f,
-				new Vector3f(75f,(float)Constants.HEIGHT/20f,-0.5f),
+				new Vector3f(20f,0f,-0.5f),
 				0f,
+				GUIAlignement.LEFT,
 				GUIAlignement.CENTER));
 		components.add(new GUIText("Droite:", //text
-				new Vector3f(-75f,(float)-Constants.HEIGHT/20f,-0.5f), //pos
+				new Vector3f(-20f,-Constants.HEIGHT/10f,-0.5f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				Color.WHITE, // color
 				ratio*0.3f, //scale
+				GUIAlignement.RIGHT,
 				GUIAlignement.CENTER));
 		components.add(ComponentFactory.generateInputButton(this,
 				c,
@@ -134,15 +144,17 @@ public class ControlGUI extends GUI{
 				(int)(Constants.WIDTH/8f),
 				(int)(Constants.HEIGHT/12f),
 				ratio*0.5f,
-				new Vector3f(75f,(float)-Constants.HEIGHT/20f,-0.5f),
+				new Vector3f(20f,-Constants.HEIGHT/10f,-0.5f),
 				0f,
+				GUIAlignement.LEFT,
 				GUIAlignement.CENTER));
 		components.add(new GUIText("Sauter:", //text
-				new Vector3f(-75f,(float)-Constants.HEIGHT/7f,-0.5f), //pos
+				new Vector3f(-20f,2*-Constants.HEIGHT/10f,-0.5f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				Color.WHITE, // color
 				ratio*0.3f, //scale
+				GUIAlignement.RIGHT,
 				GUIAlignement.CENTER));
 		components.add(ComponentFactory.generateInputButton(this,
 				c,
@@ -152,15 +164,17 @@ public class ControlGUI extends GUI{
 				(int)(Constants.WIDTH/8f),
 				(int)(Constants.HEIGHT/12f),
 				ratio*0.5f,
-				new Vector3f(75f,(float)-Constants.HEIGHT/7f,-0.5f),
+				new Vector3f(20f,2*-Constants.HEIGHT/10f,-0.5f),
 				0f,
+				GUIAlignement.LEFT,
 				GUIAlignement.CENTER));
 		components.add(new GUIText("S'accroupir:", //text
-				new Vector3f(-100f,(float)-Constants.HEIGHT/4.25f,-0.5f), //pos
+				new Vector3f(-20f,3*-Constants.HEIGHT/10f,-0.5f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				Color.WHITE, // color
 				ratio*0.3f, //scale
+				GUIAlignement.RIGHT,
 				GUIAlignement.CENTER));
 		components.add(ComponentFactory.generateInputButton(this,
 				c,
@@ -170,8 +184,9 @@ public class ControlGUI extends GUI{
 				(int)(Constants.WIDTH/8f),
 				(int)(Constants.HEIGHT/12f),
 				ratio*0.5f,
-				new Vector3f(75f,(float)-Constants.HEIGHT/4.25f,-0.5f),
+				new Vector3f(20f,3*-Constants.HEIGHT/10f,-0.5f),
 				0f,
+				GUIAlignement.LEFT,
 				GUIAlignement.CENTER));
 	}
 

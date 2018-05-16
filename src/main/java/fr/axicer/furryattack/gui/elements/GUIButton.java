@@ -112,7 +112,7 @@ public class GUIButton extends GUIComponent implements EventListener{
 	 * @param alignement {@link GUIAlignement} alignement
 	 * @param action {@link Runnable} action to do
 	 */
-	public GUIButton(GUI gui, String text, float textMul ,int width, int height, String texturePath, String hoverTexturePath, String clickTexturePath, float scale, FontType type, Color textColor, Vector3f pos, float rot, GUIAlignement alignement, Runnable action) {
+	public GUIButton(GUI gui, String text, float textMul ,int width, int height, String texturePath, String hoverTexturePath, String clickTexturePath, float scale, FontType type, Color textColor, Vector3f pos, float rot, GUIAlignement alignement, GUIAlignement guialignement, Runnable action) {
 		this.tex = Texture.loadTexture(texturePath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
 		this.hover_tex = Texture.loadTexture(hoverTexturePath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
 		this.click_tex = Texture.loadTexture(clickTexturePath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
@@ -127,18 +127,18 @@ public class GUIButton extends GUIComponent implements EventListener{
 		this.scale = scale;
 		this.gui = gui;
 		this.alignement = alignement;
-
+		this.guialignement = guialignement;
 		this.textG = new GUIText(text, new Vector3f(
-				pos.x+alignement.getOffsetXfromCenter(width),
-				pos.y+alignement.getOffsetYfromCenter(height),
+				pos.x+alignement.getOffsetXfromCenter(width)*scale,
+				pos.y+alignement.getOffsetYfromCenter(height)*scale,
 				pos.z
-		), rot, type, textColor, textMul, GUIAlignement.CENTER);
+		), rot, type, textColor, textMul, GUIAlignement.CENTER, guialignement);
 		this.shader = new ButtonShader();
 		this.box = new CollisionBoxM();
 		this.modelMatrix = new Matrix4f().translate(
 				new Vector3f(
-						pos.x+alignement.getOffsetXfromCenter(width),
-						pos.y+alignement.getOffsetYfromCenter(height),
+						pos.x+alignement.getOffsetXfromCenter(width)*scale+guialignement.getReverseOffsetXfromCenter(Constants.WIDTH),
+						pos.y+alignement.getOffsetYfromCenter(height)*scale+guialignement.getReverseOffsetYfromCenter(Constants.HEIGHT),
 						pos.z
 				)
 		).rotateZ(rot).scale(scale);
@@ -207,11 +207,10 @@ public class GUIButton extends GUIComponent implements EventListener{
 
 	@Override
 	public void update() {
-		System.out.println("update button");
 		modelMatrix.identity().translate(
 				new Vector3f(
-						pos.x+alignement.getOffsetXfromCenter(width),
-						pos.y+alignement.getOffsetYfromCenter(height),
+						pos.x+alignement.getOffsetXfromCenter(width)*scale+guialignement.getReverseOffsetXfromCenter(Constants.WIDTH),
+						pos.y+alignement.getOffsetYfromCenter(height)*scale+guialignement.getReverseOffsetYfromCenter(Constants.HEIGHT),
 						pos.z
 				)
 		).rotateZ(rot).scale(scale);
@@ -241,8 +240,8 @@ public class GUIButton extends GUIComponent implements EventListener{
 		//if(hover && clicked && clickable)onClick();
 		
 		textG.setPosition(new Vector3f(
-				pos.x+alignement.getOffsetXfromCenter(width),
-				pos.y+alignement.getOffsetYfromCenter(height),
+				pos.x+alignement.getOffsetXfromCenter(width)*scale,
+				pos.y+alignement.getOffsetYfromCenter(height)*scale,
 				pos.z
 		));
 		textG.setRotation(rot);
@@ -402,7 +401,7 @@ public class GUIButton extends GUIComponent implements EventListener{
 	}
 
 	@Override
-	public void setGUIAlignement(GUIAlignement alignement) {
+	public void setComponentAlignement(GUIAlignement alignement) {
 		this.alignement = alignement;
 	}
 }

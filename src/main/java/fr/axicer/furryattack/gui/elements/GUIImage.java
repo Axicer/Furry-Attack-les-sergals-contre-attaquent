@@ -14,6 +14,7 @@ import org.lwjgl.opengl.GL20;
 import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.render.shader.BackgroundShader;
 import fr.axicer.furryattack.render.textures.Texture;
+import fr.axicer.furryattack.util.Constants;
 
 /**
  * A image component
@@ -58,7 +59,7 @@ public class GUIImage extends GUIComponent{
 	 * @param rot float rotation of the image
 	 * @param scale float scale of the image
 	 */
-	public GUIImage(String imgPath, boolean blur, Vector2f blurDirection, int width, int height, Vector3f pos, float rot, float scale, GUIAlignement alignement) {
+	public GUIImage(String imgPath, boolean blur, Vector2f blurDirection, int width, int height, Vector3f pos, float rot, float scale, GUIAlignement alignement, GUIAlignement guialignement) {
 		shader = new BackgroundShader();
 		tex = Texture.loadTexture(imgPath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_LINEAR);
 		this.pos = pos;
@@ -67,6 +68,7 @@ public class GUIImage extends GUIComponent{
 		this.width = width;
 		this.height = height;
 		this.alignement = alignement;
+		this.guialignement = guialignement;
 		
 		FloatBuffer vertices = BufferUtils.createFloatBuffer(3);
 		vertices.put(new float[] {0f,0f,0f});
@@ -78,8 +80,8 @@ public class GUIImage extends GUIComponent{
 		
 		modelMatrix = new Matrix4f().identity().translate(
 				new Vector3f(
-						pos.x+alignement.getOffsetXfromCenter(width),
-						pos.y+alignement.getOffsetYfromCenter(height),
+						pos.x+alignement.getOffsetXfromCenter(width)*scale+guialignement.getReverseOffsetXfromCenter(Constants.WIDTH),
+						pos.y+alignement.getOffsetYfromCenter(height)*scale+guialignement.getReverseOffsetYfromCenter(Constants.HEIGHT),
 						pos.z
 				)
 		).rotateZ(rot).scale(scale);
@@ -124,8 +126,8 @@ public class GUIImage extends GUIComponent{
 		
 		modelMatrix = new Matrix4f().identity().translate(
 				new Vector3f(
-						pos.x+alignement.getOffsetXfromCenter(width),
-						pos.y+alignement.getOffsetYfromCenter(height),
+						pos.x+alignement.getOffsetXfromCenter(width)*scale+guialignement.getReverseOffsetXfromCenter(Constants.WIDTH),
+						pos.y+alignement.getOffsetYfromCenter(height)*scale+guialignement.getReverseOffsetYfromCenter(Constants.HEIGHT),
 						pos.z
 				)
 		).rotateZ(rot).scale(scale);
@@ -168,8 +170,8 @@ public class GUIImage extends GUIComponent{
 	public void update() {
 		modelMatrix.identity().translate(
 				new Vector3f(
-						pos.x+alignement.getOffsetXfromCenter(width),
-						pos.y+alignement.getOffsetYfromCenter(height),
+						pos.x+alignement.getOffsetXfromCenter(width)*scale,
+						pos.y+alignement.getOffsetYfromCenter(height)*scale,
 						pos.z
 				)
 		).rotateZ(rot).scale(scale);
@@ -204,7 +206,7 @@ public class GUIImage extends GUIComponent{
 	}
 
 	@Override
-	public void setGUIAlignement(GUIAlignement alignement) {
+	public void setComponentAlignement(GUIAlignement alignement) {
 		this.alignement = alignement;
 	}
 }

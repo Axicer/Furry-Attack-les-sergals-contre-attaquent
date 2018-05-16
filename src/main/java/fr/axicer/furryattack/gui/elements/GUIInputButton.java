@@ -138,7 +138,7 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 	 * @param textureHoverPath path for hovered texture
 	 * @param textureClickPath path for clicked texture
 	 */
-	public GUIInputButton(GUI gui, Configuration config, File configFile, String path, float textMul, FontType type, int width, int height, float scale, Color color, Vector3f pos, float rot, String texturePath, String textureHoverPath, String textureClickPath, GUIAlignement alignement) {
+	public GUIInputButton(GUI gui, Configuration config, File configFile, String path, float textMul, FontType type, int width, int height, float scale, Color color, Vector3f pos, float rot, String texturePath, String textureHoverPath, String textureClickPath, GUIAlignement alignement, GUIAlignement guialignement) {
 		this.tex = Texture.loadTexture(texturePath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
 		this.hover_tex = Texture.loadTexture(textureHoverPath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
 		this.click_tex = Texture.loadTexture(textureClickPath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
@@ -151,18 +151,18 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 		this.scale = scale;
 		this.gui = gui;
 		this.alignement = alignement;
-
+		this.guialignement = guialignement;
 		this.textG = new GUIText(Util.getKeyRepresentation(config.getInt(path, DEFAULT_KEY)), new Vector3f(
 				pos.x+alignement.getOffsetXfromCenter(width),
 				pos.y+alignement.getOffsetYfromCenter(height),
 				pos.z
-		), rot, type, color, textMul, GUIAlignement.CENTER);
+		), rot, type, color, textMul, GUIAlignement.CENTER, guialignement);
 		this.shader = new ButtonShader();
 		this.box = new CollisionBoxM();
 		this.modelMatrix = new Matrix4f().translate(
 				new Vector3f(
-						pos.x+alignement.getOffsetXfromCenter(width),
-						pos.y+alignement.getOffsetYfromCenter(height),
+						pos.x+alignement.getOffsetXfromCenter(width)*scale+guialignement.getReverseOffsetXfromCenter(Constants.WIDTH),
+						pos.y+alignement.getOffsetYfromCenter(height)*scale+guialignement.getReverseOffsetYfromCenter(Constants.HEIGHT),
 						pos.z
 				)
 		).rotateZ(rot).scale(scale);
@@ -244,8 +244,8 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 		modelMatrix.identity()
 			.translate(
 					new Vector3f(
-							pos.x+alignement.getOffsetXfromCenter((int) width),
-							pos.y+alignement.getOffsetYfromCenter((int) height),
+							pos.x+alignement.getOffsetXfromCenter(width)*scale+guialignement.getReverseOffsetXfromCenter(Constants.WIDTH),
+							pos.y+alignement.getOffsetYfromCenter(height)*scale+guialignement.getReverseOffsetYfromCenter(Constants.HEIGHT),
 							pos.z
 					)
 			)
@@ -270,8 +270,8 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 		hover = box.isInside((float)MouseHandler.getPosX()-Constants.WIDTH/2f, -((float)MouseHandler.getPosY()-Constants.HEIGHT/2f));
 		
 		textG.setPosition(new Vector3f(
-				pos.x+alignement.getOffsetXfromCenter(width),
-				pos.y+alignement.getOffsetYfromCenter(height),
+				pos.x+alignement.getOffsetXfromCenter(width)*scale,
+				pos.y+alignement.getOffsetYfromCenter(height)*scale,
 				pos.z
 		));
 		textG.setRotation(rot);
@@ -452,7 +452,7 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 	}
 
 	@Override
-	public void setGUIAlignement(GUIAlignement alignement) {
+	public void setComponentAlignement(GUIAlignement alignement) {
 		this.alignement = alignement;
 	}
 }

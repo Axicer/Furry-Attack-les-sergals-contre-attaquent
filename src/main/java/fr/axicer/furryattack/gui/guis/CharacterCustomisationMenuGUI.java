@@ -33,48 +33,54 @@ public class CharacterCustomisationMenuGUI extends GUI{
 									Constants.WIDTH, //width
 									Constants.HEIGHT, //height
 									new Vector3f(0,0,-1f),//pos
+									GUIAlignement.CENTER,
 									GUIAlignement.CENTER)); //alignement
 		components.add(new GUIText("Customisation du personnage", //text
-									new Vector3f(0f, (float)Constants.HEIGHT/2.5f, -1f), //pos
+									new Vector3f(0f, -Constants.HEIGHT/10f, -1f), //pos
 									0f, //rot
 									FontType.CAPTAIN, //font
 									new Color(50, 70, 120, 255), // color
 									ratio*0.5f,
-									GUIAlignement.CENTER)); //scale
+									GUIAlignement.TOP,
+									GUIAlignement.TOP)); //scale
 		components.add(ComponentFactory.generateImage("/img/gui/background/gray-back-bg.png",
 									Constants.WIDTH/4,
 									Constants.HEIGHT/2,
 									new Vector3f(0,0,-1f),
+									GUIAlignement.CENTER,
 									GUIAlignement.CENTER));
 		components.add(ComponentFactory.generateButton(this,
 				"RESET",
 				ratio*0.2f,
-				(int)(Constants.WIDTH/6f),
-				(int)(Constants.HEIGHT/10f),
+				(int)(Constants.WIDTH/8f),
+				(int)(Constants.HEIGHT/12f),
 				ratio*0.5f,
-				new Vector3f(0f, (float)-Constants.HEIGHT/2.5f, -1f),
+				new Vector3f(-Constants.WIDTH/8f-50f, 50f, -1f),
 				0f,
-				GUIAlignement.CENTER,
+				GUIAlignement.BOTTOM_RIGHT,
+				GUIAlignement.BOTTOM_RIGHT,
 				null));
 		components.add(ComponentFactory.generateButton(this,
 				"Appliquer",
 				ratio*0.2f,
-				(int)(Constants.WIDTH/6f),
-				(int)(Constants.HEIGHT/10f),
+				(int)(Constants.WIDTH/8f),
+				(int)(Constants.HEIGHT/12f),
 				ratio*0.5f,
-				new Vector3f((float)Constants.WIDTH/5, (float)-Constants.HEIGHT/2.5f, -1f),
+				new Vector3f(-50f, 50f, -1f),
 				0f,
-				GUIAlignement.CENTER,
+				GUIAlignement.BOTTOM_RIGHT,
+				GUIAlignement.BOTTOM_RIGHT,
 				null));
 		components.add(ComponentFactory.generateButton(this,
 				"Retour",
 				ratio*0.2f,
-				(int)(Constants.WIDTH/6f),
-				(int)(Constants.HEIGHT/10f),
+				(int)(Constants.WIDTH/8f),
+				(int)(Constants.HEIGHT/12f),
 				ratio*0.5f,
-				new Vector3f((float)Constants.WIDTH/2.5f, (float)-Constants.HEIGHT/2.5f, -1f),
+				new Vector3f(50f, 50f, -1f),
 				0f,
-				GUIAlignement.CENTER,
+				GUIAlignement.BOTTOM_LEFT,
+				GUIAlignement.BOTTOM_LEFT,
 				new Runnable() {
 					public void run() {
 						FurryAttack.getInstance().getRenderer().getGUIRenderer().setCurrentGUI(GUIs.MAIN_MENU);
@@ -83,97 +89,84 @@ public class CharacterCustomisationMenuGUI extends GUI{
 		components.add(ComponentFactory.generateButton(this,
 				"Exporter",
 				ratio*0.2f,
-				(int)(Constants.WIDTH/6f),
-				(int)(Constants.HEIGHT/10f),
+				(int)(Constants.WIDTH/8f),
+				(int)(Constants.HEIGHT/12f),
 				ratio*0.5f,
-				new Vector3f((float)-Constants.WIDTH/5, (float)-Constants.HEIGHT/2.5f, -1f),
+				new Vector3f(25f, 50f, -1f),
 				0f,
-				GUIAlignement.CENTER,
+				GUIAlignement.BOTTOM_LEFT,
+				GUIAlignement.BOTTOM,
 				null));
 		components.add(ComponentFactory.generateButton(this,
 				"Importer",
 				ratio*0.2f,
-				(int)(Constants.WIDTH/6f),
-				(int)(Constants.HEIGHT/10f),
+				(int)(Constants.WIDTH/8f),
+				(int)(Constants.HEIGHT/12f),
 				ratio*0.5f,
-				new Vector3f((float)-Constants.WIDTH/2.5f, (float)-Constants.HEIGHT/2.5f, -1f),
+				new Vector3f(-25f, 50f, -1f),
 				0f,
-				GUIAlignement.CENTER,
+				GUIAlignement.BOTTOM_RIGHT,
+				GUIAlignement.BOTTOM,
 				null));
-		components.add(new GUIText("Race", //text
-				new Vector3f((float)-Constants.WIDTH/2f+(float)Constants.WIDTH/5.5f,(float)Constants.HEIGHT/3.5f,-0.5f), //pos
+		components.add(new GUIText("Race:", //text
+				new Vector3f(50f,2*Constants.HEIGHT/10f,-0.5f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				Color.WHITE, // color
 				ratio*0.3f,//scale
-				GUIAlignement.CENTER)); 
+				GUIAlignement.LEFT,
+				GUIAlignement.LEFT)); 
 		components.add(new GUISelector<Species>(
 				this,
-				new Vector3f((float)-Constants.WIDTH/2f+(float)Constants.WIDTH/5.5f,(float)Constants.HEIGHT/5f,-0.5f),
+				new Vector3f(50f,Constants.HEIGHT/10f,-0.5f),
 				(int)(Constants.WIDTH/3f),
 				(int)(Constants.HEIGHT/10f),
 				FontType.CAPTAIN,
 				Color.WHITE,
-				GUIAlignement.CENTER,
+				GUIAlignement.LEFT,
+				GUIAlignement.LEFT,
 				new GUISelectorItem<>(Species.FOX, "Renard"),
 				new GUISelectorItem<>(Species.WOLF, "Loup"),
 				new GUISelectorItem<>(Species.DUTCH_ANGEL_DRAGON, "Dutch Angel Dragon"),
 				new GUISelectorItem<>(Species.HYENA, "Hyene")));
 		components.add(new GUIText("Couleur primaire", //text
-				new Vector3f((float)-Constants.WIDTH/2f+(float)Constants.WIDTH/5.5f,(float)Constants.HEIGHT/11f,-0.5f), //pos
+				new Vector3f(50f,0f,-0.5f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				Color.WHITE, // color
 				ratio*0.3f,//scale
-				GUIAlignement.CENTER)); 
+				GUIAlignement.LEFT,
+				GUIAlignement.LEFT)); 
 		components.add(new GUISelector<Color>(
 				this,
-				new Vector3f((float)-Constants.WIDTH/2f+(float)Constants.WIDTH/5.5f,0f,-0.5f),
+				new Vector3f(50,-Constants.HEIGHT/10f,-0.5f),
 				(int)(Constants.WIDTH/3f),
 				(int)(Constants.HEIGHT/10f),
 				FontType.CAPTAIN,
 				Color.WHITE,
-				GUIAlignement.CENTER,
+				GUIAlignement.LEFT,
+				GUIAlignement.LEFT,
 				new GUISelectorItem<>(Color.WHITE, "Blanc"),
 				new GUISelectorItem<>(Color.BLACK, "Noir")));
 		components.add(new GUIText("Couleur secondaire", //text
-				new Vector3f((float)-Constants.WIDTH/2f+(float)Constants.WIDTH/5.5f,(float)-Constants.HEIGHT/9f,-0.5f), //pos
+				new Vector3f(50f,2*-Constants.HEIGHT/10f,-0.5f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				Color.WHITE, // color
 				ratio*0.3f, //scale
-				GUIAlignement.CENTER));
+				GUIAlignement.LEFT,
+				GUIAlignement.LEFT));
 		components.add(new GUISelector<Color>(
 				this,
-				new Vector3f((float)-Constants.WIDTH/2f+(float)Constants.WIDTH/5.5f,(float)-Constants.HEIGHT/5f,-0.5f),
+				new Vector3f(50f,3*-Constants.HEIGHT/10f,-0.5f),
 				(int)(Constants.WIDTH/3f),
 				(int)(Constants.HEIGHT/10f),
 				FontType.CAPTAIN,
 				Color.WHITE,
-				GUIAlignement.CENTER,
+				GUIAlignement.LEFT,
+				GUIAlignement.LEFT,
 				new GUISelectorItem<>(Color.WHITE, "Blanc"),
 				new GUISelectorItem<>(Color.BLACK, "Noir")));
-		components.add(new GUIText("//TODO", //text
-				new Vector3f((float)Constants.WIDTH/2f-(float)Constants.WIDTH/5.5f,0f,-0.5f), //pos
-				0f, //rot
-				FontType.CAPTAIN, //font
-				Color.WHITE, // color
-				ratio*0.3f, //scale
-				GUIAlignement.CENTER)); 
-		components.add(new GUIText("//TODO", //text
-				new Vector3f((float)Constants.WIDTH/2f-(float)Constants.WIDTH/5.5f,(float)Constants.HEIGHT/5.5f,-0.5f), //pos
-				0f, //rot
-				FontType.CAPTAIN, //font
-				Color.WHITE, // color
-				ratio*0.3f, //scale
-				GUIAlignement.CENTER));
-		components.add(new GUIText("//TODO", //text
-				new Vector3f((float)Constants.WIDTH/2f-(float)Constants.WIDTH/5.5f,(float)-Constants.HEIGHT/5.5f,-0.5f), //pos
-				0f, //rot
-				FontType.CAPTAIN, //font
-				Color.WHITE, // color
-				ratio*0.3f, //scale
-				GUIAlignement.CENTER));
 		character = new Character(Species.FOX, Color.WHITE, Color.BLACK, "", new CharacterAnimation("/anim/wolf_head_normal.anim", "/img/human_walk_texture.png"), ratio);
 	}
 

@@ -26,22 +26,24 @@ public class MenuGUI extends GUI{
 									Constants.WIDTH, //width
 									Constants.HEIGHT, //height
 									new Vector3f(0,0,-1f), //pos
+									GUIAlignement.CENTER,
 									GUIAlignement.CENTER));
 		components.add(new GUIText("FURRY-ATTACK", //text
-									new Vector3f(0f,  4f*Constants.HEIGHT/10f, -1f), //pos
+									new Vector3f(0f,  -Constants.HEIGHT/10f, -1f), //pos
 									0f, //rot
 									FontType.CAPTAIN, //font
 									new Color(255, 50, 50, 255), //color
 									ratio*0.5f, //scale
-									GUIAlignement.CENTER));
-		
+									GUIAlignement.TOP,
+									GUIAlignement.TOP));
 		components.add(new GUIText("Les sergals contre attaquent",
-									new Vector3f(0f, 3f*Constants.HEIGHT/10f, -1f),
+									new Vector3f(0f, -Constants.HEIGHT/10f-FontType.CAPTAIN.getHeight()*ratio*0.5f, -1f),
 									0f,
 									FontType.CAPTAIN,
 									new Color(50, 255, 255, 255),
 									ratio*0.5f,
-									GUIAlignement.CENTER));
+									GUIAlignement.TOP,
+									GUIAlignement.TOP));
 		
 		components.add(ComponentFactory.generateButton(this,
 									"Nouvelle Partie",//text
@@ -51,6 +53,7 @@ public class MenuGUI extends GUI{
 									ratio*0.5f, //scale
 									new Vector3f(0f, Constants.HEIGHT/10f, -1f), //pos
 									0f, //rot
+									GUIAlignement.CENTER,
 									GUIAlignement.CENTER,
 									null));//action
 		components.add(ComponentFactory.generateButton(this,
@@ -62,6 +65,7 @@ public class MenuGUI extends GUI{
 									new Vector3f(0f, 0f, -1f),
 									0f,
 									GUIAlignement.CENTER,
+									GUIAlignement.CENTER,
 									null));
 		components.add(ComponentFactory.generateButton(this,
 									"Personnalisation du personnage",
@@ -71,6 +75,7 @@ public class MenuGUI extends GUI{
 									ratio*0.5f,
 									new Vector3f(0f, -Constants.HEIGHT/10f, -1f),
 									0f,
+									GUIAlignement.CENTER,
 									GUIAlignement.CENTER,
 									new Runnable() {
 										public void run() {
@@ -86,6 +91,7 @@ public class MenuGUI extends GUI{
 									new Vector3f(0f, -2*Constants.HEIGHT/10f, -1f),
 									0f,
 									GUIAlignement.CENTER,
+									GUIAlignement.CENTER,
 									null));
 		components.add(ComponentFactory.generateButton(this,
 									"Quitter",
@@ -95,6 +101,7 @@ public class MenuGUI extends GUI{
 									ratio*0.5f,
 									new Vector3f(0f, -3*Constants.HEIGHT/10f, -1f),
 									0f,
+									GUIAlignement.CENTER,
 									GUIAlignement.CENTER,
 									new Runnable() {
 										@Override
@@ -108,9 +115,10 @@ public class MenuGUI extends GUI{
 									(int)(Constants.WIDTH/8f),
 									(int)(Constants.HEIGHT/12f),
 									ratio*0.5f,
-									new Vector3f(-Constants.WIDTH/2f+150f, -Constants.HEIGHT/2+100f, -1f),
+									new Vector3f(50f, 50f, -1f),
 									0f,
-									GUIAlignement.CENTER,
+									GUIAlignement.BOTTOM_LEFT,
+									GUIAlignement.BOTTOM_LEFT,
 									new Runnable() {
 										public void run() {
 											FurryAttack.getInstance().getRenderer().getGUIRenderer().setCurrentGUI(GUIs.OPTION_MENU);

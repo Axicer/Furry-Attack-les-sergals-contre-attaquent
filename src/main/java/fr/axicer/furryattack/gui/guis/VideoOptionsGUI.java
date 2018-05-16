@@ -41,23 +41,26 @@ public class VideoOptionsGUI extends GUI{
 				Constants.WIDTH, //width
 				Constants.HEIGHT, //height
 				new Vector3f(0,0,-1f), //pos
+				GUIAlignement.CENTER,
 				GUIAlignement.CENTER));
 		components.add(new GUIText("Options vidéo", //text
-				new Vector3f(0f, (float)Constants.HEIGHT/2.5f, -1f), //pos
+				new Vector3f(0f, -Constants.HEIGHT/10f, -1f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				new Color(50, 70, 120, 255), // color
 				ratio*0.5f, //scale
-				GUIAlignement.CENTER));
+				GUIAlignement.TOP,
+				GUIAlignement.TOP));
 		components.add(ComponentFactory.generateButton(this,
 				"Retour",
 				ratio*0.2f,
-				(int)(Constants.WIDTH/6f),
-				(int)(Constants.HEIGHT/10f),
+				(int)(Constants.WIDTH/8f),
+				(int)(Constants.HEIGHT/12f),
 				ratio*0.5f,
-				new Vector3f((float)Constants.WIDTH/2.5f, (float)-Constants.HEIGHT/2.5f, -1f),
+				new Vector3f(50f, 50f, -1f),
 				0f,
-				GUIAlignement.CENTER,
+				GUIAlignement.BOTTOM_LEFT,
+				GUIAlignement.BOTTOM_LEFT,
 				new Runnable() {
 					public void run() {
 						FurryAttack.getInstance().getRenderer().getGUIRenderer().setCurrentGUI(GUIs.OPTION_MENU);
@@ -65,11 +68,12 @@ public class VideoOptionsGUI extends GUI{
 				}));
 		//resolution selector
 		GUISelector<Resolution> selector = new GUISelector<Resolution>(this,
-				new Vector3f(0f, (float)Constants.HEIGHT/6.5f, -1f),
+				new Vector3f(0f, Constants.HEIGHT/10f, -1f),
 				(int)(Constants.WIDTH/6f),
 				(int)(Constants.HEIGHT/10f),
 				FontType.CAPTAIN,
 				Color.WHITE,
+				GUIAlignement.CENTER,
 				GUIAlignement.CENTER,
 				getAllResolutions());
 		selector.setActualItem(getActual());
@@ -77,11 +81,12 @@ public class VideoOptionsGUI extends GUI{
 		components.add(ComponentFactory.generateButton(this,
 				"Appliquer",
 				ratio*0.175f,
-				(int)(Constants.WIDTH/6f),
-				(int)(Constants.HEIGHT/10f),
+				(int)(Constants.WIDTH/8f),
+				(int)(Constants.HEIGHT/12f),
 				ratio*0.5f,
-				new Vector3f(0f, (float)-Constants.HEIGHT/6.5f, -1f),
+				new Vector3f(0f, -Constants.HEIGHT/10f, -1f),
 				0f,
+				GUIAlignement.CENTER,
 				GUIAlignement.CENTER,
 				new Runnable() {
 					@Override
@@ -91,7 +96,6 @@ public class VideoOptionsGUI extends GUI{
 						Constants.MAIN_CONFIG.setInt("width", Constants.WIDTH, true);
 						Constants.MAIN_CONFIG.setInt("height", Constants.HEIGHT, true);
 						Constants.MAIN_CONFIG.save(Constants.MAIN_CONFIG_FILE);
-						System.out.println(Constants.FULLSCREEN);
 						Constants.FULLSCREEN = Constants.MAIN_CONFIG.getBoolean("fullscreen", false);
 						GLFW.glfwSetWindowSize(FurryAttack.getInstance().window, Constants.WIDTH, Constants.HEIGHT);
 						GL11.glViewport(0, 0, Constants.WIDTH, Constants.HEIGHT);
@@ -106,11 +110,12 @@ public class VideoOptionsGUI extends GUI{
 					}
 				}));
 		components.add(new GUIText("Plein Ecran",
-				new Vector3f(-Constants.WIDTH/30f, 0f, -1f),
+				new Vector3f(-20f, 0f, -1f),
 				0f,
 				FontType.CAPTAIN,
 				Color.WHITE,
 				ratio*0.25f,
+				GUIAlignement.RIGHT,
 				GUIAlignement.CENTER));
 		components.add(new GUICheckBox(this,
 				Constants.MAIN_CONFIG,
@@ -119,10 +124,11 @@ public class VideoOptionsGUI extends GUI{
 				30,
 				30,
 				1f,
-				new Vector3f(Constants.WIDTH/30f,0f,-1f),
+				new Vector3f(20f,0f,-1f),
 				0f,
 				"/img/gui/checkbox/checkbox.png",
 				"/img/gui/checkbox/checkbox_checked.png",
+				GUIAlignement.LEFT,
 				GUIAlignement.CENTER));
 	}
 	

@@ -25,23 +25,26 @@ public class OptionsMenu extends GUI{
 				Constants.WIDTH, //width
 				Constants.HEIGHT, //height
 				new Vector3f(0,0,-1f), //pos
+				GUIAlignement.CENTER,
 				GUIAlignement.CENTER)); 
 		components.add(new GUIText("Options", //text
-				new Vector3f(0f, (float)Constants.HEIGHT/2.5f, -1f), //pos
+				new Vector3f(0f, -Constants.HEIGHT/10f, -1f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				new Color(50, 70, 120, 255), // color
 				ratio*0.5f, //scale
-				GUIAlignement.CENTER));
+				GUIAlignement.TOP,
+				GUIAlignement.TOP));
 		components.add(ComponentFactory.generateButton(this,
 				"Retour",
 				ratio*0.2f,
-				(int)(Constants.WIDTH/6f),
-				(int)(Constants.HEIGHT/10f),
+				(int)(Constants.WIDTH/8f),
+				(int)(Constants.HEIGHT/12f),
 				ratio*0.5f,
-				new Vector3f((float)Constants.WIDTH/2.5f, (float)-Constants.HEIGHT/2.5f, -1f),
+				new Vector3f(50f, 50f, -1f),
 				0f,
-				GUIAlignement.CENTER,
+				GUIAlignement.BOTTOM_LEFT,
+				GUIAlignement.BOTTOM_LEFT,
 				new Runnable() {
 					public void run() {
 						FurryAttack.getInstance().getRenderer().getGUIRenderer().setCurrentGUI(GUIs.MAIN_MENU);
@@ -50,11 +53,12 @@ public class OptionsMenu extends GUI{
 		components.add(ComponentFactory.generateButton(this,
 				"Vidéo",
 				ratio*0.2f,
-				(int)(Constants.WIDTH/3f),
-				(int)(Constants.HEIGHT/10f),
+				(int)(Constants.WIDTH/4f),
+				(int)(Constants.HEIGHT/12f),
 				ratio*0.5f,
-				new Vector3f(0, (float)Constants.HEIGHT/6.5f, -1f),
+				new Vector3f(0, Constants.HEIGHT/10f, -1f),
 				0f,
+				GUIAlignement.CENTER,
 				GUIAlignement.CENTER,
 				new Runnable() {
 					@Override
@@ -65,11 +69,12 @@ public class OptionsMenu extends GUI{
 		components.add(ComponentFactory.generateButton(this,
 				"Controles",
 				ratio*0.2f,
-				(int)(Constants.WIDTH/3f),
-				(int)(Constants.HEIGHT/10f),
+				(int)(Constants.WIDTH/4f),
+				(int)(Constants.HEIGHT/12f),
 				ratio*0.5f,
-				new Vector3f(0, (float)Constants.HEIGHT/20f, -1f),
+				new Vector3f(0f, 0f, -1f),
 				0f,
+				GUIAlignement.CENTER,
 				GUIAlignement.CENTER,
 				new Runnable() {
 					@Override
@@ -80,21 +85,23 @@ public class OptionsMenu extends GUI{
 		components.add(ComponentFactory.generateButton(this,
 				"Langue",
 				ratio*0.2f,
-				(int)(Constants.WIDTH/3f),
-				(int)(Constants.HEIGHT/10f),
+				(int)(Constants.WIDTH/4f),
+				(int)(Constants.HEIGHT/12f),
 				ratio*0.5f,
-				new Vector3f(0, (float)-Constants.HEIGHT/20f, -1f),
+				new Vector3f(0, -Constants.HEIGHT/10f, -1f),
 				0f,
+				GUIAlignement.CENTER,
 				GUIAlignement.CENTER,
 				null));
 		components.add(ComponentFactory.generateButton(this,
 				"Credits",
 				ratio*0.2f,
-				(int)(Constants.WIDTH/3f),
-				(int)(Constants.HEIGHT/10f),
+				(int)(Constants.WIDTH/4f),
+				(int)(Constants.HEIGHT/12f),
 				ratio*0.5f,
-				new Vector3f(0, (float)-Constants.HEIGHT/6.5f, -1f),
+				new Vector3f(0, 2*-Constants.HEIGHT/10f, -1f),
 				0f,
+				GUIAlignement.CENTER,
 				GUIAlignement.CENTER,
 				null));
 	}

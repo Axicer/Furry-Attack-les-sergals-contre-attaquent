@@ -73,14 +73,14 @@ public class GUIText extends GUIComponent{
 	 * @param color {@link Color} color of the text
 	 * @param alignement {@link Alignment} where is the component aligned
 	 */
-	public GUIText(String text, FontType type, Color color, GUIAlignement alignement) {
+	public GUIText(String text, FontType type, Color color, GUIAlignement alignement, GUIAlignement guialignement) {
 		super();
 		this.text = text;
 		this.type = type;
 		this.color = color;
 		this.scale = 1f;
 		this.alignement = alignement;
-		init();
+		this.guialignement = guialignement;
 		initRender();
 	}
 	
@@ -94,28 +94,15 @@ public class GUIText extends GUIComponent{
 	 * @param scale float scale of the text
 	 * @param alignement {@link Alignment} where is the component aligned
 	 */
-	public GUIText(String text, Vector3f pos, float rot, FontType type, Color color, float scale, GUIAlignement alignement) {
+	public GUIText(String text, Vector3f pos, float rot, FontType type, Color color, float scale, GUIAlignement alignement, GUIAlignement guialignement) {
 		super(pos, rot);
 		this.text = text;
 		this.type = type;
 		this.color = color;
 		this.scale = scale;
 		this.alignement = alignement;
-		init();
+		this.guialignement = guialignement;
 		initRender();
-	}
-	
-	/**
-	 * Init the component matrix and shader
-	 */
-	private void init() {
-		modelMatrix = new Matrix4f().translate(
-				new Vector3f(
-						pos.x+alignement.getOffsetXfromCenter((int) textWidth),
-						pos.y+alignement.getOffsetYfromCenter(type.getHeight()),
-						pos.z)
-				).rotateZ(rot).scale((scale/((float)Constants.WIDTH/(float)Constants.HEIGHT))*1.4f);
-		shader = new TextShader();
 	}
 	
 	/**
@@ -184,6 +171,19 @@ public class GUIText extends GUIComponent{
 	    GL15.glBufferData(GL15.GL_ARRAY_BUFFER, textures, GL15.GL_STATIC_DRAW);
 	    GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 	    
+	    
+	    modelMatrix = new Matrix4f()
+				.translate(
+						new Vector3f(
+								pos.x+alignement.getOffsetXfromCenter((int) textWidth)*scale+guialignement.getReverseOffsetXfromCenter(Constants.WIDTH),
+								pos.y+alignement.getOffsetYfromCenter(type.getHeight())*scale+guialignement.getReverseOffsetYfromCenter(Constants.HEIGHT),
+								pos.z
+						)
+				)
+				.rotateZ(rot)
+				.scale(scale);
+		shader = new TextShader();
+		
 	    shader.bind();
 	    shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 	    shader.setUniformMat4f("viewMatrix", FurryAttack.getInstance().viewMatrix);
@@ -228,12 +228,12 @@ public class GUIText extends GUIComponent{
 		modelMatrix.identity()
 				.translate(
 						new Vector3f(
-								pos.x+alignement.getOffsetXfromCenter((int) textWidth),
-								pos.y+alignement.getOffsetYfromCenter(type.getHeight()),
+								pos.x+alignement.getOffsetXfromCenter((int) textWidth)*scale+guialignement.getReverseOffsetXfromCenter(Constants.WIDTH),
+								pos.y+alignement.getOffsetYfromCenter(type.getHeight())*scale+guialignement.getReverseOffsetYfromCenter(Constants.HEIGHT),
 								pos.z)
 						)
 				.rotateZ(rot)
-				.scale((scale/((float)Constants.WIDTH/(float)Constants.HEIGHT))*1.4f);
+				.scale(scale);
 		shader.bind();
 		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 		shader.setUniformMat4f("modelMatrix", modelMatrix);
@@ -328,10 +328,4 @@ public class GUIText extends GUIComponent{
 	public void allowRender(boolean val) {
 		this.canRender = val;
 	}
-
-	@Override
-	public void setGUIAlignement(GUIAlignement alignement) {
-		this.alignement = alignement;
-	}
-
 }

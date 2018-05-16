@@ -30,6 +30,7 @@ public abstract class GUIComponent implements Renderable, Updateable, Destroyabl
 	 * The alignement (point the component should render)
 	 */
 	protected GUIAlignement alignement;
+	protected GUIAlignement guialignement;
 	
 	/**
 	 * An abstract {@link GUIComponent} with no rotation and a position of (0,0,0)
@@ -85,12 +86,29 @@ public abstract class GUIComponent implements Renderable, Updateable, Destroyabl
 	 * Get the component's alignement
 	 * @return {@link GUIAlignement} alignement
 	 */
-	public GUIAlignement getGUIAlignement() {
+	public GUIAlignement getComponentAlignement() {
 		return this.alignement;
 	}
 	/**
-	 * Set the {@link GUIAlignement} of this component
+	 * Set the component{@link GUIAlignement} of this component
 	 * @param alignement {@link GUIAlignement} alignement
 	 */
-	public abstract void setGUIAlignement(GUIAlignement alignement);
+	public void setComponentAlignement(GUIAlignement alignement) {
+		this.alignement = alignement;
+	}
+	
+	/**
+	 * Get the component's guialignement
+	 * @return {@link GUIAlignement} guialignement
+	 */
+	public GUIAlignement getGUIAlignement() {
+		return this.guialignement;
+	}
+	/**
+	 * Set the gui {@link GUIAlignement} of this component
+	 * @param guialignement {@link GUIAlignement} guialignement
+	 */
+	public void setGUIAlignement(GUIAlignement guialignement) {
+		this.guialignement = guialignement;
+	}
 }
