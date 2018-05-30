@@ -8,39 +8,44 @@
 		},
 		"menu":{
 			"main":{
+				"party":{
+					"new":"New party",
+					"load":"load party"
+				},
 				"singleplayer":"Singleplayer",
 				"multiplayer":"Multiplayer",
 				"characterCustom":"Character Customisation",
-				"GunCustom":"Gun Customisation",
+				"gunCustom":"Gun Customisation",
 				"quit":"Quit Game",
 				"options":"Options"
 			},
 			"options":{
-				"optionsTitle":"Options",
+				"title":"Options",
 				"video":"Video",
 				"control":"Control",
 				"language":"Language",
 				"credits":"Credits",
-				"back":"@translation.generic.back"
+				"back":"@generic.back"
 			},
 			"video":{
-				"videoTitle":"Video Options",
+				"title":"Video Options",
 				"fullscreen":"Fullscreen",
-				"apply":"@translation.generic.apply",
-				"back":"Back"
+				"apply":"@generic.apply",
+				"back":"@generic.back"
 			},
 			"control":{
-				"controlTitle":"Controls",
+				"title":"Controls",
 				"up":"Up",
 				"down":"Down",
 				"left":"Left",
 				"right":"Right",
 				"jump":"Jump",
 				"shift":"Shift",
-				"back":"@translation.generic.back"
+				"back":"@generic.back"
 			},
 			"custom":{
 				"character":{
+					"title":"Character customisation",
 					"race":"Race",
 					"color":{
 						"primary":"Primary Color",
@@ -49,8 +54,8 @@
 					"import":"Import",
 					"export":"Export",
 					"reset":"Reset",
-					"apply":"@translation.generic.apply",
-					"back":"@translation.generic.back"
+					"apply":"@generic.apply",
+					"back":"@generic.back"
 				}
 			}
 		}

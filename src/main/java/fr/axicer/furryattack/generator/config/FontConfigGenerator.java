@@ -2,10 +2,11 @@ package fr.axicer.furryattack.generator.config;
 
 import java.awt.FontMetrics;
 
+import fr.axicer.furryattack.generator.AbstractGenerator;
 import fr.axicer.furryattack.util.config.Configuration;
 import fr.axicer.furryattack.util.font.CharInfo;
 
-public class FontConfigGenerator extends ConfigGenerator{
+public class FontConfigGenerator extends AbstractGenerator{
 
 	private String representedString;
 	private FontMetrics metrics;
@@ -15,7 +16,6 @@ public class FontConfigGenerator extends ConfigGenerator{
 		this.metrics = fontMetrics;
 	}
 	
-	@Override
 	public Configuration generate() {
 		Configuration config = new Configuration();
 		int width = 0, height = 0;

@@ -2,9 +2,10 @@ package fr.axicer.furryattack.generator.config;
 
 import org.lwjgl.glfw.GLFW;
 
+import fr.axicer.furryattack.generator.AbstractGenerator;
 import fr.axicer.furryattack.util.config.Configuration;
 
-public class ControlConfigGenerator extends ConfigGenerator{
+public class ControlConfigGenerator extends AbstractGenerator{
 
 	public static final String CONFIG_NAME = "config.json";
 	public static final String UP_CONTROL_ID = "up";
@@ -16,7 +17,6 @@ public class ControlConfigGenerator extends ConfigGenerator{
 	
 	public ControlConfigGenerator() {}
 
-	@Override
 	public Configuration generate() {
 		Configuration c = new Configuration();
 		c.setInt(UP_CONTROL_ID, GLFW.GLFW_KEY_Z, true);

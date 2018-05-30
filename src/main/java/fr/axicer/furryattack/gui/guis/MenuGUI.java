@@ -46,7 +46,7 @@ public class MenuGUI extends GUI{
 									GUIAlignement.TOP));
 		
 		components.add(ComponentFactory.generateButton(this,
-									"Nouvelle Partie",//text
+									FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.main.party.new"),//text
 									ratio*0.2f,// textscale
 									(int)(Constants.WIDTH/4f), //width
 									(int)(Constants.HEIGHT/12f), //height
@@ -57,7 +57,7 @@ public class MenuGUI extends GUI{
 									GUIAlignement.CENTER,
 									null));//action
 		components.add(ComponentFactory.generateButton(this,
-									"Charger partie",
+				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.main.party.load"),
 									ratio*0.2f,
 									(int)(Constants.WIDTH/4f),
 									(int)(Constants.HEIGHT/12f),
@@ -68,7 +68,7 @@ public class MenuGUI extends GUI{
 									GUIAlignement.CENTER,
 									null));
 		components.add(ComponentFactory.generateButton(this,
-									"Personnalisation du personnage",
+				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.main.characterCustom"),
 									ratio*0.15f,
 									(int)(Constants.WIDTH/4f),
 									(int)(Constants.HEIGHT/12f),
@@ -83,7 +83,7 @@ public class MenuGUI extends GUI{
 										}
 									}));
 		components.add(ComponentFactory.generateButton(this,
-									"Personnalisation de l'arme",
+				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.main.gunCustom"),
 									ratio*0.2f,
 									(int)(Constants.WIDTH/4f),
 									(int)(Constants.HEIGHT/12f),
@@ -94,7 +94,7 @@ public class MenuGUI extends GUI{
 									GUIAlignement.CENTER,
 									null));
 		components.add(ComponentFactory.generateButton(this,
-									"Quitter",
+				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.main.quit"),
 									ratio*0.2f,
 									(int)(Constants.WIDTH/4f),
 									(int)(Constants.HEIGHT/12f),
@@ -110,7 +110,7 @@ public class MenuGUI extends GUI{
 										}
 									}));
 		components.add(ComponentFactory.generateButton(this,
-									"Options",
+				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.main.options"),
 									ratio*0.2f,
 									(int)(Constants.WIDTH/8f),
 									(int)(Constants.HEIGHT/12f),

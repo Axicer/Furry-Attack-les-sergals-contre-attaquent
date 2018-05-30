@@ -15,6 +15,7 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL11;
 
 import fr.axicer.furryattack.FurryAttack;
+import fr.axicer.furryattack.generator.config.MainConfigGenerator;
 import fr.axicer.furryattack.gui.elements.ComponentFactory;
 import fr.axicer.furryattack.gui.elements.GUIAlignement;
 import fr.axicer.furryattack.gui.elements.GUICheckBox;
@@ -43,7 +44,7 @@ public class VideoOptionsGUI extends GUI{
 				new Vector3f(0,0,-1f), //pos
 				GUIAlignement.CENTER,
 				GUIAlignement.CENTER));
-		components.add(new GUIText("Options vidéo", //text
+		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.video.title"), //text
 				new Vector3f(0f, -Constants.HEIGHT/10f, -1f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
@@ -52,7 +53,7 @@ public class VideoOptionsGUI extends GUI{
 				GUIAlignement.TOP,
 				GUIAlignement.TOP));
 		components.add(ComponentFactory.generateButton(this,
-				"Retour",
+				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.video.back"),
 				ratio*0.2f,
 				(int)(Constants.WIDTH/8f),
 				(int)(Constants.HEIGHT/12f),
@@ -79,7 +80,7 @@ public class VideoOptionsGUI extends GUI{
 		selector.setActualItem(getActual());
 		components.add(selector);
 		components.add(ComponentFactory.generateButton(this,
-				"Appliquer",
+				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.video.apply"),
 				ratio*0.175f,
 				(int)(Constants.WIDTH/8f),
 				(int)(Constants.HEIGHT/12f),
@@ -96,7 +97,7 @@ public class VideoOptionsGUI extends GUI{
 						Constants.MAIN_CONFIG.setInt("width", Constants.WIDTH, true);
 						Constants.MAIN_CONFIG.setInt("height", Constants.HEIGHT, true);
 						Constants.MAIN_CONFIG.save(Constants.MAIN_CONFIG_FILE);
-						Constants.FULLSCREEN = Constants.MAIN_CONFIG.getBoolean("fullscreen", false);
+						Constants.FULLSCREEN = Constants.MAIN_CONFIG.getBoolean(MainConfigGenerator.FULLSCREEN_PATH, false);
 						GLFW.glfwSetWindowSize(FurryAttack.getInstance().window, Constants.WIDTH, Constants.HEIGHT);
 						GL11.glViewport(0, 0, Constants.WIDTH, Constants.HEIGHT);
 						FurryAttack.getInstance().projectionMatrix = new Matrix4f().ortho(-Constants.WIDTH/2, Constants.WIDTH/2, -Constants.HEIGHT/2, Constants.HEIGHT/2, 0.1f, 1000.0f);
@@ -109,7 +110,7 @@ public class VideoOptionsGUI extends GUI{
 							);
 					}
 				}));
-		components.add(new GUIText("Plein Ecran",
+		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.video.fullscreen"),
 				new Vector3f(-20f, 0f, -1f),
 				0f,
 				FontType.CAPTAIN,
@@ -120,7 +121,7 @@ public class VideoOptionsGUI extends GUI{
 		components.add(new GUICheckBox(this,
 				Constants.MAIN_CONFIG,
 				Constants.MAIN_CONFIG_FILE,
-				"fullscreen",
+				MainConfigGenerator.FULLSCREEN_PATH,
 				30,
 				30,
 				1f,

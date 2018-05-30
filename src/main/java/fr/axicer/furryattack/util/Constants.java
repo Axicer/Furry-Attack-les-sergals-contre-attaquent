@@ -3,6 +3,7 @@ package fr.axicer.furryattack.util;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import fr.axicer.furryattack.generator.config.MainConfigGenerator;
 import fr.axicer.furryattack.util.config.Configuration;
 import fr.axicer.furryattack.util.config.FileManager;
 
@@ -28,18 +29,12 @@ public class Constants {
 				e.printStackTrace();
 			}
 		}else {
-			MAIN_CONFIG = new Configuration();
-			MAIN_CONFIG.setBoolean("fullscreen", Util.contains(args, "-fullscreen"), true);
-			MAIN_CONFIG.setBoolean("vsync", Util.contains(args, "-vsync"), true);
-			MAIN_CONFIG.setInt("width", Integer.parseInt(System.getProperty("width", "800")), true);
-			MAIN_CONFIG.setInt("height", Integer.parseInt(System.getProperty("height", "600")), true);
-			MAIN_CONFIG.setInt("screenid", Integer.valueOf(System.getProperty("fullscreenid", "0")), true);
-			MAIN_CONFIG.save(MAIN_CONFIG_FILE);
+			MAIN_CONFIG = MainConfigGenerator.generate(MAIN_CONFIG_FILE, args);
 		}
-		Constants.FULLSCREEN = MAIN_CONFIG.getBoolean("fullscreen",false);
-		Constants.V_SYNC = MAIN_CONFIG.getBoolean("vsync",false);
-		Constants.WIDTH = MAIN_CONFIG.getInt("width", 800);
-		Constants.HEIGHT = MAIN_CONFIG.getInt("height", 600);
+		Constants.FULLSCREEN = MAIN_CONFIG.getBoolean(MainConfigGenerator.FULLSCREEN_PATH,false);
+		Constants.V_SYNC = MAIN_CONFIG.getBoolean(MainConfigGenerator.VSYNC_PATH,false);
+		Constants.WIDTH = MAIN_CONFIG.getInt(MainConfigGenerator.WIDTH_PATH, 800);
+		Constants.HEIGHT = MAIN_CONFIG.getInt(MainConfigGenerator.HEIGHT_PATH, 600);
 	}
 	
 }

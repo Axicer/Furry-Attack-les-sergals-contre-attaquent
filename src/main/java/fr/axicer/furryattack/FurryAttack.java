@@ -28,6 +28,7 @@ import fr.axicer.furryattack.util.control.MouseButtonHandler;
 import fr.axicer.furryattack.util.control.MouseHandler;
 import fr.axicer.furryattack.util.events.EventManager;
 import fr.axicer.furryattack.util.font.FontType;
+import fr.axicer.furryattack.util.lang.LanguageManager;
 
 public class FurryAttack implements Renderable, Updateable{
 	
@@ -48,6 +49,7 @@ public class FurryAttack implements Renderable, Updateable{
 
 	private Renderer renderer;
 	private EventManager eventManager;
+	private LanguageManager langManager;
 	
 	private Logger logger = LoggerFactory.getLogger(FurryAttack.class);
 	
@@ -65,6 +67,7 @@ public class FurryAttack implements Renderable, Updateable{
 		viewMatrix = new Matrix4f().identity();
 
 		eventManager = new EventManager();
+		langManager = new LanguageManager();
 		renderer = new Renderer();
 		
 		//only show GUI at first launch
@@ -215,6 +218,10 @@ public class FurryAttack implements Renderable, Updateable{
 	
 	public EventManager getEventManager() {
 		return eventManager;
+	}
+	
+	public LanguageManager getLangManager() {
+		return langManager;
 	}
 	
 	//******************** Launch ********************//

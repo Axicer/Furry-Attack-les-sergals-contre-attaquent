@@ -45,7 +45,7 @@ public class ControlGUI extends GUI{
 				new Vector3f(0,0,-1f), //pos
 				GUIAlignement.CENTER,
 				GUIAlignement.CENTER)); 
-		components.add(new GUIText("Contrôles", //text
+		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.control.title"), //text
 				new Vector3f(0f, -Constants.HEIGHT/10f, -1f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
@@ -54,7 +54,7 @@ public class ControlGUI extends GUI{
 				GUIAlignement.TOP,
 				GUIAlignement.TOP));
 		components.add(ComponentFactory.generateButton(this,
-				"Retour",
+				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.control.back"),
 				ratio*0.2f,
 				(int)(Constants.WIDTH/8f),
 				(int)(Constants.HEIGHT/12f),
@@ -68,7 +68,7 @@ public class ControlGUI extends GUI{
 						FurryAttack.getInstance().getRenderer().getGUIRenderer().setCurrentGUI(GUIs.OPTION_MENU);
 					}
 				}));
-		components.add(new GUIText("Haut:", //text
+		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.control.up")+":", //text
 				new Vector3f(-20f, 2*Constants.HEIGHT/10f,-0.5f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
@@ -88,7 +88,7 @@ public class ControlGUI extends GUI{
 				0f,
 				GUIAlignement.LEFT,
 				GUIAlignement.CENTER));
-		components.add(new GUIText("Gauche:", //text
+		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.control.left")+":", //text
 				new Vector3f(-20f,Constants.HEIGHT/10f,-0.5f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
@@ -108,7 +108,7 @@ public class ControlGUI extends GUI{
 				0f,
 				GUIAlignement.LEFT,
 				GUIAlignement.CENTER));
-		components.add(new GUIText("Bas:", //text
+		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.control.down")+":", //text
 				new Vector3f(-20f, 0f,-0.5f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
@@ -128,7 +128,7 @@ public class ControlGUI extends GUI{
 				0f,
 				GUIAlignement.LEFT,
 				GUIAlignement.CENTER));
-		components.add(new GUIText("Droite:", //text
+		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.control.right")+":", //text
 				new Vector3f(-20f,-Constants.HEIGHT/10f,-0.5f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
@@ -148,7 +148,7 @@ public class ControlGUI extends GUI{
 				0f,
 				GUIAlignement.LEFT,
 				GUIAlignement.CENTER));
-		components.add(new GUIText("Sauter:", //text
+		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.control.jump")+":", //text
 				new Vector3f(-20f,2*-Constants.HEIGHT/10f,-0.5f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
@@ -168,7 +168,7 @@ public class ControlGUI extends GUI{
 				0f,
 				GUIAlignement.LEFT,
 				GUIAlignement.CENTER));
-		components.add(new GUIText("S'accroupir:", //text
+		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.control.shift")+":", //text
 				new Vector3f(-20f,3*-Constants.HEIGHT/10f,-0.5f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font

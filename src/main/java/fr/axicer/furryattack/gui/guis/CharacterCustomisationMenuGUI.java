@@ -35,7 +35,7 @@ public class CharacterCustomisationMenuGUI extends GUI{
 									new Vector3f(0,0,-1f),//pos
 									GUIAlignement.CENTER,
 									GUIAlignement.CENTER)); //alignement
-		components.add(new GUIText("Customisation du personnage", //text
+		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.custom.character.title"), //text
 									new Vector3f(0f, -Constants.HEIGHT/10f, -1f), //pos
 									0f, //rot
 									FontType.CAPTAIN, //font
@@ -50,7 +50,7 @@ public class CharacterCustomisationMenuGUI extends GUI{
 									GUIAlignement.CENTER,
 									GUIAlignement.CENTER));
 		components.add(ComponentFactory.generateButton(this,
-				"RESET",
+				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.custom.character.reset"),
 				ratio*0.2f,
 				(int)(Constants.WIDTH/8f),
 				(int)(Constants.HEIGHT/12f),
@@ -61,7 +61,7 @@ public class CharacterCustomisationMenuGUI extends GUI{
 				GUIAlignement.BOTTOM_RIGHT,
 				null));
 		components.add(ComponentFactory.generateButton(this,
-				"Appliquer",
+				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.custom.character.apply"),
 				ratio*0.2f,
 				(int)(Constants.WIDTH/8f),
 				(int)(Constants.HEIGHT/12f),
@@ -72,7 +72,7 @@ public class CharacterCustomisationMenuGUI extends GUI{
 				GUIAlignement.BOTTOM_RIGHT,
 				null));
 		components.add(ComponentFactory.generateButton(this,
-				"Retour",
+				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.custom.character.back"),
 				ratio*0.2f,
 				(int)(Constants.WIDTH/8f),
 				(int)(Constants.HEIGHT/12f),
@@ -87,7 +87,7 @@ public class CharacterCustomisationMenuGUI extends GUI{
 					}
 				}));
 		components.add(ComponentFactory.generateButton(this,
-				"Exporter",
+				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.custom.character.export"),
 				ratio*0.2f,
 				(int)(Constants.WIDTH/8f),
 				(int)(Constants.HEIGHT/12f),
@@ -98,7 +98,7 @@ public class CharacterCustomisationMenuGUI extends GUI{
 				GUIAlignement.BOTTOM,
 				null));
 		components.add(ComponentFactory.generateButton(this,
-				"Importer",
+				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.custom.character.import"),
 				ratio*0.2f,
 				(int)(Constants.WIDTH/8f),
 				(int)(Constants.HEIGHT/12f),
@@ -108,7 +108,7 @@ public class CharacterCustomisationMenuGUI extends GUI{
 				GUIAlignement.BOTTOM_RIGHT,
 				GUIAlignement.BOTTOM,
 				null));
-		components.add(new GUIText("Race:", //text
+		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.custom.character.race"), //text
 				new Vector3f(50f,2*Constants.HEIGHT/10f,-0.5f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
@@ -129,7 +129,7 @@ public class CharacterCustomisationMenuGUI extends GUI{
 				new GUISelectorItem<>(Species.WOLF, "Loup"),
 				new GUISelectorItem<>(Species.DUTCH_ANGEL_DRAGON, "Dutch Angel Dragon"),
 				new GUISelectorItem<>(Species.HYENA, "Hyene")));
-		components.add(new GUIText("Couleur primaire", //text
+		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.custom.character.color.primary"), //text
 				new Vector3f(50f,0f,-0.5f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
@@ -148,7 +148,7 @@ public class CharacterCustomisationMenuGUI extends GUI{
 				GUIAlignement.LEFT,
 				new GUISelectorItem<>(Color.WHITE, "Blanc"),
 				new GUISelectorItem<>(Color.BLACK, "Noir")));
-		components.add(new GUIText("Couleur secondaire", //text
+		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.custom.character.color.secondary"), //text
 				new Vector3f(50f,2*-Constants.HEIGHT/10f,-0.5f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font

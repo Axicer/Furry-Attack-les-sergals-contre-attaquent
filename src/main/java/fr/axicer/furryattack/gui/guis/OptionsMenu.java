@@ -27,7 +27,7 @@ public class OptionsMenu extends GUI{
 				new Vector3f(0,0,-1f), //pos
 				GUIAlignement.CENTER,
 				GUIAlignement.CENTER)); 
-		components.add(new GUIText("Options", //text
+		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.options.title"), //text
 				new Vector3f(0f, -Constants.HEIGHT/10f, -1f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
@@ -36,7 +36,7 @@ public class OptionsMenu extends GUI{
 				GUIAlignement.TOP,
 				GUIAlignement.TOP));
 		components.add(ComponentFactory.generateButton(this,
-				"Retour",
+				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.options.back"),
 				ratio*0.2f,
 				(int)(Constants.WIDTH/8f),
 				(int)(Constants.HEIGHT/12f),
@@ -51,7 +51,7 @@ public class OptionsMenu extends GUI{
 					}
 				}));
 		components.add(ComponentFactory.generateButton(this,
-				"Vidéo",
+				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.options.video"),
 				ratio*0.2f,
 				(int)(Constants.WIDTH/4f),
 				(int)(Constants.HEIGHT/12f),
@@ -67,7 +67,7 @@ public class OptionsMenu extends GUI{
 					}
 				}));
 		components.add(ComponentFactory.generateButton(this,
-				"Controles",
+				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.options.control"),
 				ratio*0.2f,
 				(int)(Constants.WIDTH/4f),
 				(int)(Constants.HEIGHT/12f),
@@ -83,7 +83,7 @@ public class OptionsMenu extends GUI{
 					}
 				}));
 		components.add(ComponentFactory.generateButton(this,
-				"Langue",
+				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.options.language"),
 				ratio*0.2f,
 				(int)(Constants.WIDTH/4f),
 				(int)(Constants.HEIGHT/12f),
@@ -94,7 +94,7 @@ public class OptionsMenu extends GUI{
 				GUIAlignement.CENTER,
 				null));
 		components.add(ComponentFactory.generateButton(this,
-				"Credits",
+				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.options.credits"),
 				ratio*0.2f,
 				(int)(Constants.WIDTH/4f),
 				(int)(Constants.HEIGHT/12f),
