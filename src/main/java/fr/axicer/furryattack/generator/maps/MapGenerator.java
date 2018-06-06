@@ -1,0 +1,71 @@
+package fr.axicer.furryattack.generator.maps;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.joml.Vector2f;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+import fr.axicer.furryattack.map.AbstractMap;
+import fr.axicer.furryattack.map.MapObstacle;
+import fr.axicer.furryattack.map.MapType;
+import fr.axicer.furryattack.util.Constants;
+import fr.axicer.furryattack.util.config.Configuration;
+
+/**
+ * Generator of maps
+ * @author Axicer
+ *
+ */
+public class MapGenerator {
+	
+	/**
+	 * Create a map from a config file
+	 * @param config {@link Configuration} config to use
+	 * @return {@link AbstractMap} created or null if there is any error
+	 */
+	@SuppressWarnings("unchecked")
+	public static AbstractMap createMap(Configuration config) {
+		//get map type
+		MapType type = MapType.getMapTypeFromString(config.getString("type", "classic"));
+		Class<? extends AbstractMap> clazz = type.getInvokedMapClass();
+		try {
+			//get constructor and create map
+			Constructor<? extends AbstractMap> mapconstructor = clazz.getConstructor(String.class);
+			AbstractMap map = mapconstructor.newInstance(config.getString("name", "default-name"));
+			
+			//add obstacles
+			for(Object object : config.getJSONArray("obstacles", new JSONArray()).toArray()) {
+				if(object instanceof JSONObject) {
+					//get json of every object
+					JSONObject obj = (JSONObject) object;
+					List<Vector2f> pos = new ArrayList<>();
+					
+					int pointsCount = 0;
+					
+					//iterate trough each json object of points
+					JSONArray innerArray = (JSONArray)obj.getOrDefault("points", new JSONArray());
+					for(Object innerObject : innerArray.toArray()) {
+						if(innerObject instanceof JSONObject) {
+							JSONObject innerobj = (JSONObject) innerObject;
+							//add a new point
+							pos.add(new Vector2f((float)((double)innerobj.getOrDefault("x", 0))*Constants.WIDTH, (float)((double)innerobj.getOrDefault("y", 0))*Constants.HEIGHT));
+							pointsCount++;
+						}
+					}
+					MapObstacle obstacle = new MapObstacle(pos.toArray(new Vector2f[pointsCount]));
+					map.getObstacles().add(obstacle);
+				}
+			}
+			
+			
+			return map;
+		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+}

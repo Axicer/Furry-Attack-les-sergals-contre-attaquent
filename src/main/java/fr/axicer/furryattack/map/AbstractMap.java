@@ -29,6 +29,7 @@ public abstract class AbstractMap implements Renderable,Updateable,Destroyable{
 	 */
 	public AbstractMap(String name) {
 		this.obstacles = new ArrayList<>();
+		this.name = name;
 	}
 
 	/**
@@ -43,4 +44,13 @@ public abstract class AbstractMap implements Renderable,Updateable,Destroyable{
 	 * @return {@link MapType} of the map
 	 */
 	public abstract MapType getType();
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("[map]:\n");
+		builder.append("\tname: "+name+"\n");
+		builder.append("\tobstacles: "+obstacles+"\n");
+		return builder.toString();
+	}
 }

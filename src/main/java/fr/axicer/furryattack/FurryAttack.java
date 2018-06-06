@@ -17,11 +17,14 @@ import org.lwjgl.system.MemoryStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fr.axicer.furryattack.generator.maps.MapGenerator;
+import fr.axicer.furryattack.map.ClassicMap;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Renderer;
 import fr.axicer.furryattack.render.Updateable;
 import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.Util;
+import fr.axicer.furryattack.util.config.Configuration;
 import fr.axicer.furryattack.util.config.FileManager;
 import fr.axicer.furryattack.util.control.KeyboardHandler;
 import fr.axicer.furryattack.util.control.MouseButtonHandler;
@@ -71,8 +74,11 @@ public class FurryAttack implements Renderable, Updateable{
 		renderer = new Renderer();
 		
 		//only show GUI at first launch
-		renderer.getGUIRenderer().setActivated(true);
-		renderer.getMapRenderer().setActivated(false);
+		//renderer.getGUIRenderer().setActivated(true);
+		renderer.getMapRenderer().setActivated(true);
+		
+		ClassicMap map = (ClassicMap) MapGenerator.createMap(new Configuration("/maps/default.json"));
+		renderer.getMapRenderer().setMap(map);
 	}
 	
 	private void initFrame() {

@@ -101,4 +101,18 @@ public class CollisionBoxM {
 		//return 0.5f*Math.abs((A.x*(B.y-C.y)	+	B.x*(C.y-A.y)	+	C.x*(A.y-B.y)));
 		return 0.5f * Math.abs((B.x - A.x)*(C.y - A.y) - (C.x - A.x)*(B.y - A.y));
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("[CollisionBoxM]:\n");
+		builder.append("\tpoints: [\n");
+		for(int i = 0 ; i < points.length ; i++) {
+			builder.append("\t\tx : "+points[i].x+" ");
+			builder.append("\t\ty : "+points[i].y+"\n");
+		}
+		builder.append("\t]");
+		return builder.toString();
+		
+	}
 }
