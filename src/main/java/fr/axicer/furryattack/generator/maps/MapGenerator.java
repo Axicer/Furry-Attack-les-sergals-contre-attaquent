@@ -57,6 +57,8 @@ public class MapGenerator {
 							pointsCount++;
 						}
 					}
+					
+					//obstacle's creation
 					MapObstacle obstacle = new MapObstacle(pos.toArray(new Vector2f[pointsCount]));
 					obstacle.setTexture(MapObstaclesTextures.fromString((String) obj.getOrDefault("texture", "brick")).getTexture());
 					obstacle.setTextureMul((float)((double)obj.getOrDefault("textureMulX", 1)), (float)((double)obj.getOrDefault("textureMulY", 1)));
