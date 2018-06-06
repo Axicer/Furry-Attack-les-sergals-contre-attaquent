@@ -4,6 +4,9 @@
 	"obstacles":[
 		{
 			"name":"ground",
+			"texture":"brick",
+			"textureMulX":10.0,
+			"textureMulY":1.0,
 			"points":[
 				{
 					"x":-0.5,

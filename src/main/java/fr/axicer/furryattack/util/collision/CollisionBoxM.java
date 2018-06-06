@@ -16,8 +16,8 @@ public class CollisionBoxM {
 	
 	public Vector2f[] points;
 	
-	private int vbo;
-	private CollisionBoxShader shader;
+	protected int vbo;
+	protected CollisionBoxShader shader;
 	
 	public CollisionBoxM() {
 		this(new Vector2f(),new Vector2f(),new Vector2f(),new Vector2f());
@@ -32,7 +32,7 @@ public class CollisionBoxM {
 	    shader.setUniformMat4f("modelMatrix", new Matrix4f());
 		shader.unbind();
 		vbo = GL15.glGenBuffers();
-		updateRender();
+		this.updateRender();
 	}
 	
 	public void updatePos(Vector2f... points) {

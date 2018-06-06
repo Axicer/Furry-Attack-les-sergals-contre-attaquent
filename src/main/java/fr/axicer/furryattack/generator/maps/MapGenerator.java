@@ -11,6 +11,7 @@ import org.json.simple.JSONObject;
 
 import fr.axicer.furryattack.map.AbstractMap;
 import fr.axicer.furryattack.map.MapObstacle;
+import fr.axicer.furryattack.map.MapObstaclesTextures;
 import fr.axicer.furryattack.map.MapType;
 import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.config.Configuration;
@@ -57,6 +58,8 @@ public class MapGenerator {
 						}
 					}
 					MapObstacle obstacle = new MapObstacle(pos.toArray(new Vector2f[pointsCount]));
+					obstacle.setTexture(MapObstaclesTextures.fromString((String) obj.getOrDefault("texture", "brick")).getTexture());
+					obstacle.setTextureMul((float)((double)obj.getOrDefault("textureMulX", 1)), (float)((double)obj.getOrDefault("textureMulY", 1)));
 					map.getObstacles().add(obstacle);
 				}
 			}
