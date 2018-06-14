@@ -1,6 +1,7 @@
 package fr.axicer.furryattack.map;
 
 import fr.axicer.furryattack.render.Destroyable;
+import fr.axicer.furryattack.render.FrameBuffer;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
 
@@ -14,7 +15,7 @@ public class MapRenderer implements Renderable,Updateable,Destroyable{
 	/**
 	 * the map frame buffer
 	 */
-	private MapFrameBuffer mapFBO;
+	private FrameBuffer mapFBO;
 	
 	/**
 	 * the abstract map being rendered (can be null)
@@ -29,7 +30,7 @@ public class MapRenderer implements Renderable,Updateable,Destroyable{
 	 * Create a new {@link MapRenderer} with no map (null value)
 	 */
 	public MapRenderer() {
-		mapFBO = new MapFrameBuffer();
+		mapFBO = new FrameBuffer();
 		map = null;
 	}
 
@@ -49,15 +50,15 @@ public class MapRenderer implements Renderable,Updateable,Destroyable{
 	 */
 	public void recreate() {
 		mapFBO.cleanUp();
-		mapFBO = new MapFrameBuffer();
+		mapFBO = new FrameBuffer();
 	}
 
 	@Override
 	public void render() {
 		if(!activated)return;
-		mapFBO.bindMapFrameBuffer();
+		mapFBO.bindFrameBuffer();
 		if(map != null)map.render();
-		mapFBO.unbindCurrentFrameBuffer();
+		FrameBuffer.unbindCurrentFrameBuffer();
 	}
 	
 	/**
@@ -97,7 +98,7 @@ public class MapRenderer implements Renderable,Updateable,Destroyable{
 	 * Get the {@link MapFrameBuffer}
 	 * @return {@link MapFrameBuffer}
 	 */
-	public MapFrameBuffer getMapFBO() {
+	public FrameBuffer getMapFBO() {
 		return this.mapFBO;
 	}
 }

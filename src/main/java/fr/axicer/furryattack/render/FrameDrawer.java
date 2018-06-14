@@ -1,4 +1,4 @@
-package fr.axicer.furryattack.map;
+package fr.axicer.furryattack.render;
 
 import java.nio.FloatBuffer;
 
@@ -11,48 +11,19 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
 import fr.axicer.furryattack.FurryAttack;
-import fr.axicer.furryattack.render.Destroyable;
-import fr.axicer.furryattack.render.Renderable;
-import fr.axicer.furryattack.render.Updateable;
-import fr.axicer.furryattack.render.shader.MapFrameDrawerShader;
+import fr.axicer.furryattack.render.shader.FrameDrawerShader;
 import fr.axicer.furryattack.render.textures.Texture;
 
-/**
- * Rendering element used to render what's inside the {@link MapFrameBuffer}
- * @author Axicer
- *
- */
-public class MapFrameDrawer implements Renderable,Updateable,Destroyable{
+public class FrameDrawer implements Renderable,Updateable,Destroyable{
 	
-	/**
-	 * the vbo id
-	 */
 	private int vboId;
-	/**
-	 * the model {@link Matrix4f} used in this model
-	 */
 	private Matrix4f modelMatrix;
-	/**
-	 * the shader used here
-	 */
-	private MapFrameDrawerShader shader;
+	private FrameDrawerShader shader;
 	
-	/**
-	 * the position of this element
-	 */
 	private Vector3f pos;
-	/**
-	 * the texture used in this element
-	 */
 	private Texture tex;
 	
-	/**
-	 * Create a {@link MapFrameDrawer}
-	 * @param textureId int representing the id of the texture to draw
-	 * @param width int the width to draw
-	 * @param height int the height to draw
-	 */
-	public MapFrameDrawer(int textureId, int width, int height) {
+	public FrameDrawer(int textureId, int width, int height) {
 		this.tex = new Texture(textureId, width, height, GL12.GL_CLAMP_TO_EDGE, GL11.GL_LINEAR);
 		this.pos = new Vector3f(0f,0f,-1f);
 		
@@ -66,7 +37,7 @@ public class MapFrameDrawer implements Renderable,Updateable,Destroyable{
 		
 		modelMatrix = new Matrix4f().identity().translate(pos);
 		
-		shader = new MapFrameDrawerShader();
+		shader = new FrameDrawerShader();
 		shader.bind();
 		shader.setUniformi("tex", 0);
 		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);

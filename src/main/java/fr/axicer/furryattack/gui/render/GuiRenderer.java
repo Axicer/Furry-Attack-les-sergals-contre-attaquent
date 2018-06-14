@@ -2,6 +2,7 @@ package fr.axicer.furryattack.gui.render;
 
 import fr.axicer.furryattack.gui.elements.GUIButton;
 import fr.axicer.furryattack.render.Destroyable;
+import fr.axicer.furryattack.render.FrameBuffer;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
 import fr.axicer.furryattack.util.DelayableTask;
@@ -12,7 +13,7 @@ import fr.axicer.furryattack.util.DelayableTask;
  */
 public class GuiRenderer implements Renderable,Updateable,Destroyable{
 
-	private GUIFrameBufferObject guiFBO;
+	private FrameBuffer guiFBO;
 	private GUIs currentGUI;
 	private boolean activated = true;
 	
@@ -20,7 +21,7 @@ public class GuiRenderer implements Renderable,Updateable,Destroyable{
 	 * Create the renderer class and initialize the FBO
 	 */
 	public GuiRenderer() {
-		guiFBO = new GUIFrameBufferObject();
+		guiFBO = new FrameBuffer();
 		currentGUI = GUIs.MAIN_MENU;
 	}
 	
@@ -28,7 +29,7 @@ public class GuiRenderer implements Renderable,Updateable,Destroyable{
 	 * Get the Gui's FBO
 	 * @return {@link GUIFrameBufferObject}
 	 */
-	public GUIFrameBufferObject getGuiFBO() {
+	public FrameBuffer getGuiFBO() {
 		return this.guiFBO;
 	}
 	
@@ -90,16 +91,16 @@ public class GuiRenderer implements Renderable,Updateable,Destroyable{
 
 	public void recreate() {
 		guiFBO.cleanUp();
-		guiFBO = new GUIFrameBufferObject();
+		guiFBO = new FrameBuffer();
 		GUIs.recreate();
 	}
 	
 	@Override
 	public void render() {
 		if(!activated)return;
-		guiFBO.bindGuiFrameBuffer();
+		guiFBO.bindFrameBuffer();
 		currentGUI.getGUI().render();
-		guiFBO.unbindCurrentFrameBuffer();
+		FrameBuffer.unbindCurrentFrameBuffer();
 	}
 	
 }

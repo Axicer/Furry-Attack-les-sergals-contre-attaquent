@@ -1,6 +1,7 @@
-package fr.axicer.furryattack.gui.render;
+package fr.axicer.furryattack.render;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
 import java.nio.ByteBuffer;
 
@@ -10,53 +11,53 @@ import org.lwjgl.opengl.GL32;
 
 import fr.axicer.furryattack.util.Constants;
 
-/**
- * Contains the FBO's information relative to the GUI
- * @author Axicer
- *
- */
-public class GUIFrameBufferObject {
+public class FrameBuffer {
 	
-	private int GuiFrameBufferId;
-    private int GuiTextureId;
-    private int GuiDepthBufferId;
+	// id of the frame buffer
+	private int frameBufferId;
+	// id of the texture
+    private int textureId;
+    // id of the depth buffer
+    private int depthBufferId;
+    
     
     /**
-     * Create and initialize the GUI's FBO
+     * Create and initialize the Frame Buffer
      */
-    public GUIFrameBufferObject() {
-    	initializeGuiFrameBuffer();
+    public FrameBuffer() {
+    	initializeFrameBuffer();
     }
     
     /**
      * Get the frame buffer ID
      * @return int
      */
-    public int getGuiFrameBufferId() {
-		return GuiFrameBufferId;
+    public int getFrameBufferId() {
+		return frameBufferId;
 	}
 
     /**
      * Get the Texture ID
      * @return int
      */
-	public int getGuiTextureId() {
-		return GuiTextureId;
+	public int getTextureId() {
+		return textureId;
 	}
 
 	/**
-	 * Get the DepthBuffer ID
+	 * Get the Depth Buffer ID
 	 * @return int
 	 */
-	public int getGuiDepthBufferId() {
-		return GuiDepthBufferId;
+	public int getDepthBufferId() {
+		return depthBufferId;
 	}
 
 	/**
-	 * Bind the GUI frameBuffer
+	 * Bind the frameBuffer to the actual windows width and height
 	 */
-	public void bindGuiFrameBuffer() {//call before rendering to this FBO
-        bindFrameBuffer(GuiFrameBufferId,Constants.WIDTH,Constants.HEIGHT);
+	public void bindFrameBuffer() {
+		//call before rendering to this FBO
+        bindFrameBuffer(frameBufferId,Constants.WIDTH,Constants.HEIGHT);
     }
 	
 	/**
@@ -65,7 +66,7 @@ public class GUIFrameBufferObject {
 	 * @param width
 	 * @param height
 	 */
-	private void bindFrameBuffer(int frameBuffer, int width, int height){
+	public static void bindFrameBuffer(int frameBuffer, int width, int height){
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);//To make sure the texture isn't bound
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
         GL11.glViewport(0, 0, width, height);
@@ -74,7 +75,8 @@ public class GUIFrameBufferObject {
 	/**
 	 * Unbind the current frameBuffer, switching to the default one
 	 */
-	public void unbindCurrentFrameBuffer() {//call to switch to default frame buffer
+	public static void unbindCurrentFrameBuffer() {
+		//call to switch to default frame buffer
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
         GL11.glViewport(0, 0, Constants.WIDTH, Constants.HEIGHT);
     }
@@ -83,7 +85,8 @@ public class GUIFrameBufferObject {
 	 * Clear the buffer
 	 */
 	public void clearBuffer() {
-		bindGuiFrameBuffer();
+		bindFrameBuffer();
+		GL11.glClearColor(0f, 0f, 0f, 0f);
 		GL11.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		unbindCurrentFrameBuffer();
 	}
@@ -91,10 +94,10 @@ public class GUIFrameBufferObject {
 	/**
 	 * Initialize the Frame Buffer to the default width and height
 	 */
-    private void initializeGuiFrameBuffer() {
-    	GuiFrameBufferId = createFrameBuffer();
-    	GuiTextureId = createTextureAttachment(Constants.WIDTH,Constants.HEIGHT);
-    	GuiDepthBufferId = createDepthBufferAttachment(Constants.WIDTH,Constants.HEIGHT);
+    private void initializeFrameBuffer() {
+    	frameBufferId = createFrameBuffer();
+    	textureId = createTextureAttachment(Constants.WIDTH,Constants.HEIGHT);
+    	depthBufferId = createDepthBufferAttachment(Constants.WIDTH,Constants.HEIGHT);
         unbindCurrentFrameBuffer();
     }
     
@@ -121,7 +124,7 @@ public class GUIFrameBufferObject {
     private int createTextureAttachment( int width, int height) {
         int texture = GL11.glGenTextures();
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture);
-        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGB, width, height, 0, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, (ByteBuffer) null);
+        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, (ByteBuffer) null);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
         GL32.glFramebufferTexture(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, texture, 0);
@@ -146,8 +149,8 @@ public class GUIFrameBufferObject {
      * Destroy all inside the FBO
      */
     public void cleanUp() {//call when closing the game
-        GL30.glDeleteFramebuffers(GuiFrameBufferId);
-        GL11.glDeleteTextures(GuiTextureId);
-        GL30.glDeleteRenderbuffers(GuiDepthBufferId);
+        GL30.glDeleteFramebuffers(frameBufferId);
+        GL11.glDeleteTextures(textureId);
+        GL30.glDeleteRenderbuffers(depthBufferId);
     }
 }
