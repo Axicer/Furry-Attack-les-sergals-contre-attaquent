@@ -1,4 +1,4 @@
-package fr.axicer.furryattack.character;
+package fr.axicer.furryattack.entity;
 
 import java.nio.FloatBuffer;
 
@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
 import fr.axicer.furryattack.FurryAttack;
-import fr.axicer.furryattack.character.animation.CharacterAnimation;
+import fr.axicer.furryattack.entity.render.animation.CharacterAnimation;
 import fr.axicer.furryattack.render.Destroyable;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;

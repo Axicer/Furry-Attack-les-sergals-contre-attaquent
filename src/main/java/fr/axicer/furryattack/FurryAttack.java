@@ -101,7 +101,7 @@ public class FurryAttack implements Renderable, Updateable{
 		renderer = new Renderer();
 		
 		//only show GUI at first launch
-		//renderer.getGUIRenderer().setActivated(true);
+		renderer.getGUIRenderer().setActivated(false);
 		renderer.getMapRenderer().setActivated(true);
 		
 		ClassicMap map = (ClassicMap) MapGenerator.createMap(new Configuration("/maps/default.json"));

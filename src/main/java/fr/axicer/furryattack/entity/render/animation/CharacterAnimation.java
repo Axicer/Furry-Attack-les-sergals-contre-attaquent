@@ -1,4 +1,4 @@
-package fr.axicer.furryattack.character.animation;
+package fr.axicer.furryattack.entity.render.animation;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;

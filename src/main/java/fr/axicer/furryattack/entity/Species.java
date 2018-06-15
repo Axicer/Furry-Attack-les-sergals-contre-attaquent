@@ -1,4 +1,4 @@
-package fr.axicer.furryattack.character;
+package fr.axicer.furryattack.entity;
 
 public enum Species {
 	

@@ -1,4 +1,4 @@
-package fr.axicer.furryattack.character;
+package fr.axicer.furryattack.entity;
 
 public enum Popufurs {
 	/*RAY_BLEIZ(new Character(Species.WOLF, new Color(127,127,127,255), new Color(0,0,255,255), "Kaboom !", "/img/wolf_sprite.png")),

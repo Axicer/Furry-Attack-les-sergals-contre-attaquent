@@ -3,9 +3,9 @@ package fr.axicer.furryattack.gui.guis;
 import org.joml.Vector3f;
 
 import fr.axicer.furryattack.FurryAttack;
-import fr.axicer.furryattack.character.Character;
-import fr.axicer.furryattack.character.Species;
-import fr.axicer.furryattack.character.animation.CharacterAnimation;
+import fr.axicer.furryattack.entity.Character;
+import fr.axicer.furryattack.entity.Species;
+import fr.axicer.furryattack.entity.render.animation.CharacterAnimation;
 import fr.axicer.furryattack.gui.elements.ComponentFactory;
 import fr.axicer.furryattack.gui.elements.GUIAlignement;
 import fr.axicer.furryattack.gui.elements.GUIComponent;
