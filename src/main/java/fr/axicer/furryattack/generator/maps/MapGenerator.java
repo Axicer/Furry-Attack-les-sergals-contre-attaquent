@@ -37,7 +37,7 @@ public class MapGenerator {
 			//get constructor and create map
 			Constructor<? extends AbstractMap> mapconstructor = clazz.getConstructor(String.class);
 			AbstractMap map = mapconstructor.newInstance(config.getString("name", "default-name"));
-			
+			map.setGravity(config.getFloat("gravity", 1.0f));
 			//add obstacles
 			for(Object object : config.getJSONArray("obstacles", new JSONArray()).toArray()) {
 				if(object instanceof JSONObject) {
@@ -65,8 +65,6 @@ public class MapGenerator {
 					map.getObstacles().add(obstacle);
 				}
 			}
-			
-			
 			return map;
 		} catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			e.printStackTrace();

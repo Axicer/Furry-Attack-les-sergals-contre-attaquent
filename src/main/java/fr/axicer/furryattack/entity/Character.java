@@ -11,19 +11,18 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
 import fr.axicer.furryattack.FurryAttack;
+import fr.axicer.furryattack.entity.control.Entity;
 import fr.axicer.furryattack.entity.render.animation.CharacterAnimation;
 import fr.axicer.furryattack.render.Destroyable;
-import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
 import fr.axicer.furryattack.render.shader.CharacterShader;
 import fr.axicer.furryattack.util.Color;
 
-public class Character implements Renderable,Updateable,Destroyable{
+public class Character extends Entity implements Updateable,Destroyable{
 
 	public static final float CHARACTER_HEIGHT = 1.7f;
 	public static final float CHARACTER_WIDTH = 1f;
 	
-	private Vector2f pos;
 	private float scale;
 	
 	private Species race;
@@ -134,7 +133,7 @@ public class Character implements Renderable,Updateable,Destroyable{
 		GL20.glVertexAttribPointer(vertexAttribLocation, 3, GL11.GL_FLOAT, false, 0, 0);
 		
 		GL11.glDrawArrays(GL11.GL_POINTS, 0, 1);
-		
+
 		GL20.glDisableVertexAttribArray(vertexAttribLocation);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 		
@@ -147,5 +146,13 @@ public class Character implements Renderable,Updateable,Destroyable{
 	public void destroy() {
 		GL15.glDeleteBuffers(VERTEX_VBO_ID);
 		walk.getTexture().delete();
+	}
+
+	@Override
+	public void setCollisionBorder() {
+		updatePos(new Vector2f(-CHARACTER_WIDTH/2, -CHARACTER_HEIGHT/2),
+				new Vector2f(-CHARACTER_WIDTH/2, CHARACTER_HEIGHT/2),
+				new Vector2f(CHARACTER_WIDTH/2, CHARACTER_HEIGHT/2),
+				new Vector2f(CHARACTER_WIDTH/2, -CHARACTER_HEIGHT/2));
 	}
 }

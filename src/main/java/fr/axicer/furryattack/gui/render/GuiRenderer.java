@@ -40,7 +40,7 @@ public class GuiRenderer implements Renderable,Updateable,Destroyable{
 	 */
 	public void setActivated(boolean activated) {
 		this.activated = activated;
-		if(!activated)guiFBO.clearBuffer();
+		guiFBO.clearBuffer();
 	}
 	/**
 	 * Get whether the GUI renderer is activated

@@ -44,14 +44,17 @@ import org.lwjgl.system.MemoryStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fr.axicer.furryattack.generator.maps.MapGenerator;
-import fr.axicer.furryattack.map.ClassicMap;
+import fr.axicer.furryattack.entity.Character;
+import fr.axicer.furryattack.entity.Species;
+import fr.axicer.furryattack.entity.control.Controller;
+import fr.axicer.furryattack.entity.render.animation.CharacterAnimation;
+import fr.axicer.furryattack.map.MapManager;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Renderer;
 import fr.axicer.furryattack.render.Updateable;
+import fr.axicer.furryattack.util.Color;
 import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.Util;
-import fr.axicer.furryattack.util.config.Configuration;
 import fr.axicer.furryattack.util.config.FileManager;
 import fr.axicer.furryattack.util.control.KeyboardHandler;
 import fr.axicer.furryattack.util.control.MouseButtonHandler;
@@ -80,6 +83,8 @@ public class FurryAttack implements Renderable, Updateable{
 	private Renderer renderer;
 	private EventManager eventManager;
 	private LanguageManager langManager;
+	private MapManager mapManager;
+	private Controller controller;
 	
 	private Logger logger = LoggerFactory.getLogger(FurryAttack.class);
 	
@@ -99,13 +104,13 @@ public class FurryAttack implements Renderable, Updateable{
 		eventManager = new EventManager();
 		langManager = new LanguageManager();
 		renderer = new Renderer();
+		mapManager = new MapManager();
+		float ratio = Constants.WIDTH/Constants.HEIGHT;
+		controller = new Controller(new Character(Species.FOX, Color.WHITE, Color.BLACK, "", new CharacterAnimation("/anim/wolf_head_normal.anim", "/img/human_walk_texture.png"), ratio));
 		
 		//only show GUI at first launch
 		renderer.getGUIRenderer().setActivated(false);
 		renderer.getMapRenderer().setActivated(true);
-		
-		ClassicMap map = (ClassicMap) MapGenerator.createMap(new Configuration("/maps/default.json"));
-		renderer.getMapRenderer().setMap(map);
 	}
 	
 	private void initFrame() {
@@ -221,7 +226,7 @@ public class FurryAttack implements Renderable, Updateable{
 	}
 	
 	public void exit() {
-		renderer.destroy();
+		//renderer.destroy();
 		// Free the window callbacks and destroy the window
 		glfwFreeCallbacks(window);
 		glfwDestroyWindow(window);
@@ -235,12 +240,14 @@ public class FurryAttack implements Renderable, Updateable{
 	
 	@Override
 	public void update() {
+		controller.update();
 		renderer.update();
 	}
 
 	@Override
 	public void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+		controller.render();
 		renderer.render();
 		glfwSwapBuffers(window); // swap the color buffers
 	}
@@ -255,6 +262,10 @@ public class FurryAttack implements Renderable, Updateable{
 	
 	public LanguageManager getLangManager() {
 		return langManager;
+	}
+	
+	public MapManager getMapManager() {
+		return mapManager;
 	}
 	
 	//******************** Launch ********************//

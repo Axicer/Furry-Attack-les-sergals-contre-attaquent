@@ -22,6 +22,10 @@ public abstract class AbstractMap implements Renderable,Updateable,Destroyable{
 	 * Name of the map
 	 */
 	protected String name;
+	/**
+	 * Gravity on this map
+	 */
+	protected float mapGravity;
 	
 	/**
 	 * Constructor of an empty abstract map
@@ -38,6 +42,22 @@ public abstract class AbstractMap implements Renderable,Updateable,Destroyable{
 	 */
 	public List<MapObstacle> getObstacles() {
 		return obstacles;
+	}
+	
+	/**
+	 * Returns the map actual gravity applied to each entity
+	 * @return float gravity
+	 */
+	public float getGravity() {
+		return this.mapGravity;
+	}
+	
+	/**
+	 * Set the gravity to apply on this world 
+	 * @param gravity float gravity factor
+	 */
+	public void setGravity(float gravity) {
+		this.mapGravity = gravity;
 	}
 	
 	/**
