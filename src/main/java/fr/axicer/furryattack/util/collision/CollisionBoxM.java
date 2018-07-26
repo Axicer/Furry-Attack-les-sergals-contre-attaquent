@@ -1,5 +1,7 @@
 package fr.axicer.furryattack.util.collision;
 
+import java.awt.Polygon;
+import java.awt.geom.Area;
 import java.nio.FloatBuffer;
 
 import org.joml.Matrix4f;
@@ -100,6 +102,24 @@ public class CollisionBoxM {
 	public float calcTriangle(Vector2f A, Vector2f B, Vector2f C) {
 		//return 0.5f*Math.abs((A.x*(B.y-C.y)	+	B.x*(C.y-A.y)	+	C.x*(A.y-B.y)));
 		return 0.5f * Math.abs((B.x - A.x)*(C.y - A.y) - (C.x - A.x)*(B.y - A.y));
+	}
+	
+	public boolean intersect(CollisionBoxM boxA) {
+		return CollisionBoxM.intersect(this, boxA);
+	}
+	
+	public static boolean intersect(CollisionBoxM boxA, CollisionBoxM boxB) {
+		Polygon polyA = new Polygon();
+		Polygon polyB = new Polygon();
+		for(int i = 0 ; i < boxA.points.length ; i++) {
+			polyA.addPoint((int)boxA.points[i].x, (int)boxA.points[i].y);
+		}
+		for(int i = 0 ; i < boxB.points.length ; i++) {
+			polyB.addPoint((int)boxB.points[i].x, (int)boxB.points[i].y);
+		}
+		Area area = new Area(polyA);
+		area.intersect(new Area(polyB));
+		return !area.isEmpty();
 	}
 	
 	@Override

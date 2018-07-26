@@ -101,6 +101,7 @@ public class MapObstacle extends CollisionBoxM implements Updateable{
 	}
 	
 	public void render() {
+		super.render();
 		//to avoid problems set the line stroke to 2
 		GL11.glLineWidth(2f);
 		

@@ -107,6 +107,12 @@ public class Character extends Entity implements Updateable,Destroyable{
 	public float getScale() {
 		return scale;
 	}
+	public float getCharacterWidth() {
+		return walk.getSpriteWidth();
+	}
+	public float getCharacterHeight() {
+		return walk.getSpriteHeight();
+	}
 
 	@Override
 	public void update() {
@@ -148,11 +154,4 @@ public class Character extends Entity implements Updateable,Destroyable{
 		walk.getTexture().delete();
 	}
 
-	@Override
-	public void setCollisionBorder() {
-		updatePos(new Vector2f(-CHARACTER_WIDTH/2, -CHARACTER_HEIGHT/2),
-				new Vector2f(-CHARACTER_WIDTH/2, CHARACTER_HEIGHT/2),
-				new Vector2f(CHARACTER_WIDTH/2, CHARACTER_HEIGHT/2),
-				new Vector2f(CHARACTER_WIDTH/2, -CHARACTER_HEIGHT/2));
-	}
 }

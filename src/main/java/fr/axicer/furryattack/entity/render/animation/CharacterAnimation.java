@@ -38,8 +38,14 @@ public class CharacterAnimation extends Configuration{
 		actualTick %= tickCount;
 	}
 	
+	public float getSpriteWidth() {
+		return texture.width/(float)countX;
+	}
 	public float getNormalisedSpriteWidth() {
 		return 1f/((float)countX);
+	}
+	public float getSpriteHeight() {
+		return texture.height/(float)countY;
 	}
 	public float getNormalisedSpriteHeight() {
 		return 1f/((float)countY);

@@ -9,14 +9,11 @@ import fr.axicer.furryattack.util.collision.CollisionBoxM;
 public abstract class Entity extends CollisionBoxM implements Renderable, Updateable{
 	
 	protected Vector2f pos;
+	protected boolean onGround;
 	
 	public static float STEP = 10000.0f;
 	
-	public Entity() {
-		setCollisionBorder();
-	}
-	
-	public abstract void setCollisionBorder();
+	public Entity() {}
 	
 	public void move(float x, float y) {
 		float stepX = x/STEP;
