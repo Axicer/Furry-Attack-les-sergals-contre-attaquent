@@ -144,7 +144,7 @@ public class Character extends Entity implements Updateable,Destroyable{
 
 	@Override
 	protected float getWidth() {
-		return 100f;
+		return 120f;
 	}
 
 	@Override
