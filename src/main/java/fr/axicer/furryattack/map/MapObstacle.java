@@ -2,13 +2,16 @@ package fr.axicer.furryattack.map;
 
 import java.nio.FloatBuffer;
 
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
+import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.render.Updateable;
+import fr.axicer.furryattack.render.shader.CollisionBoxShader;
 import fr.axicer.furryattack.render.textures.Texture;
 import fr.axicer.furryattack.util.collision.CollisionBoxM;
 
@@ -27,6 +30,7 @@ public class MapObstacle extends CollisionBoxM implements Updateable{
 	private int textureVBO;
 	//the texture instance to apply
 	private Texture usedTexture;
+	private CollisionBoxShader shader;
 	
 	/**
 	 * Create an obstacle from a given geometry
@@ -34,6 +38,12 @@ public class MapObstacle extends CollisionBoxM implements Updateable{
 	 */
 	public MapObstacle(Vector2f... corners) {
 		super(corners);
+		shader = new CollisionBoxShader();
+		shader.bind();
+		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
+	    shader.setUniformMat4f("viewMatrix", FurryAttack.getInstance().viewMatrix);
+	    shader.setUniformMat4f("modelMatrix", new Matrix4f());
+		shader.unbind();
 	}
 	
 	/**
@@ -101,7 +111,6 @@ public class MapObstacle extends CollisionBoxM implements Updateable{
 	}
 	
 	public void render() {
-		super.render();
 		//to avoid problems set the line stroke to 2
 		GL11.glLineWidth(2f);
 		
@@ -135,6 +144,9 @@ public class MapObstacle extends CollisionBoxM implements Updateable{
 		
 		//reset the line stroke to 1
 		GL11.glLineWidth(1f);
+		
+		//show collision box
+		//super.render();
 	}
 	
 	/**

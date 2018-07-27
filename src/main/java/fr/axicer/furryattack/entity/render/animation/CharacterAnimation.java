@@ -3,6 +3,7 @@ package fr.axicer.furryattack.entity.render.animation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
+import fr.axicer.furryattack.render.shader.AbstractShader;
 import fr.axicer.furryattack.render.textures.Texture;
 import fr.axicer.furryattack.util.config.Configuration;
 
@@ -30,7 +31,7 @@ public class CharacterAnimation extends Configuration{
 		checkTicks();
 	}
 	
-	public void checkTicks() {
+	private void checkTicks() {
 		if(actualTick >= tickCount) {
 			actual++;
 			if(actual >= countX*countY)actual=0;
@@ -38,19 +39,33 @@ public class CharacterAnimation extends Configuration{
 		actualTick %= tickCount;
 	}
 	
-	public float getSpriteWidth() {
-		return texture.width/(float)countX;
-	}
+	/**
+	 * Get the normalized sprite's width to use in the shader
+	 * @return float normalized sprite's width
+	 */
 	public float getNormalisedSpriteWidth() {
 		return 1f/((float)countX);
 	}
-	public float getSpriteHeight() {
-		return texture.height/(float)countY;
-	}
+	/**
+	 * Get the normalized sprite's height to use in the shader
+	 * @return float normalized sprite's height
+	 */
 	public float getNormalisedSpriteHeight() {
 		return 1f/((float)countY);
 	}
 	
+	/**
+	 * Set the offset on both axis
+	 * THIS FUNCTION IS ASSUMING THE SHADER IS BIND 
+	 */
+	public void setShaderVariables(AbstractShader shader) {
+		shader.setUniformf("offsetX", getActualFrame().getPosX());
+		shader.setUniformf("offsetY", getActualFrame().getPosY());
+	}
+	
+	/**
+	 * @return {@link KeyFrame} the actual key frame used actually
+	 */
 	public KeyFrame getActualFrame() {
 		KeyFrame frame = new KeyFrame(actual%countX, actual/countX);
 		return frame;

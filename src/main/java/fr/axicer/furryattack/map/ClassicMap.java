@@ -17,6 +17,7 @@ public class ClassicMap extends AbstractMap {
 
 	@Override
 	public void render() {
+		background.render();
 		for(int i = obstacles.size()-1 ; i >= 0 ; i--) {
 			obstacles.get(i).render();
 		}
@@ -24,6 +25,7 @@ public class ClassicMap extends AbstractMap {
 
 	@Override
 	public void update() {
+		background.update();
 		for(int i = obstacles.size()-1 ; i >= 0 ; i--) {
 			obstacles.get(i).update();
 		}
@@ -31,6 +33,7 @@ public class ClassicMap extends AbstractMap {
 
 	@Override
 	public void destroy() {
+		background.destroy();
 		for(int i = obstacles.size()-1 ; i >= 0 ; i--) {
 			obstacles.get(i).destroy();
 		}

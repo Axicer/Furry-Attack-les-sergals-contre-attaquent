@@ -12,14 +12,14 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
 import fr.axicer.furryattack.FurryAttack;
-import fr.axicer.furryattack.render.shader.CollisionBoxShader;
+import fr.axicer.furryattack.render.shader.BorderShader;
 
 public class CollisionBoxM {
 	
 	public Vector2f[] points;
 	
 	protected int vbo;
-	protected CollisionBoxShader shader;
+	protected BorderShader shader;
 	
 	public CollisionBoxM() {
 		this(new Vector2f(),new Vector2f(),new Vector2f(),new Vector2f());
@@ -27,7 +27,7 @@ public class CollisionBoxM {
 	
 	public CollisionBoxM(Vector2f... points) {
 		this.points = points;
-		shader = new CollisionBoxShader();
+		shader = new BorderShader();
 		shader.bind();
 		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 	    shader.setUniformMat4f("viewMatrix", FurryAttack.getInstance().viewMatrix);
@@ -64,7 +64,9 @@ public class CollisionBoxM {
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
 		GL20.glVertexAttribPointer(vertexAttribLocation, 3, GL11.GL_FLOAT, false, 0, 0);
 		
+		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 		GL11.glDrawArrays(GL11.GL_POLYGON, 0, points.length);
+		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 		
 		GL20.glDisableVertexAttribArray(vertexAttribLocation);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);

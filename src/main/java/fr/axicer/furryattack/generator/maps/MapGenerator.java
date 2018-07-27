@@ -6,9 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import fr.axicer.furryattack.gui.elements.GUIAlignement;
+import fr.axicer.furryattack.gui.elements.GUIImage;
 import fr.axicer.furryattack.map.AbstractMap;
 import fr.axicer.furryattack.map.MapObstacle;
 import fr.axicer.furryattack.map.MapObstaclesTextures;
@@ -38,6 +41,7 @@ public class MapGenerator {
 			Constructor<? extends AbstractMap> mapconstructor = clazz.getConstructor(String.class);
 			AbstractMap map = mapconstructor.newInstance(config.getString("name", "default-name"));
 			map.setGravity(config.getFloat("gravity", 1.0f));
+			map.setBackground(new GUIImage("/img/map/"+config.getString("background", "bg")+".png", true, new Vector2f(1), Constants.WIDTH, Constants.HEIGHT, new Vector3f(), 0f, 1f, GUIAlignement.CENTER, GUIAlignement.CENTER));
 			//add obstacles
 			for(Object object : config.getJSONArray("obstacles", new JSONArray()).toArray()) {
 				if(object instanceof JSONObject) {

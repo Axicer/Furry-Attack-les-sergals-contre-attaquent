@@ -240,15 +240,15 @@ public class FurryAttack implements Renderable, Updateable{
 	
 	@Override
 	public void update() {
-		controller.update();
 		renderer.update();
+		controller.update();
 	}
 
 	@Override
 	public void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-		controller.render();
 		renderer.render();
+		controller.render();
 		glfwSwapBuffers(window); // swap the color buffers
 	}
 	

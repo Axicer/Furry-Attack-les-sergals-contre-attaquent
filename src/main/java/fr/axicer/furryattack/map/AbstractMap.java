@@ -3,6 +3,7 @@ package fr.axicer.furryattack.map;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.axicer.furryattack.gui.elements.GUIImage;
 import fr.axicer.furryattack.render.Destroyable;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
@@ -18,6 +19,10 @@ public abstract class AbstractMap implements Renderable,Updateable,Destroyable{
 	 * List of all obstacles in the map
 	 */
 	protected List<MapObstacle> obstacles;
+	/**
+	 * background image
+	 */
+	protected GUIImage background;
 	/**
 	 * Name of the map
 	 */
@@ -65,6 +70,14 @@ public abstract class AbstractMap implements Renderable,Updateable,Destroyable{
 	 */
 	public abstract MapType getType();
 	
+	public GUIImage getBackground() {
+		return background;
+	}
+
+	public void setBackground(GUIImage background) {
+		this.background = background;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();

@@ -89,9 +89,9 @@ public class Controller implements Updateable, Renderable{
 		if(KeyboardHandler.isKeyDown(c.getInt(ControlConfigGenerator.RIGHT_CONTROL_ID, GLFW.GLFW_KEY_D))) {
 			vec.add(SPEED, 0f);
 		}
-		if(entity.onGround && KeyboardHandler.isKeyDown(c.getInt(ControlConfigGenerator.JUMP_CONTROL_ID, GLFW.GLFW_KEY_SPACE))) {
+		if(entity.isOnGround() && KeyboardHandler.isKeyDown(c.getInt(ControlConfigGenerator.JUMP_CONTROL_ID, GLFW.GLFW_KEY_SPACE))) {
 			vec.add(0f, 9*SPEED);
-			entity.onGround = false;
+			entity.setOnGround(false);
 		}
 		if(KeyboardHandler.isKeyDown(c.getInt(ControlConfigGenerator.SHIFT_CONTROL_ID, GLFW.GLFW_KEY_LEFT_SHIFT))) {
 			//do not move, just make him shift
@@ -99,7 +99,7 @@ public class Controller implements Updateable, Renderable{
 		}
 		
 		//apply gravity factor
-		if(!entity.onGround)vec.set(vec.x, vec.y-FurryAttack.getInstance().getMapManager().getMap().getGravity());
+		if(!entity.isOnGround())vec.set(vec.x, vec.y-FurryAttack.getInstance().getMapManager().getMap().getGravity());
 		else vec.set(vec.x, 0);
 			
 		//move the entity

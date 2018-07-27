@@ -1,4 +1,4 @@
-package fr.axicer.furryattack.entity.control;
+package fr.axicer.furryattack.entity;
 
 import org.joml.Vector2f;
 
@@ -13,7 +13,7 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 	//position of the entity
 	protected Vector2f pos;
 	//whether an entity is on ground or not
-	protected boolean onGround;
+	private boolean onGround;
 	
 	//amount of step for each movement
 	public static float STEP = 10000.0f;
@@ -21,7 +21,17 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 	/**
 	 * Empty entity constructor
 	 */
-	public Entity() {}
+	public Entity() {
+		this .pos = new Vector2f();
+		setBoxBounds();
+	}
+	
+	private void setBoxBounds() {
+		updatePos(new Vector2f(pos.x - getWidth()/2, pos.y - getHeight()/2),
+				new Vector2f(pos.x - getWidth()/2, pos.y + getHeight()/2),
+				new Vector2f(pos.x + getWidth()/2, pos.y + getHeight()/2),
+				new Vector2f(pos.x + getWidth()/2, pos.y - getHeight()/2));
+	}
 	
 	/**
 	 * @return float width of the entity used both in rendering and collision detection
@@ -86,7 +96,7 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 					//if it will collide on bottom
 					if(negY) {
 						//define entity on ground
-						onGround = true;
+						setOnGround(true);
 					}
 					//stop checking obstacles
 					break;
@@ -97,5 +107,26 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 			//else stop incrementing
 			else break;
 		}
+	}
+
+	/**
+	 * Default entity render method which only shows the collision box
+	 */
+	@Override
+	public void render() {
+		super.render();
+	}
+	
+	@Override
+	public void update() {
+		setBoxBounds();
+	}
+	
+	public boolean isOnGround() {
+		return onGround;
+	}
+
+	public void setOnGround(boolean onGround) {
+		this.onGround = onGround;
 	}
 }
