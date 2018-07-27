@@ -9,7 +9,6 @@ import org.lwjgl.glfw.GLFW;
 import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.entity.Character;
 import fr.axicer.furryattack.generator.config.ControlConfigGenerator;
-import fr.axicer.furryattack.map.MapObstacle;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
 import fr.axicer.furryattack.util.config.Configuration;
@@ -100,24 +99,9 @@ public class Controller implements Updateable, Renderable{
 		}
 		
 		//apply gravity factor
-		vec.set(vec.x, vec.y-FurryAttack.getInstance().getMapManager().getMap().getGravity());
-
-		for(MapObstacle obstacle : FurryAttack.getInstance().getMapManager().getMap().getObstacles()) {
-			boolean posX = obstacle.isInside(entity.pos.x+vec.x-entity.getCharacterWidth()/2, entity.pos.y);
-			boolean negX = obstacle.isInside(entity.pos.x+vec.x+entity.getCharacterWidth()/2, entity.pos.y);
-			boolean posY = obstacle.isInside(entity.pos.x, entity.pos.y+vec.y+entity.getCharacterHeight()/2);
-			boolean negY = obstacle.isInside(entity.pos.x, entity.pos.y+vec.y-entity.getCharacterHeight()/2);
-			if(negX || posX) {
-				vec.set(0, vec.y);
-			}
-			if(negY || posY) {
-				vec.set(vec.x, 0);
-				if(negY) {
-					entity.onGround = true;
-				}
-			}
-		}
-
+		if(!entity.onGround)vec.set(vec.x, vec.y-FurryAttack.getInstance().getMapManager().getMap().getGravity());
+		else vec.set(vec.x, 0);
+			
 		//move the entity
 		entity.move(vec.x, vec.y);
 		

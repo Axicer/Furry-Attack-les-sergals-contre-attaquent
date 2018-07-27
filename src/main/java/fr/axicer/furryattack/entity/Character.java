@@ -20,11 +20,6 @@ import fr.axicer.furryattack.util.Color;
 
 public class Character extends Entity implements Updateable,Destroyable{
 
-	public static final float CHARACTER_HEIGHT = 1.7f;
-	public static final float CHARACTER_WIDTH = 1f;
-	
-	private float scale;
-	
 	private Species race;
 	private Color primaryColor;
 	private Color secondaryColor;
@@ -35,15 +30,14 @@ public class Character extends Entity implements Updateable,Destroyable{
 	private CharacterShader shader;
 	private int VERTEX_VBO_ID;
 	
-	public Character(Species race, Color primary, Color secondary, String expression, CharacterAnimation walkAnim, float scale) {
+	public Character(Species race, Color primary, Color secondary, String expression, CharacterAnimation walkAnim) {
 		this.race = race;
 		this.primaryColor = primary;
 		this.secondaryColor = secondary;
 		this.expression = expression;
 		this.pos = new Vector2f();
 		this.walk = walkAnim;
-		this.scale = scale;
-		this.modelMatrix = new Matrix4f().identity().translate(pos.x, pos.y, 0f).scale(100*scale);
+		this.modelMatrix = new Matrix4f().identity().translate(pos.x, pos.y, 0f);
 		
 		shader = new CharacterShader();
 		
@@ -63,8 +57,8 @@ public class Character extends Entity implements Updateable,Destroyable{
 		shader.setUniformvec3f("secondaryColor", new Vector3f(secondaryColor.x, secondaryColor.y, secondaryColor.z));
 		shader.setUniformf("spriteWidth", walk.getNormalisedSpriteWidth());
 		shader.setUniformf("spriteHeight", walk.getNormalisedSpriteHeight());
-		shader.setUniformf("characterWidth", CHARACTER_WIDTH);
-		shader.setUniformf("characterHeight", CHARACTER_HEIGHT);
+		shader.setUniformf("characterWidth", getWidth());
+		shader.setUniformf("characterHeight", getHeight());
 		shader.setUniformi("tex", 0);
 		shader.unbind();
 	}
@@ -101,12 +95,6 @@ public class Character extends Entity implements Updateable,Destroyable{
 		this.expression = expression;
 	}
 	
-	public void setScale(float scale) {
-		this.scale = scale;
-	}
-	public float getScale() {
-		return scale;
-	}
 	public float getCharacterWidth() {
 		return walk.getSpriteWidth();
 	}
@@ -117,7 +105,7 @@ public class Character extends Entity implements Updateable,Destroyable{
 	@Override
 	public void update() {
 		walk.updateState();
-		modelMatrix.identity().translate(pos.x, pos.y, 0f).scale(100*scale);
+		modelMatrix.identity().translate(pos.x, pos.y, 0f);
 		shader.bind();
 		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 		shader.setUniformMat4f("modelMatrix", modelMatrix);
@@ -152,6 +140,16 @@ public class Character extends Entity implements Updateable,Destroyable{
 	public void destroy() {
 		GL15.glDeleteBuffers(VERTEX_VBO_ID);
 		walk.getTexture().delete();
+	}
+
+	@Override
+	protected float getWidth() {
+		return 100f;
+	}
+
+	@Override
+	protected float getHeight() {
+		return 170f;
 	}
 
 }

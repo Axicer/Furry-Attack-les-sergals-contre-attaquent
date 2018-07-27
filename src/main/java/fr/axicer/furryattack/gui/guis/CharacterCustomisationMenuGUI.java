@@ -167,7 +167,7 @@ public class CharacterCustomisationMenuGUI extends GUI{
 				GUIAlignement.LEFT,
 				new GUISelectorItem<>(Color.WHITE, "Blanc"),
 				new GUISelectorItem<>(Color.BLACK, "Noir")));
-		character = new Character(Species.FOX, Color.WHITE, Color.BLACK, "", new CharacterAnimation("/anim/wolf_head_normal.anim", "/img/human_walk_texture.png"), ratio);
+		character = new Character(Species.FOX, Color.WHITE, Color.BLACK, "", new CharacterAnimation("/anim/wolf_head_normal.anim", "/img/human_walk_texture.png"));
 	}
 
 	@Override

@@ -106,7 +106,7 @@ public class FurryAttack implements Renderable, Updateable{
 		renderer = new Renderer();
 		mapManager = new MapManager();
 		
-		controller = new Controller(new Character(Species.FOX, Color.WHITE, Color.BLACK, "", new CharacterAnimation("/anim/wolf_head_normal.anim", "/img/human_walk_texture.png"), 1));
+		controller = new Controller(new Character(Species.FOX, Color.WHITE, Color.BLACK, "", new CharacterAnimation("/anim/wolf_head_normal.anim", "/img/human_walk_texture.png")));
 		
 		//only show GUI at first launch
 		renderer.getGUIRenderer().setActivated(false);
