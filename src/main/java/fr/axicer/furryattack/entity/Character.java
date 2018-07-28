@@ -143,7 +143,7 @@ public class Character extends Entity implements Updateable,Destroyable{
 		GL11.glDisable(GL11.GL_BLEND);
 		
 		//render collision box
-		super.render();
+		//super.render();
 	}
 	
 	@Override
