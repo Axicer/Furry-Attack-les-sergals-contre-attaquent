@@ -23,6 +23,7 @@ public class Renderer implements Renderable,Updateable,Destroyable{
 	 * Construct the main renderer at initialization
 	 */
 	public Renderer() {
+		
 		//create the new GUI renderer
 		this.GUIrenderer = new GuiRenderer();
 		this.GUIdrawer = new FrameDrawer(GUIrenderer.getGuiFBO().getTextureId(), Constants.WIDTH, Constants.HEIGHT);
@@ -30,6 +31,7 @@ public class Renderer implements Renderable,Updateable,Destroyable{
 		//reate the new map renderer
 		this.mapRenderer = new MapRenderer();
 		this.mapDrawer = new FrameDrawer(mapRenderer.getMapFBO().getTextureId(), Constants.WIDTH, Constants.HEIGHT);
+		
 	}
 	
 	public GuiRenderer getGUIRenderer() {

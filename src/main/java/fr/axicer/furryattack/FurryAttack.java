@@ -59,6 +59,7 @@ import fr.axicer.furryattack.util.config.FileManager;
 import fr.axicer.furryattack.util.control.KeyboardHandler;
 import fr.axicer.furryattack.util.control.MouseButtonHandler;
 import fr.axicer.furryattack.util.control.MouseHandler;
+import fr.axicer.furryattack.util.debug.Debugger;
 import fr.axicer.furryattack.util.events.EventManager;
 import fr.axicer.furryattack.util.font.FontType;
 import fr.axicer.furryattack.util.lang.LanguageManager;
@@ -89,9 +90,17 @@ public class FurryAttack implements Renderable, Updateable{
 	private Logger logger = LoggerFactory.getLogger(FurryAttack.class);
 	
 	public void run() {
-		logger.debug("Hello LWJGL " + Version.getVersion() + "!");
+		logger.info("LWJGL " + Version.getVersion() + "!");
+		logger.info("Initializing frame...");
+		Debugger.startCounting();
 		initFrame();
+		logger.info("Done");
+		Debugger.endCounting();
+		logger.info("Setup game...");
+		Debugger.startCounting();
 		setupGame();
+		logger.info("Done");
+		Debugger.endCounting();
 		
 		loop();
 		exit();
