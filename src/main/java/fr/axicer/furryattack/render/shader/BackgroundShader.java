@@ -3,7 +3,7 @@ package fr.axicer.furryattack.render.shader;
 public class BackgroundShader extends AbstractShader{
 
 	public BackgroundShader() {
-		super("background/background.vs", "background/background.gs", "background/background.fs");
+		super("background/background.vert", "background/background.geom", "background/background.frag");
 		linkAndValidate();
 	}
 	

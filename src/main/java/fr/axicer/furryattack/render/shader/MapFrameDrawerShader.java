@@ -3,7 +3,7 @@ package fr.axicer.furryattack.render.shader;
 public class MapFrameDrawerShader extends AbstractShader{
 
 	public MapFrameDrawerShader() {
-		super("MapFrameDrawer/mapFrameDrawer.vs", "MapFrameDrawer/mapFrameDrawer.gs", "MapFrameDrawer/mapFrameDrawer.fs");
+		super("MapFrameDrawer/mapFrameDrawer.vert", "MapFrameDrawer/mapFrameDrawer.geom", "MapFrameDrawer/mapFrameDrawer.frag");
 		linkAndValidate();
 	}
 
