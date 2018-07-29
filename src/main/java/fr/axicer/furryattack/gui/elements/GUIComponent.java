@@ -111,4 +111,6 @@ public abstract class GUIComponent implements Renderable, Updateable, Destroyabl
 	public void setGUIAlignement(GUIAlignement guialignement) {
 		this.guialignement = guialignement;
 	}
+	
+	public abstract void recreate(int width, int height);
 }

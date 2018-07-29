@@ -49,6 +49,7 @@ public class Controller implements Updateable, Renderable{
 	
 	@Override
 	public void update() {
+		if(entity == null)return;
 		//add direction to the vector
 		if(KeyboardHandler.isKeyDown(c.getInt(ControlConfigGenerator.UP_CONTROL_ID, GLFW.GLFW_KEY_Z))) {
 			//do not move the character just make him look upward
@@ -82,6 +83,7 @@ public class Controller implements Updateable, Renderable{
 
 	@Override
 	public void render() {
+		if(entity == null)return;
 		entity.render();
 	}
 	

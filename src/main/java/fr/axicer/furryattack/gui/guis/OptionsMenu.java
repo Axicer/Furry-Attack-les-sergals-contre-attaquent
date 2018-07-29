@@ -22,13 +22,13 @@ public class OptionsMenu extends GUI{
 	private void init() {
 		float ratio = (float)Constants.WIDTH/(float)Constants.HEIGHT;
 		components.add(ComponentFactory.generateImage("/img/gui/background/menu-bg.png", //imgPath
-				Constants.WIDTH, //width
-				Constants.HEIGHT, //height
-				new Vector3f(0,0,-1f), //pos
+				1, //width
+				1, //height
+				new Vector3f(0,0,-2f), //pos
 				GUIAlignement.CENTER,
-				GUIAlignement.CENTER)); 
+				GUIAlignement.CENTER));
 		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.options.title"), //text
-				new Vector3f(0f, -Constants.HEIGHT/10f, -1f), //pos
+				new Vector3f(0f, -0.1f, -1f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				new Color(50, 70, 120, 255), // color
@@ -38,10 +38,10 @@ public class OptionsMenu extends GUI{
 		components.add(ComponentFactory.generateButton(this,
 				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.options.back"),
 				ratio*0.2f,
-				(int)(Constants.WIDTH/8f),
-				(int)(Constants.HEIGHT/12f),
+				0.125f,
+				0.084f,
 				ratio*0.5f,
-				new Vector3f(50f, 50f, -1f),
+				new Vector3f(0.05f, 0.05f, -1f),
 				0f,
 				GUIAlignement.BOTTOM_LEFT,
 				GUIAlignement.BOTTOM_LEFT,
@@ -53,10 +53,10 @@ public class OptionsMenu extends GUI{
 		components.add(ComponentFactory.generateButton(this,
 				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.options.video"),
 				ratio*0.2f,
-				(int)(Constants.WIDTH/4f),
-				(int)(Constants.HEIGHT/12f),
+				0.25f,
+				0.084f,
 				ratio*0.5f,
-				new Vector3f(0, Constants.HEIGHT/10f, -1f),
+				new Vector3f(0, 0.1f, -1f),
 				0f,
 				GUIAlignement.CENTER,
 				GUIAlignement.CENTER,
@@ -69,8 +69,8 @@ public class OptionsMenu extends GUI{
 		components.add(ComponentFactory.generateButton(this,
 				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.options.control"),
 				ratio*0.2f,
-				(int)(Constants.WIDTH/4f),
-				(int)(Constants.HEIGHT/12f),
+				0.25f,
+				0.084f,
 				ratio*0.5f,
 				new Vector3f(0f, 0f, -1f),
 				0f,
@@ -85,10 +85,10 @@ public class OptionsMenu extends GUI{
 		components.add(ComponentFactory.generateButton(this,
 				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.options.language"),
 				ratio*0.2f,
-				(int)(Constants.WIDTH/4f),
-				(int)(Constants.HEIGHT/12f),
+				0.25f,
+				0.084f,
 				ratio*0.5f,
-				new Vector3f(0, -Constants.HEIGHT/10f, -1f),
+				new Vector3f(0, -0.1f, -1f),
 				0f,
 				GUIAlignement.CENTER,
 				GUIAlignement.CENTER,
@@ -96,10 +96,10 @@ public class OptionsMenu extends GUI{
 		components.add(ComponentFactory.generateButton(this,
 				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.options.credits"),
 				ratio*0.2f,
-				(int)(Constants.WIDTH/4f),
-				(int)(Constants.HEIGHT/12f),
+				0.25f,
+				0.084f,
 				ratio*0.5f,
-				new Vector3f(0, 2*-Constants.HEIGHT/10f, -1f),
+				new Vector3f(0, -0.2f, -1f),
 				0f,
 				GUIAlignement.CENTER,
 				GUIAlignement.CENTER,
@@ -126,8 +126,8 @@ public class OptionsMenu extends GUI{
 		components.clear();
 	}
 
-	public void recreate() {
-		destroy();
-		init();
+	@Override
+	public void recreate(int width, int height) {
+		for(GUIComponent comp : components)comp.recreate(width, height);
 	}
 }

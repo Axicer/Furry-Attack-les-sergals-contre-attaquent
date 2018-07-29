@@ -23,13 +23,13 @@ public class MenuGUI extends GUI{
 		float ratio = (float)Constants.WIDTH/(float)Constants.HEIGHT;
 		
 		components.add(ComponentFactory.generateImage("/img/gui/background/menu-bg.png", //imgPath
-									Constants.WIDTH, //width
-									Constants.HEIGHT, //height
-									new Vector3f(0,0,-1f), //pos
+									1, //width
+									1, //height
+									new Vector3f(0,0,-2f), //pos
 									GUIAlignement.CENTER,
 									GUIAlignement.CENTER));
 		components.add(new GUIText("FURRY-ATTACK", //text
-									new Vector3f(0f,  -Constants.HEIGHT/10f, -1f), //pos
+									new Vector3f(0f, -0.1f, 0f), //pos
 									0f, //rot
 									FontType.CAPTAIN, //font
 									new Color(255, 50, 50, 255), //color
@@ -37,30 +37,29 @@ public class MenuGUI extends GUI{
 									GUIAlignement.TOP,
 									GUIAlignement.TOP));
 		components.add(new GUIText("Les sergals contre attaquent",
-									new Vector3f(0f, -Constants.HEIGHT/10f-FontType.CAPTAIN.getHeight()*ratio*0.5f, -1f),
+									new Vector3f(0f, -0.2f, 0f),
 									0f,
 									FontType.CAPTAIN,
 									new Color(50, 255, 255, 255),
 									ratio*0.5f,
 									GUIAlignement.TOP,
 									GUIAlignement.TOP));
-		
 		components.add(ComponentFactory.generateButton(this,
 									FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.main.party.new"),//text
 									ratio*0.2f,// textscale
-									(int)(Constants.WIDTH/4f), //width
-									(int)(Constants.HEIGHT/12f), //height
+									0.25f, //width
+									0.084f, //height
 									ratio*0.5f, //scale
-									new Vector3f(0f, Constants.HEIGHT/10f, -1f), //pos
+									new Vector3f(0f, 0.1f, -1f), //pos
 									0f, //rot
 									GUIAlignement.CENTER,
 									GUIAlignement.CENTER,
 									null));//action
 		components.add(ComponentFactory.generateButton(this,
-				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.main.party.load"),
+									FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.main.party.load"),
 									ratio*0.2f,
-									(int)(Constants.WIDTH/4f),
-									(int)(Constants.HEIGHT/12f),
+									0.25f,
+									0.084f,
 									ratio*0.5f,
 									new Vector3f(0f, 0f, -1f),
 									0f,
@@ -70,10 +69,10 @@ public class MenuGUI extends GUI{
 		components.add(ComponentFactory.generateButton(this,
 				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.main.characterCustom"),
 									ratio*0.15f,
-									(int)(Constants.WIDTH/4f),
-									(int)(Constants.HEIGHT/12f),
+									0.25f,
+									0.084f,
 									ratio*0.5f,
-									new Vector3f(0f, -Constants.HEIGHT/10f, -1f),
+									new Vector3f(0f, -0.1f, -1f),
 									0f,
 									GUIAlignement.CENTER,
 									GUIAlignement.CENTER,
@@ -85,10 +84,10 @@ public class MenuGUI extends GUI{
 		components.add(ComponentFactory.generateButton(this,
 				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.main.gunCustom"),
 									ratio*0.2f,
-									(int)(Constants.WIDTH/4f),
-									(int)(Constants.HEIGHT/12f),
+									0.25f,
+									0.084f,
 									ratio*0.5f,
-									new Vector3f(0f, -2*Constants.HEIGHT/10f, -1f),
+									new Vector3f(0f, -0.2f, -1f),
 									0f,
 									GUIAlignement.CENTER,
 									GUIAlignement.CENTER,
@@ -96,10 +95,10 @@ public class MenuGUI extends GUI{
 		components.add(ComponentFactory.generateButton(this,
 				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.main.quit"),
 									ratio*0.2f,
-									(int)(Constants.WIDTH/4f),
-									(int)(Constants.HEIGHT/12f),
+									0.25f,
+									0.084f,
 									ratio*0.5f,
-									new Vector3f(0f, -3*Constants.HEIGHT/10f, -1f),
+									new Vector3f(0f, -0.3f, -1f),
 									0f,
 									GUIAlignement.CENTER,
 									GUIAlignement.CENTER,
@@ -112,10 +111,10 @@ public class MenuGUI extends GUI{
 		components.add(ComponentFactory.generateButton(this,
 				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.main.options"),
 									ratio*0.2f,
-									(int)(Constants.WIDTH/8f),
-									(int)(Constants.HEIGHT/12f),
+									0.125f,
+									0.084f,
 									ratio*0.5f,
-									new Vector3f(50f, 50f, -1f),
+									new Vector3f(0.05f, 0.05f, -1f),
 									0f,
 									GUIAlignement.BOTTOM_LEFT,
 									GUIAlignement.BOTTOM_LEFT,
@@ -143,9 +142,8 @@ public class MenuGUI extends GUI{
 		for(GUIComponent comp : components)comp.destroy();
 	}
 
-	
-	public void recreate() {
-		destroy();
-		init();
+	@Override
+	public void recreate(int width, int height) {
+		for(GUIComponent comp : components)comp.recreate(width, height);
 	}
 }

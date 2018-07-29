@@ -23,7 +23,6 @@ public class Renderer implements Renderable,Updateable,Destroyable{
 	 * Construct the main renderer at initialization
 	 */
 	public Renderer() {
-		
 		//create the new GUI renderer
 		this.GUIrenderer = new GuiRenderer();
 		this.GUIdrawer = new FrameDrawer(GUIrenderer.getGuiFBO().getTextureId(), Constants.WIDTH, Constants.HEIGHT);
@@ -41,8 +40,8 @@ public class Renderer implements Renderable,Updateable,Destroyable{
 		return this.mapRenderer;
 	}
 	
-	public void recreate() {
-		this.GUIrenderer.recreate();
+	public void recreate(int width, int height) {
+		this.GUIrenderer.recreate(width, height);
 		this.GUIdrawer = new FrameDrawer(GUIrenderer.getGuiFBO().getTextureId(), Constants.WIDTH, Constants.HEIGHT);
 		
 		this.mapRenderer.recreate();
@@ -62,7 +61,6 @@ public class Renderer implements Renderable,Updateable,Destroyable{
 
 		//show the map frame drawer
 		if(mapRenderer.isActivated())this.mapDrawer.render();
-		
 	}
 
 	@Override
@@ -79,5 +77,10 @@ public class Renderer implements Renderable,Updateable,Destroyable{
 		this.GUIdrawer.destroy();
 		this.mapRenderer.destroy();
 		this.mapDrawer.destroy();
+	}
+	
+	public void clearBuffers() {
+		GUIrenderer.getGuiFBO().clearBuffer();
+		mapRenderer.getMapFBO().clearBuffer();
 	}
 }

@@ -49,7 +49,7 @@ public class GUISelector<T> extends GUIComponent{
 	/**
 	 * the selector's width and height
 	 */
-	private int width, height;
+	private float width, height;
 	
 	/**
 	 * Constructor of a {@link GUISelector}
@@ -64,7 +64,7 @@ public class GUISelector<T> extends GUIComponent{
 	 * @param items {@link GUISelectorItem}[] array of all items
 	 */
 	@SuppressWarnings("unchecked")
-	public GUISelector(GUI gui, Vector3f pos, int width, int height, FontType type, Color textColor, GUIAlignement alignement, GUIAlignement guialignement, GUISelectorItem<T>... items) {
+	public GUISelector(GUI gui, Vector3f pos, float width, float height, FontType type, Color textColor, GUIAlignement alignement, GUIAlignement guialignement, GUISelectorItem<T>... items) {
 		this.items = items;
 		this.selectedIndex = 0;
 		float ratio = (float)Constants.WIDTH/(float)Constants.HEIGHT;
@@ -73,12 +73,18 @@ public class GUISelector<T> extends GUIComponent{
 		this.width = width;
 		this.height = height;
 		
-		this.text = new GUIText(items[selectedIndex].getName(), new Vector3f(pos.x+alignement.getOffsetXfromCenter(width), pos.y+alignement.getOffsetYfromCenter(height),pos.z), 0f, type, textColor, ratio*0.2f, GUIAlignement.CENTER, guialignement);
-		int buttonsWidth = (int) ((1f/5f)*width);
-		int buttonsHeight = (int) ((2f/3f)*height);
+		this.text = new GUIText(items[selectedIndex].getName(),
+				new Vector3f(pos.x+alignement.getOffsetXfromCenter(width),
+							pos.y+alignement.getOffsetYfromCenter(height),
+							pos.z),
+				0f, type, textColor, ratio*0.2f, GUIAlignement.CENTER, guialignement);
+		
+		float buttonsWidth = (1f/5f)*width;
+		float buttonsHeight = (2f/3f)*height;
 		
 		Vector3f leftPos = new Vector3f();
-		pos.sub(width/2-buttonsWidth/2, 0, 0, leftPos);
+		pos.sub(width/2f-buttonsWidth/2f, 0, 0, leftPos);
+		
 		leftPos.add(alignement.getOffsetXfromCenter(width), alignement.getOffsetYfromCenter(height), 0, leftPos);
 		this.left = ComponentFactory.generateButton(gui, "<", ratio*0.2f, buttonsWidth, buttonsHeight, ratio*0.5f, leftPos, 0f, GUIAlignement.CENTER, guialignement, new Runnable() {
 			public void run() {
@@ -87,7 +93,8 @@ public class GUISelector<T> extends GUIComponent{
 		});
 		
 		Vector3f rightPos = new Vector3f();
-		pos.add(width/2-buttonsWidth/2, 0, 0, rightPos);
+		pos.add(width/2f-buttonsWidth/2f, 0, 0, rightPos);
+		
 		rightPos.add(alignement.getOffsetXfromCenter(width), alignement.getOffsetYfromCenter(height), 0, rightPos);
 		this.right = ComponentFactory.generateButton(gui, ">", ratio*0.2f, buttonsWidth, buttonsHeight, ratio*0.5f, rightPos, 0f, GUIAlignement.CENTER, guialignement, new Runnable() {
 			public void run() {
@@ -181,15 +188,17 @@ public class GUISelector<T> extends GUIComponent{
 	 * Get the selector's total width
 	 * @return int width
 	 */
-	public int getWidth() {
+	public float getWidth() {
 		return width;
 	}
 	/**
 	 * get the selector's total height
 	 * @return int height
 	 */
-	public int getHeight() {
+	public float getHeight() {
 		return height;
 	}
 
+	@Override
+	public void recreate(int width, int height) {}
 }

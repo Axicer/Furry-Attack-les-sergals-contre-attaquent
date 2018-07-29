@@ -40,13 +40,13 @@ public class ControlGUI extends GUI{
 		c.save(f);
 		float ratio = (float)Constants.WIDTH/(float)Constants.HEIGHT;
 		components.add(ComponentFactory.generateImage("/img/gui/background/menu-bg.png", //imgPath
-				Constants.WIDTH, //width
-				Constants.HEIGHT, //height
+				1, //width
+				1, //height
 				new Vector3f(0,0,-1f), //pos
 				GUIAlignement.CENTER,
 				GUIAlignement.CENTER)); 
 		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.control.title"), //text
-				new Vector3f(0f, -Constants.HEIGHT/10f, -1f), //pos
+				new Vector3f(0f, -0.1f, -1f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				new Color(50, 70, 120, 255), // color
@@ -56,10 +56,10 @@ public class ControlGUI extends GUI{
 		components.add(ComponentFactory.generateButton(this,
 				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.control.back"),
 				ratio*0.2f,
-				(int)(Constants.WIDTH/8f),
-				(int)(Constants.HEIGHT/12f),
+				0.125f,
+				0.085f,
 				ratio*0.5f,
-				new Vector3f(50f, 50f, -1f),
+				new Vector3f(0.05f, 0.05f, -1f),
 				0f,
 				GUIAlignement.BOTTOM_LEFT,
 				GUIAlignement.BOTTOM_LEFT,
@@ -69,7 +69,7 @@ public class ControlGUI extends GUI{
 					}
 				}));
 		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.control.up")+":", //text
-				new Vector3f(-20f, 2*Constants.HEIGHT/10f,-0.5f), //pos
+				new Vector3f(-0f, 0.2f,-0.5f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				Color.WHITE, // color
@@ -81,15 +81,15 @@ public class ControlGUI extends GUI{
 				f,
 				ControlConfigGenerator.UP_CONTROL_ID,
 				ratio*0.2f,
-				(int)(Constants.WIDTH/8f),
-				(int)(Constants.HEIGHT/12f),
+				0.125f,
+				0.084f,
 				ratio*0.5f,
-				new Vector3f(20f,2*Constants.HEIGHT/10f,-0.5f),
+				new Vector3f(0f,0.2f,-1f),
 				0f,
 				GUIAlignement.LEFT,
 				GUIAlignement.CENTER));
 		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.control.left")+":", //text
-				new Vector3f(-20f,Constants.HEIGHT/10f,-0.5f), //pos
+				new Vector3f(0f,0.1f,-1f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				Color.WHITE, // color
@@ -101,15 +101,15 @@ public class ControlGUI extends GUI{
 				f,
 				ControlConfigGenerator.LEFT_CONTROL_ID,
 				ratio*0.2f,
-				(int)(Constants.WIDTH/8f),
-				(int)(Constants.HEIGHT/12f),
+				0.125f,
+				0.084f,
 				ratio*0.5f,
-				new Vector3f(20f,Constants.HEIGHT/10f,-0.5f),
+				new Vector3f(0f,0.1f,-1f),
 				0f,
 				GUIAlignement.LEFT,
 				GUIAlignement.CENTER));
 		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.control.down")+":", //text
-				new Vector3f(-20f, 0f,-0.5f), //pos
+				new Vector3f(-0f, 0f,-1f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				Color.WHITE, // color
@@ -121,15 +121,15 @@ public class ControlGUI extends GUI{
 				f,
 				ControlConfigGenerator.DOWN_CONTROL_ID,
 				ratio*0.2f,
-				(int)(Constants.WIDTH/8f),
-				(int)(Constants.HEIGHT/12f),
+				0.125f,
+				0.084f,
 				ratio*0.5f,
-				new Vector3f(20f,0f,-0.5f),
+				new Vector3f(0f,0f,-1f),
 				0f,
 				GUIAlignement.LEFT,
 				GUIAlignement.CENTER));
 		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.control.right")+":", //text
-				new Vector3f(-20f,-Constants.HEIGHT/10f,-0.5f), //pos
+				new Vector3f(-0f,-0.1f,-1f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				Color.WHITE, // color
@@ -141,15 +141,15 @@ public class ControlGUI extends GUI{
 				f,
 				ControlConfigGenerator.RIGHT_CONTROL_ID,
 				ratio*0.2f,
-				(int)(Constants.WIDTH/8f),
-				(int)(Constants.HEIGHT/12f),
+				0.125f,
+				0.084f,
 				ratio*0.5f,
-				new Vector3f(20f,-Constants.HEIGHT/10f,-0.5f),
+				new Vector3f(0f,-0.1f,-1f),
 				0f,
 				GUIAlignement.LEFT,
 				GUIAlignement.CENTER));
 		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.control.jump")+":", //text
-				new Vector3f(-20f,2*-Constants.HEIGHT/10f,-0.5f), //pos
+				new Vector3f(-0f,-0.2f,-1f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				Color.WHITE, // color
@@ -161,15 +161,15 @@ public class ControlGUI extends GUI{
 				f,
 				ControlConfigGenerator.JUMP_CONTROL_ID,
 				ratio*0.2f,
-				(int)(Constants.WIDTH/8f),
-				(int)(Constants.HEIGHT/12f),
+				0.125f,
+				0.084f,
 				ratio*0.5f,
-				new Vector3f(20f,2*-Constants.HEIGHT/10f,-0.5f),
+				new Vector3f(0f,-0.2f,-1f),
 				0f,
 				GUIAlignement.LEFT,
 				GUIAlignement.CENTER));
 		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.control.shift")+":", //text
-				new Vector3f(-20f,3*-Constants.HEIGHT/10f,-0.5f), //pos
+				new Vector3f(-0f,-0.3f,-1f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				Color.WHITE, // color
@@ -181,10 +181,10 @@ public class ControlGUI extends GUI{
 				f,
 				ControlConfigGenerator.SHIFT_CONTROL_ID,
 				ratio*0.2f,
-				(int)(Constants.WIDTH/8f),
-				(int)(Constants.HEIGHT/12f),
+				0.125f,
+				0.084f,
 				ratio*0.5f,
-				new Vector3f(20f,3*-Constants.HEIGHT/10f,-0.5f),
+				new Vector3f(0f,-0.3f,-1f),
 				0f,
 				GUIAlignement.LEFT,
 				GUIAlignement.CENTER));
@@ -207,9 +207,9 @@ public class ControlGUI extends GUI{
 		for(GUIComponent comp : components)comp.destroy();
 	}
 	
-	public void recreate() {
-		destroy();
-		init();
+	@Override
+	public void recreate(int width, int height) {
+		for(GUIComponent comp : components)comp.recreate(width, height);
 	}
 
 }

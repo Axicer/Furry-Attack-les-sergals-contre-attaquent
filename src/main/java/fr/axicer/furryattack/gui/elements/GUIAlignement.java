@@ -42,8 +42,8 @@ public enum GUIAlignement {
 	 * @param originalComponentWidth int component's width
 	 * @return int offset x
 	 */
-	public int getOffsetXfromCenter(int originalComponentWidth) {
-		return (int) (centerOffsetXmul.get(x, y)*originalComponentWidth);
+	public float getOffsetXfromCenter(float originalComponentWidth) {
+		return centerOffsetXmul.get(x, y)*originalComponentWidth;
 	}
 	
 	/**
@@ -51,15 +51,15 @@ public enum GUIAlignement {
 	 * @param originalComponentHeight int component's height
 	 * @return int offset y
 	 */
-	public int getOffsetYfromCenter(int originalComponentHeight) {
-		return (int) (centerOffsetYmul.get(x, y)*originalComponentHeight);
+	public float getOffsetYfromCenter(float originalComponentHeight) {
+		return centerOffsetYmul.get(x, y)*originalComponentHeight;
 	}
 	
-	public int getReverseOffsetXfromCenter(int width) {
-		return (int) (reverseCenterOffsetXmul.get(x, y)*width);
+	public float getFrameOffsetX(float width) {
+		return reverseCenterOffsetXmul.get(x, y)*width;
 	}
 	
-	public int getReverseOffsetYfromCenter(int height) {
-		return (int) (reverseCenterOffsetYmul.get(x, y)*height);
+	public float getFrameOffsetY(float height) {
+		return reverseCenterOffsetYmul.get(x, y)*height;
 	}
 }

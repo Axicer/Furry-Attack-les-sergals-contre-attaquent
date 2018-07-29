@@ -63,10 +63,9 @@ public enum GUIs {
 		return this.gui;
 	}
 	
-	public static void recreate() {
+	public static void recreate(int width, int height) {
 		for(GUIs elem : GUIs.values()) {
-			elem.gui.destroy();
-			elem.gui = elem.getNewInstance();
+			elem.gui.recreate(width, height);
 		}
 	}
 }

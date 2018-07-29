@@ -30,7 +30,7 @@ public abstract class GUI implements Renderable, Updateable, Destroyable{
 		return components;
 	}
 	
-	public abstract void recreate();
+	public abstract void recreate(int width, int height);
 
 	@Override
 	public boolean equals(Object obj) {

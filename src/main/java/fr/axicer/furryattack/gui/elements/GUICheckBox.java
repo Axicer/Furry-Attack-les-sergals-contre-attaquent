@@ -131,8 +131,8 @@ public class GUICheckBox extends GUIComponent implements EventListener{
 		
 		this.modelMatrix = new Matrix4f().identity().translate(
 				new Vector3f(
-						pos.x+alignement.getOffsetXfromCenter(width)*scale+guialignement.getReverseOffsetXfromCenter(Constants.WIDTH),
-						pos.y+alignement.getOffsetYfromCenter(height)*scale+guialignement.getReverseOffsetYfromCenter(Constants.HEIGHT),
+						pos.x*Constants.WIDTH+alignement.getOffsetXfromCenter(width)*scale+guialignement.getFrameOffsetX(Constants.WIDTH),
+						pos.y*Constants.HEIGHT+alignement.getOffsetYfromCenter(height)*scale+guialignement.getFrameOffsetY(Constants.HEIGHT),
 						pos.z
 				)
 		).rotateZ(rot).scale(scale);
@@ -185,8 +185,8 @@ public class GUICheckBox extends GUIComponent implements EventListener{
 	public void update() {
 		modelMatrix.identity().translate(
 				new Vector3f(
-						pos.x+alignement.getOffsetXfromCenter(width)*scale+guialignement.getReverseOffsetXfromCenter(Constants.WIDTH),
-						pos.y+alignement.getOffsetYfromCenter(height)*scale+guialignement.getReverseOffsetYfromCenter(Constants.HEIGHT),
+						pos.x*Constants.WIDTH+alignement.getOffsetXfromCenter(width)*scale+guialignement.getFrameOffsetX(Constants.WIDTH),
+						pos.y*Constants.HEIGHT+alignement.getOffsetYfromCenter(height)*scale+guialignement.getFrameOffsetY(Constants.HEIGHT),
 						pos.z
 				)
 		).rotateZ(rot).scale(scale);
@@ -314,5 +314,10 @@ public class GUICheckBox extends GUIComponent implements EventListener{
 	 */
 	public void setClickable(boolean clickable) {
 		this.clickable = clickable;
+	}
+	
+	@Override
+	public void recreate(int width, int height) {
+		
 	}
 }

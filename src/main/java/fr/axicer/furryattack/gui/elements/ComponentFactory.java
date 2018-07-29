@@ -53,7 +53,7 @@ public class ComponentFactory {
 	 * @param action {@link Runnable} action to do
 	 * @return a new {@link GUIButton} instance
 	 */
-	public static GUIButton generateButton(GUI gui, String text, float textScale, int width, int height, float scale, Vector3f pos, float rot, GUIAlignement alignement, GUIAlignement guialignement, Runnable action){
+	public static GUIButton generateButton(GUI gui, String text, float textScale, float width, float height, float scale, Vector3f pos, float rot, GUIAlignement alignement, GUIAlignement guialignement, Runnable action){
 		return new GUIButton(gui, text, textScale, width, height, DEFAULT_BUTTON_IMG, DEFAULT_BUTTON_HOVER_IMG, DEFAULT_BUTTON_CLICK_IMG, scale, DEFAULT_FONT, DEFAULT_COLOR, pos, rot, alignement, guialignement, action);
 	}
 	
@@ -73,7 +73,7 @@ public class ComponentFactory {
 	 * @param guialignement {@link GUIAlignement} gui alignement
 	 * @return a new {@link GUIInputButton} instance
 	 */
-	public static GUIInputButton generateInputButton(GUI gui, Configuration config, File configFile, String path, float textScale, int width, int height, float scale, Vector3f pos, float rot, GUIAlignement alignement, GUIAlignement guialignement) {
+	public static GUIInputButton generateInputButton(GUI gui, Configuration config, File configFile, String path, float textScale, float width, float height, float scale, Vector3f pos, float rot, GUIAlignement alignement, GUIAlignement guialignement) {
 		return new GUIInputButton(gui, config, configFile, path, textScale, DEFAULT_FONT, width, height, scale, DEFAULT_COLOR, pos, rot, DEFAULT_BUTTON_IMG, DEFAULT_BUTTON_HOVER_IMG, DEFAULT_BUTTON_CLICK_IMG, alignement, guialignement);
 	}
 	
@@ -87,7 +87,7 @@ public class ComponentFactory {
 	 * @param guialignement {@link GUIAlignement} gui alignement
 	 * @return a new {@link GUIImage} instance
 	 */
-	public static GUIImage generateImage(String imgPath, int width, int height, Vector3f pos, GUIAlignement alignement, GUIAlignement guialignement) {
+	public static GUIImage generateImage(String imgPath, float width, float height, Vector3f pos, GUIAlignement alignement, GUIAlignement guialignement) {
 		return new GUIImage(imgPath, false, new Vector2f(), width, height, pos, 0f, 1f, alignement, guialignement);
 	}
 }

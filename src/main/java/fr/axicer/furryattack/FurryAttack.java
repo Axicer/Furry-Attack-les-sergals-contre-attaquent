@@ -72,12 +72,9 @@ public class FurryAttack implements Renderable, Updateable{
 	public long window = -1;
 	public boolean running = true;
 	public static int screenid;
-	@SuppressWarnings("unused")
-	private KeyboardHandler keyhandler;
-	@SuppressWarnings("unused")
-	private MouseHandler mousehandler;
-	@SuppressWarnings("unused")
-	private GLFWMouseButtonCallback mousebuttoncallback;
+	public KeyboardHandler keyhandler;
+	public MouseHandler mousehandler;
+	public GLFWMouseButtonCallback mousebuttoncallback;
 	public Matrix4f projectionMatrix;
 	public Matrix4f viewMatrix;
 
@@ -118,8 +115,8 @@ public class FurryAttack implements Renderable, Updateable{
 		controller = new Controller(new Character(Species.FOX, Color.WHITE, Color.BLACK, "", new CharacterAnimation("/anim/wolf_head_normal.anim", "/img/human_walk_texture.png")));
 		
 		//only show GUI at first launch
-		renderer.getGUIRenderer().setActivated(false);
-		renderer.getMapRenderer().setActivated(true);
+		renderer.getGUIRenderer().setActivated(true);
+		renderer.getMapRenderer().setActivated(false);
 	}
 	
 	private void initFrame() {

@@ -89,10 +89,8 @@ public class GuiRenderer implements Renderable,Updateable,Destroyable{
 		if(activated)currentGUI.getGUI().update();
 	}
 
-	public void recreate() {
-		guiFBO.cleanUp();
-		guiFBO = new FrameBuffer();
-		GUIs.recreate();
+	public void recreate(int width, int height) {
+		GUIs.recreate(width, height);
 	}
 	
 	@Override

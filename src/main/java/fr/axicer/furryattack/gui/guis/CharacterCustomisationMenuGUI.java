@@ -30,13 +30,13 @@ public class CharacterCustomisationMenuGUI extends GUI{
 	private void init() {
 		float ratio = (float)Constants.WIDTH/(float)Constants.HEIGHT;
 		components.add(ComponentFactory.generateImage("/img/gui/background/menu-bg.png", //imgPath
-									Constants.WIDTH, //width
-									Constants.HEIGHT, //height
+									1, //width
+									1, //height
 									new Vector3f(0,0,-1f),//pos
 									GUIAlignement.CENTER,
 									GUIAlignement.CENTER)); //alignement
 		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.custom.character.title"), //text
-									new Vector3f(0f, -Constants.HEIGHT/10f, -1f), //pos
+									new Vector3f(0f, -0.1f, -1f), //pos
 									0f, //rot
 									FontType.CAPTAIN, //font
 									new Color(50, 70, 120, 255), // color
@@ -44,18 +44,18 @@ public class CharacterCustomisationMenuGUI extends GUI{
 									GUIAlignement.TOP,
 									GUIAlignement.TOP)); //scale
 		components.add(ComponentFactory.generateImage("/img/gui/background/gray-back-bg.png",
-									Constants.WIDTH/4,
-									Constants.HEIGHT/2,
+									0.25f,
+									0.5f,
 									new Vector3f(0,0,-1f),
 									GUIAlignement.CENTER,
 									GUIAlignement.CENTER));
 		components.add(ComponentFactory.generateButton(this,
 				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.custom.character.reset"),
 				ratio*0.2f,
-				(int)(Constants.WIDTH/8f),
-				(int)(Constants.HEIGHT/12f),
+				0.125f,
+				0.084f,
 				ratio*0.5f,
-				new Vector3f(-Constants.WIDTH/8f-50f, 50f, -1f),
+				new Vector3f(-0.15f, 0.05f, -1f),
 				0f,
 				GUIAlignement.BOTTOM_RIGHT,
 				GUIAlignement.BOTTOM_RIGHT,
@@ -63,10 +63,10 @@ public class CharacterCustomisationMenuGUI extends GUI{
 		components.add(ComponentFactory.generateButton(this,
 				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.custom.character.apply"),
 				ratio*0.2f,
-				(int)(Constants.WIDTH/8f),
-				(int)(Constants.HEIGHT/12f),
+				0.125f,
+				0.084f,
 				ratio*0.5f,
-				new Vector3f(-50f, 50f, -1f),
+				new Vector3f(-0.025f, 0.05f, -1f),
 				0f,
 				GUIAlignement.BOTTOM_RIGHT,
 				GUIAlignement.BOTTOM_RIGHT,
@@ -74,10 +74,10 @@ public class CharacterCustomisationMenuGUI extends GUI{
 		components.add(ComponentFactory.generateButton(this,
 				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.custom.character.back"),
 				ratio*0.2f,
-				(int)(Constants.WIDTH/8f),
-				(int)(Constants.HEIGHT/12f),
+				0.125f,
+				0.084f,
 				ratio*0.5f,
-				new Vector3f(50f, 50f, -1f),
+				new Vector3f(0.05f, 0.05f, -1f),
 				0f,
 				GUIAlignement.BOTTOM_LEFT,
 				GUIAlignement.BOTTOM_LEFT,
@@ -89,10 +89,10 @@ public class CharacterCustomisationMenuGUI extends GUI{
 		components.add(ComponentFactory.generateButton(this,
 				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.custom.character.export"),
 				ratio*0.2f,
-				(int)(Constants.WIDTH/8f),
-				(int)(Constants.HEIGHT/12f),
+				0.125f,
+				0.084f,
 				ratio*0.5f,
-				new Vector3f(25f, 50f, -1f),
+				new Vector3f(0.025f, 0.05f, -1f),
 				0f,
 				GUIAlignement.BOTTOM_LEFT,
 				GUIAlignement.BOTTOM,
@@ -100,16 +100,16 @@ public class CharacterCustomisationMenuGUI extends GUI{
 		components.add(ComponentFactory.generateButton(this,
 				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.custom.character.import"),
 				ratio*0.2f,
-				(int)(Constants.WIDTH/8f),
-				(int)(Constants.HEIGHT/12f),
+				0.125f,
+				0.084f,
 				ratio*0.5f,
-				new Vector3f(-25f, 50f, -1f),
+				new Vector3f(-0.025f, 0.05f, -1f),
 				0f,
 				GUIAlignement.BOTTOM_RIGHT,
 				GUIAlignement.BOTTOM,
 				null));
 		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.custom.character.race"), //text
-				new Vector3f(50f,2*Constants.HEIGHT/10f,-0.5f), //pos
+				new Vector3f(0.025f,0.2f,-1f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				Color.WHITE, // color
@@ -118,9 +118,9 @@ public class CharacterCustomisationMenuGUI extends GUI{
 				GUIAlignement.LEFT)); 
 		components.add(new GUISelector<Species>(
 				this,
-				new Vector3f(50f,Constants.HEIGHT/10f,-0.5f),
-				(int)(Constants.WIDTH/3f),
-				(int)(Constants.HEIGHT/10f),
+				new Vector3f(0.025f,0.1f,-1f),
+				0.34f,
+				0.1f,
 				FontType.CAPTAIN,
 				Color.WHITE,
 				GUIAlignement.LEFT,
@@ -130,7 +130,7 @@ public class CharacterCustomisationMenuGUI extends GUI{
 				new GUISelectorItem<>(Species.DUTCH_ANGEL_DRAGON, "Dutch Angel Dragon"),
 				new GUISelectorItem<>(Species.HYENA, "Hyene")));
 		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.custom.character.color.primary"), //text
-				new Vector3f(50f,0f,-0.5f), //pos
+				new Vector3f(0.025f,0f,-1f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				Color.WHITE, // color
@@ -139,9 +139,9 @@ public class CharacterCustomisationMenuGUI extends GUI{
 				GUIAlignement.LEFT)); 
 		components.add(new GUISelector<Color>(
 				this,
-				new Vector3f(50,-Constants.HEIGHT/10f,-0.5f),
-				(int)(Constants.WIDTH/3f),
-				(int)(Constants.HEIGHT/10f),
+				new Vector3f(0.025f,-0.1f,-1f),
+				0.34f,
+				0.1f,
 				FontType.CAPTAIN,
 				Color.WHITE,
 				GUIAlignement.LEFT,
@@ -149,7 +149,7 @@ public class CharacterCustomisationMenuGUI extends GUI{
 				new GUISelectorItem<>(Color.WHITE, "Blanc"),
 				new GUISelectorItem<>(Color.BLACK, "Noir")));
 		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.custom.character.color.secondary"), //text
-				new Vector3f(50f,2*-Constants.HEIGHT/10f,-0.5f), //pos
+				new Vector3f(0.025f,-0.2f,-1f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				Color.WHITE, // color
@@ -158,9 +158,9 @@ public class CharacterCustomisationMenuGUI extends GUI{
 				GUIAlignement.LEFT));
 		components.add(new GUISelector<Color>(
 				this,
-				new Vector3f(50f,3*-Constants.HEIGHT/10f,-0.5f),
-				(int)(Constants.WIDTH/3f),
-				(int)(Constants.HEIGHT/10f),
+				new Vector3f(0.025f,-0.3f,-1f),
+				0.34f,
+				0.1f,
 				FontType.CAPTAIN,
 				Color.WHITE,
 				GUIAlignement.LEFT,
@@ -190,8 +190,8 @@ public class CharacterCustomisationMenuGUI extends GUI{
 		character.destroy();
 	}
 	
-	public void recreate() {
-		destroy();
-		init();
+	@Override
+	public void recreate(int width, int height) {
+		for(GUIComponent comp : components)comp.recreate(width, height);
 	}
 }

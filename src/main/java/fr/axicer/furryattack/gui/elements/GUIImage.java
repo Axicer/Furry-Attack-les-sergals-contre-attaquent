@@ -46,7 +46,7 @@ public class GUIImage extends GUIComponent{
 	/**
 	 * image width and height
 	 */
-	private int width,height;
+	private float width,height;
 	
 	/**
 	 * A {@link GUIImage} constructor
@@ -61,7 +61,7 @@ public class GUIImage extends GUIComponent{
 	 * @param alignement {@link GUIAlignement} component alignement
 	 * @param guialignement {@link GUIAlignement} gui alignement
 	 */
-	public GUIImage(String imgPath, boolean blur, Vector2f blurDirection, int width, int height, Vector3f pos, float rot, float scale, GUIAlignement alignement, GUIAlignement guialignement) {
+	public GUIImage(String imgPath, boolean blur, Vector2f blurDirection, float width, float height, Vector3f pos, float rot, float scale, GUIAlignement alignement, GUIAlignement guialignement) {
 		shader = new BackgroundShader();
 		tex = Texture.loadTexture(imgPath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_LINEAR);
 		this.pos = pos;
@@ -82,8 +82,8 @@ public class GUIImage extends GUIComponent{
 		
 		modelMatrix = new Matrix4f().identity().translate(
 				new Vector3f(
-						pos.x+alignement.getOffsetXfromCenter(width)*scale+guialignement.getReverseOffsetXfromCenter(Constants.WIDTH),
-						pos.y+alignement.getOffsetYfromCenter(height)*scale+guialignement.getReverseOffsetYfromCenter(Constants.HEIGHT),
+						(pos.x+alignement.getOffsetXfromCenter(width)+guialignement.getFrameOffsetX(1))*Constants.WIDTH,
+						(pos.y+alignement.getOffsetYfromCenter(height)+guialignement.getFrameOffsetY(1))*Constants.HEIGHT,
 						pos.z
 				)
 		).rotateZ(rot).scale(scale);
@@ -93,8 +93,8 @@ public class GUIImage extends GUIComponent{
 		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 		shader.setUniformMat4f("viewMatrix", FurryAttack.getInstance().viewMatrix);
 		shader.setUniformMat4f("modelMatrix", modelMatrix);
-		shader.setUniformf("screenWidth", (float)width);
-		shader.setUniformf("screenHeight", (float)height);
+		shader.setUniformf("screenWidth", width*(float)Constants.WIDTH);
+		shader.setUniformf("screenHeight", height*(float)Constants.HEIGHT);
 		shader.setUniformi("blur", blur ? 1 : 0);
 		shader.setUniformvec2f("blurDir", blurDirection);
 		shader.unbind();
@@ -128,8 +128,8 @@ public class GUIImage extends GUIComponent{
 		
 		modelMatrix = new Matrix4f().identity().translate(
 				new Vector3f(
-						pos.x+alignement.getOffsetXfromCenter(width)*scale+guialignement.getReverseOffsetXfromCenter(Constants.WIDTH),
-						pos.y+alignement.getOffsetYfromCenter(height)*scale+guialignement.getReverseOffsetYfromCenter(Constants.HEIGHT),
+						(pos.x+alignement.getOffsetXfromCenter(width)+guialignement.getFrameOffsetX(1))*Constants.WIDTH,
+						(pos.y+alignement.getOffsetYfromCenter(height)+guialignement.getFrameOffsetY(1))*Constants.HEIGHT,
 						pos.z
 				)
 		).rotateZ(rot).scale(scale);
@@ -139,8 +139,8 @@ public class GUIImage extends GUIComponent{
 		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 		shader.setUniformMat4f("viewMatrix", FurryAttack.getInstance().viewMatrix);
 		shader.setUniformMat4f("modelMatrix", modelMatrix);
-		shader.setUniformf("screenWidth", (float)width);
-		shader.setUniformf("screenHeight", (float)height);
+		shader.setUniformf("screenWidth", width*(float)Constants.WIDTH);
+		shader.setUniformf("screenHeight", height*(float)Constants.HEIGHT);
 		shader.setUniformi("blur", 0);
 		shader.setUniformvec2f("blurDir", new Vector2f());
 		shader.unbind();
@@ -172,16 +172,16 @@ public class GUIImage extends GUIComponent{
 	public void update() {
 		modelMatrix.identity().translate(
 				new Vector3f(
-						pos.x+alignement.getOffsetXfromCenter(width)*scale,
-						pos.y+alignement.getOffsetYfromCenter(height)*scale,
+						(pos.x+alignement.getOffsetXfromCenter(width)+guialignement.getFrameOffsetX(1))*Constants.WIDTH,
+						(pos.y+alignement.getOffsetYfromCenter(height)+guialignement.getFrameOffsetY(1))*Constants.HEIGHT,
 						pos.z
 				)
 		).rotateZ(rot).scale(scale);
 		shader.bind();
 		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 		shader.setUniformMat4f("modelMatrix", modelMatrix);
-		shader.setUniformf("screenWidth", (float)width);
-		shader.setUniformf("screenHeight", (float)height);
+		shader.setUniformf("screenWidth", width*(float)Constants.WIDTH);
+		shader.setUniformf("screenHeight", height*(float)Constants.HEIGHT);
 		shader.unbind();
 	}
 
@@ -206,5 +206,8 @@ public class GUIImage extends GUIComponent{
 	public float getScale() {
 		return this.scale;
 	}
+	
+	@Override
+	public void recreate(int width, int height) {}
 
 }

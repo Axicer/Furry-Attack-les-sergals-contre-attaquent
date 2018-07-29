@@ -46,7 +46,7 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 	/**
 	 * component width and height
 	 */
-	private int width, height;
+	private float width, height;
 	/**
 	 * component scale
 	 */
@@ -140,7 +140,7 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 	 * @param alignement {@link GUIAlignement} component alignement
 	 * @param guialignement {@link GUIAlignement} gui alignement
 	 */
-	public GUIInputButton(GUI gui, Configuration config, File configFile, String path, float textMul, FontType type, int width, int height, float scale, Color color, Vector3f pos, float rot, String texturePath, String textureHoverPath, String textureClickPath, GUIAlignement alignement, GUIAlignement guialignement) {
+	public GUIInputButton(GUI gui, Configuration config, File configFile, String path, float textMul, FontType type, float width, float height, float scale, Color color, Vector3f pos, float rot, String texturePath, String textureHoverPath, String textureClickPath, GUIAlignement alignement, GUIAlignement guialignement) {
 		this.tex = Texture.loadTexture(texturePath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
 		this.hover_tex = Texture.loadTexture(textureHoverPath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
 		this.click_tex = Texture.loadTexture(textureClickPath, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
@@ -154,6 +154,7 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 		this.gui = gui;
 		this.alignement = alignement;
 		this.guialignement = guialignement;
+		
 		this.textG = new GUIText(Util.getKeyRepresentation(config.getInt(path, DEFAULT_KEY)), new Vector3f(
 				pos.x+alignement.getOffsetXfromCenter(width),
 				pos.y+alignement.getOffsetYfromCenter(height),
@@ -161,10 +162,12 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 		), rot, type, color, textMul, GUIAlignement.CENTER, guialignement);
 		this.shader = new ButtonShader();
 		this.box = new CollisionBoxM();
+		
+		
 		this.modelMatrix = new Matrix4f().translate(
 				new Vector3f(
-						pos.x+alignement.getOffsetXfromCenter(width)*scale+guialignement.getReverseOffsetXfromCenter(Constants.WIDTH),
-						pos.y+alignement.getOffsetYfromCenter(height)*scale+guialignement.getReverseOffsetYfromCenter(Constants.HEIGHT),
+						(pos.x+alignement.getOffsetXfromCenter(width)+guialignement.getFrameOffsetX(1))*(float)Constants.WIDTH,
+						(pos.y+alignement.getOffsetYfromCenter(height)+guialignement.getFrameOffsetY(1))*(float)Constants.HEIGHT,
 						pos.z
 				)
 		).rotateZ(rot).scale(scale);
@@ -203,8 +206,8 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 	    shader.setUniformMat4f("viewMatrix", FurryAttack.getInstance().viewMatrix);
 	    shader.setUniformMat4f("modelMatrix", modelMatrix);
 	    shader.setUniformi("tex", 0);
-	    shader.setUniformf("width", width);
-	    shader.setUniformf("height", height);
+	    shader.setUniformf("width", width*Constants.WIDTH);
+	    shader.setUniformf("height", height*Constants.HEIGHT);
 		shader.unbind();
 	}
 	
@@ -246,8 +249,8 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 		modelMatrix.identity()
 			.translate(
 					new Vector3f(
-							pos.x+alignement.getOffsetXfromCenter(width)*scale+guialignement.getReverseOffsetXfromCenter(Constants.WIDTH),
-							pos.y+alignement.getOffsetYfromCenter(height)*scale+guialignement.getReverseOffsetYfromCenter(Constants.HEIGHT),
+							(pos.x+alignement.getOffsetXfromCenter(width)+guialignement.getFrameOffsetX(1))*(float)Constants.WIDTH,
+							(pos.y+alignement.getOffsetYfromCenter(height)+guialignement.getFrameOffsetY(1))*(float)Constants.HEIGHT,
 							pos.z
 					)
 			)
@@ -256,15 +259,17 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 		shader.bind();
 		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 		shader.setUniformMat4f("modelMatrix", modelMatrix);
+		shader.setUniformf("width", width*Constants.WIDTH);
+	    shader.setUniformf("height", height*Constants.HEIGHT);
 		shader.unbind();
 		
-		Vector3f topL = new Vector3f(-width/2, -height/2, 1.0f);
+		Vector3f topL = new Vector3f(-width*Constants.WIDTH/2, -height*Constants.HEIGHT/2, 1.0f);
 		modelMatrix.transformPosition(topL, topL);
-		Vector3f topR = new Vector3f(width/2, -height/2, 1.0f);
+		Vector3f topR = new Vector3f(width*Constants.WIDTH/2, -height*Constants.HEIGHT/2, 1.0f);
 		modelMatrix.transformPosition(topR, topR);
-		Vector3f bottomR = new Vector3f(width/2, height/2, 1.0f);
+		Vector3f bottomR = new Vector3f(width*Constants.WIDTH/2, height*Constants.HEIGHT/2, 1.0f);
 		modelMatrix.transformPosition(bottomR, bottomR);
-		Vector3f bottomL = new Vector3f(-width/2, height/2, 1.0f);
+		Vector3f bottomL = new Vector3f(-width*Constants.WIDTH/2, height*Constants.HEIGHT/2, 1.0f);
 		modelMatrix.transformPosition(bottomL, bottomL);
 		
 		box.updatePos(new Vector2f(topL.x, topL.y), new Vector2f(topR.x, topR.y), new Vector2f(bottomR.x, bottomR.y), new Vector2f(bottomL.x, bottomL.y));
@@ -272,8 +277,8 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 		hover = box.isInside((float)MouseHandler.getPosX()-Constants.WIDTH/2f, -((float)MouseHandler.getPosY()-Constants.HEIGHT/2f));
 		
 		textG.setPosition(new Vector3f(
-				pos.x+alignement.getOffsetXfromCenter(width)*scale,
-				pos.y+alignement.getOffsetYfromCenter(height)*scale,
+				pos.x+alignement.getOffsetXfromCenter(width),
+				pos.y+alignement.getOffsetYfromCenter(height),
 				pos.z
 		));
 		textG.setRotation(rot);
@@ -452,4 +457,7 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 	public void setClickable(boolean clickable) {
 		this.clickable = clickable;
 	}
+	
+	@Override
+	public void recreate(int width, int height) {}
 }

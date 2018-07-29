@@ -1,6 +1,7 @@
 package fr.axicer.furryattack.gui.guis;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.system.MemoryUtil.*;
 
 import java.awt.DisplayMode;
 import java.awt.GraphicsDevice;
@@ -10,8 +11,8 @@ import java.util.List;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
 import fr.axicer.furryattack.FurryAttack;
@@ -39,13 +40,13 @@ public class VideoOptionsGUI extends GUI{
 	private void init() {
 		float ratio = (float)Constants.WIDTH/(float)Constants.HEIGHT;
 		components.add(ComponentFactory.generateImage("/img/gui/background/menu-bg.png", //imgPath
-				Constants.WIDTH, //width
-				Constants.HEIGHT, //height
-				new Vector3f(0,0,-1f), //pos
+				1, //width
+				1, //height
+				new Vector3f(0,0,-2f), //pos
 				GUIAlignement.CENTER,
 				GUIAlignement.CENTER));
 		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.video.title"), //text
-				new Vector3f(0f, -Constants.HEIGHT/10f, -1f), //pos
+				new Vector3f(0f, -0.1f, -1f), //pos
 				0f, //rot
 				FontType.CAPTAIN, //font
 				new Color(50, 70, 120, 255), // color
@@ -55,10 +56,10 @@ public class VideoOptionsGUI extends GUI{
 		components.add(ComponentFactory.generateButton(this,
 				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.video.back"),
 				ratio*0.2f,
-				(int)(Constants.WIDTH/8f),
-				(int)(Constants.HEIGHT/12f),
+				0.125f,
+				0.084f,
 				ratio*0.5f,
-				new Vector3f(50f, 50f, -1f),
+				new Vector3f(0.05f, 0.05f, -1f),
 				0f,
 				GUIAlignement.BOTTOM_LEFT,
 				GUIAlignement.BOTTOM_LEFT,
@@ -69,9 +70,9 @@ public class VideoOptionsGUI extends GUI{
 				}));
 		//resolution selector
 		GUISelector<Resolution> selector = new GUISelector<Resolution>(this,
-				new Vector3f(0f, Constants.HEIGHT/10f, -1f),
-				(int)(Constants.WIDTH/6f),
-				(int)(Constants.HEIGHT/10f),
+				new Vector3f(0f, 0.1f, -1f),
+				0.17f,
+				0.1f,
 				FontType.CAPTAIN,
 				Color.WHITE,
 				GUIAlignement.CENTER,
@@ -82,36 +83,67 @@ public class VideoOptionsGUI extends GUI{
 		components.add(ComponentFactory.generateButton(this,
 				FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.video.apply"),
 				ratio*0.175f,
-				(int)(Constants.WIDTH/8f),
-				(int)(Constants.HEIGHT/12f),
+				0.125f,
+				0.084f,
 				ratio*0.5f,
-				new Vector3f(0f, -Constants.HEIGHT/10f, -1f),
+				new Vector3f(0f, -0.1f, -1f),
 				0f,
 				GUIAlignement.CENTER,
 				GUIAlignement.CENTER,
 				new Runnable() {
 					@Override
 					public void run() {
+						//change to new sttings
 						Constants.WIDTH = selector.getActalItem().getVal().getWidth();
 						Constants.HEIGHT = selector.getActalItem().getVal().getHeight();
 						Constants.MAIN_CONFIG.setInt("width", Constants.WIDTH, true);
 						Constants.MAIN_CONFIG.setInt("height", Constants.HEIGHT, true);
 						Constants.MAIN_CONFIG.save(Constants.MAIN_CONFIG_FILE);
 						Constants.FULLSCREEN = Constants.MAIN_CONFIG.getBoolean(MainConfigGenerator.FULLSCREEN_PATH, false);
-						GLFW.glfwSetWindowSize(FurryAttack.getInstance().window, Constants.WIDTH, Constants.HEIGHT);
+						
+						//clear old buffers
+						FurryAttack.getInstance().getRenderer().clearBuffers();
+						//redefines decoration
+						glfwWindowHint(GLFW_DECORATED, Constants.FULLSCREEN ? GLFW_FALSE : GLFW_TRUE);
+						//create a new window from the old window
+						long window = glfwCreateWindow(Constants.WIDTH, Constants.HEIGHT, Constants.TITLE, Constants.FULLSCREEN ? glfwGetMonitors().get(FurryAttack.screenid) : NULL, FurryAttack.getInstance().window);
+						//switch gl context to the new window
+						glfwMakeContextCurrent(window);
+						//create capacibilities
+						GL.createCapabilities();
+						//destroy the old window
+						glfwDestroyWindow(FurryAttack.getInstance().window);
+						//set the new window
+						glfwSetKeyCallback(FurryAttack.getInstance().window, null);
+						glfwSetCursorPosCallback(FurryAttack.getInstance().window, null);
+						glfwSetMouseButtonCallback(FurryAttack.getInstance().window, null);
+						FurryAttack.getInstance().window = window;
+						
+						//redefines callbacks
+						glfwSetKeyCallback(window, FurryAttack.getInstance().keyhandler);
+						glfwSetCursorPosCallback(window, FurryAttack.getInstance().mousehandler);
+						glfwSetMouseButtonCallback(window, FurryAttack.getInstance().mousebuttoncallback);
+						//set viewport
 						GL11.glViewport(0, 0, Constants.WIDTH, Constants.HEIGHT);
+						//redefines projection matrix
 						FurryAttack.getInstance().projectionMatrix = new Matrix4f().ortho(-Constants.WIDTH/2, Constants.WIDTH/2, -Constants.HEIGHT/2, Constants.HEIGHT/2, 0.1f, 1000.0f);
-						FurryAttack.getInstance().getRenderer().recreate();
+						
+						//recreate each GUIS
+						//FurryAttack.getInstance().getRenderer().recreate(Constants.WIDTH, Constants.HEIGHT);
+						
+						//set the window in the center of the screen
 						GLFWVidMode vidmode = glfwGetVideoMode(glfwGetMonitors().get(FurryAttack.screenid));
-						GLFW.glfwSetWindowPos(
-								FurryAttack.getInstance().window,
+						glfwSetWindowPos(
+								window,
 								(vidmode.width() - Constants.WIDTH) / 2,
 								(vidmode.height() - Constants.HEIGHT) / 2
 							);
+						//show the window
+						glfwShowWindow(window);
 					}
 				}));
 		components.add(new GUIText(FurryAttack.getInstance().getLangManager().getActualLanguage().getTranslation("menu.video.fullscreen"),
-				new Vector3f(-20f, 0f, -1f),
+				new Vector3f(-0.0125f, 0f, -1f),
 				0f,
 				FontType.CAPTAIN,
 				Color.WHITE,
@@ -125,7 +157,7 @@ public class VideoOptionsGUI extends GUI{
 				30,
 				30,
 				1f,
-				new Vector3f(20f,0f,-1f),
+				new Vector3f(0.0125f,0f,-1f),
 				0f,
 				"/img/gui/checkbox/checkbox.png",
 				"/img/gui/checkbox/checkbox_checked.png",
@@ -180,9 +212,9 @@ public class VideoOptionsGUI extends GUI{
 		components.clear();
 	}
 
-	public void recreate() {
-		destroy();
-		init();
+	@Override
+	public void recreate(int width, int height) {
+		for(GUIComponent comp : components)comp.recreate(width, height);
 	}
 
 }

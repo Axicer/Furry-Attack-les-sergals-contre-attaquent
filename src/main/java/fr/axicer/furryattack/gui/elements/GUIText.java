@@ -171,12 +171,11 @@ public class GUIText extends GUIComponent{
 	    GL15.glBufferData(GL15.GL_ARRAY_BUFFER, textures, GL15.GL_STATIC_DRAW);
 	    GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 	    
-	    
 	    modelMatrix = new Matrix4f()
 				.translate(
 						new Vector3f(
-								pos.x+alignement.getOffsetXfromCenter((int) textWidth)*scale+guialignement.getReverseOffsetXfromCenter(Constants.WIDTH),
-								pos.y+alignement.getOffsetYfromCenter(type.getHeight())*scale+guialignement.getReverseOffsetYfromCenter(Constants.HEIGHT),
+								pos.x*(float)Constants.WIDTH+alignement.getOffsetXfromCenter(textWidth*scale)+guialignement.getFrameOffsetX(Constants.WIDTH),
+								pos.y*(float)Constants.HEIGHT+alignement.getOffsetYfromCenter(type.getHeight()*scale)+guialignement.getFrameOffsetY(Constants.HEIGHT),
 								pos.z
 						)
 				)
@@ -225,11 +224,12 @@ public class GUIText extends GUIComponent{
 
 	@Override
 	public void update() {
+		
 		modelMatrix.identity()
 				.translate(
 						new Vector3f(
-								pos.x+alignement.getOffsetXfromCenter((int) textWidth)*scale+guialignement.getReverseOffsetXfromCenter(Constants.WIDTH),
-								pos.y+alignement.getOffsetYfromCenter(type.getHeight())*scale+guialignement.getReverseOffsetYfromCenter(Constants.HEIGHT),
+								pos.x*(float)Constants.WIDTH+alignement.getOffsetXfromCenter(textWidth*scale)+guialignement.getFrameOffsetX(Constants.WIDTH),
+								pos.y*(float)Constants.HEIGHT+alignement.getOffsetYfromCenter(type.getHeight()*scale)+guialignement.getFrameOffsetY(Constants.HEIGHT),
 								pos.z)
 						)
 				.rotateZ(rot)
@@ -328,4 +328,7 @@ public class GUIText extends GUIComponent{
 	public void allowRender(boolean val) {
 		this.canRender = val;
 	}
+	
+	@Override
+	public void recreate(int width, int height) {}
 }
