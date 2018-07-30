@@ -3,7 +3,7 @@ package fr.axicer.furryattack.entity.render.animation;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import fr.axicer.furryattack.render.shader.AbstractShader;
+import fr.axicer.furryattack.render.shaders.AbstractShader;
 import fr.axicer.furryattack.render.textures.Texture;
 import fr.axicer.furryattack.util.config.Configuration;
 

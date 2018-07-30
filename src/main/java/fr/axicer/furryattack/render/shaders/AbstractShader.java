@@ -1,4 +1,4 @@
-package fr.axicer.furryattack.render.shader;
+package fr.axicer.furryattack.render.shaders;
 
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;

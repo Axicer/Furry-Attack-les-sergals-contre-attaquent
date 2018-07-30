@@ -12,7 +12,7 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
 import fr.axicer.furryattack.FurryAttack;
-import fr.axicer.furryattack.render.shader.BorderShader;
+import fr.axicer.furryattack.render.shaders.BorderShader;
 
 public class CollisionBoxM {
 	

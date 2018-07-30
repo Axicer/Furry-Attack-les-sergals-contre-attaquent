@@ -13,7 +13,7 @@ import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.entity.render.animation.CharacterAnimation;
 import fr.axicer.furryattack.render.Destroyable;
 import fr.axicer.furryattack.render.Updateable;
-import fr.axicer.furryattack.render.shader.CharacterShader;
+import fr.axicer.furryattack.render.shaders.CharacterShader;
 import fr.axicer.furryattack.util.Color;
 import fr.axicer.furryattack.util.Constants;
 

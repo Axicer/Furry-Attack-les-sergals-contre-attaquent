@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
 import fr.axicer.furryattack.FurryAttack;
-import fr.axicer.furryattack.render.shader.FrameDrawerShader;
+import fr.axicer.furryattack.render.shaders.FrameDrawerShader;
 import fr.axicer.furryattack.render.textures.Texture;
 
 public class FrameDrawer implements Renderable,Updateable,Destroyable{

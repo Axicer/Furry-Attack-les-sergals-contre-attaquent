@@ -17,7 +17,7 @@ import org.lwjgl.opengl.GL20;
 
 import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.gui.guis.GUI;
-import fr.axicer.furryattack.render.shader.ButtonShader;
+import fr.axicer.furryattack.render.shaders.StandardGeomShader;
 import fr.axicer.furryattack.render.textures.Texture;
 import fr.axicer.furryattack.util.Color;
 import fr.axicer.furryattack.util.Constants;
@@ -102,7 +102,7 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 	/**
 	 * shader used to render this input button
 	 */
-	private ButtonShader shader;
+	private StandardGeomShader shader;
 	/**
 	 * vertex buffer id
 	 */
@@ -160,7 +160,7 @@ public class GUIInputButton extends GUIComponent implements EventListener{
 				pos.y+alignement.getOffsetYfromCenter(height),
 				pos.z
 		), rot, type, color, textMul, GUIAlignement.CENTER, guialignement);
-		this.shader = new ButtonShader();
+		this.shader = new StandardGeomShader();
 		this.box = new CollisionBoxM();
 		
 		

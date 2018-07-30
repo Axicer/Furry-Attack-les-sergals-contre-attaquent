@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL20;
 
 import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.render.Updateable;
-import fr.axicer.furryattack.render.shader.CollisionBoxShader;
+import fr.axicer.furryattack.render.shaders.StandardShader;
 import fr.axicer.furryattack.render.textures.Texture;
 import fr.axicer.furryattack.util.collision.CollisionBoxM;
 
@@ -30,7 +30,7 @@ public class MapObstacle extends CollisionBoxM implements Updateable{
 	private int textureVBO;
 	//the texture instance to apply
 	private Texture usedTexture;
-	private CollisionBoxShader shader;
+	private StandardShader shader;
 	
 	/**
 	 * Create an obstacle from a given geometry
@@ -38,7 +38,7 @@ public class MapObstacle extends CollisionBoxM implements Updateable{
 	 */
 	public MapObstacle(Vector2f... corners) {
 		super(corners);
-		shader = new CollisionBoxShader();
+		shader = new StandardShader();
 		shader.bind();
 		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 	    shader.setUniformMat4f("viewMatrix", FurryAttack.getInstance().viewMatrix);

@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
 import fr.axicer.furryattack.FurryAttack;
-import fr.axicer.furryattack.render.shader.TextShader;
+import fr.axicer.furryattack.render.shaders.TextShader;
 import fr.axicer.furryattack.util.Color;
 import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.font.CharInfo;

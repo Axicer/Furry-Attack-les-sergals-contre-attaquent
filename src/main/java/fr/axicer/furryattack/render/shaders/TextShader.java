@@ -1,9 +1,9 @@
-package fr.axicer.furryattack.render.shader;
+package fr.axicer.furryattack.render.shaders;
 
 public class TextShader extends AbstractShader{
 
 	public TextShader() {
-		super("text/text.vert", null, "text/text.frag");
+		super("text.vert", null, "text.frag");
 		linkAndValidate();
 	}
 	

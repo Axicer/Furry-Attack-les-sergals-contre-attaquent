@@ -15,7 +15,7 @@ import org.lwjgl.opengl.GL20;
 
 import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.gui.guis.GUI;
-import fr.axicer.furryattack.render.shader.CheckBoxShader;
+import fr.axicer.furryattack.render.shaders.StandardGeomShader;
 import fr.axicer.furryattack.render.textures.Texture;
 import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.collision.CollisionBoxM;
@@ -90,7 +90,7 @@ public class GUICheckBox extends GUIComponent implements EventListener{
 	/**
 	 * shader used to render
 	 */
-	private CheckBoxShader shader;
+	private StandardGeomShader shader;
 	/**
 	 * vertex buffer id
 	 */
@@ -137,7 +137,7 @@ public class GUICheckBox extends GUIComponent implements EventListener{
 				)
 		).rotateZ(rot).scale(scale);
 		this.box = new CollisionBoxM();
-		this.shader = new CheckBoxShader();
+		this.shader = new StandardGeomShader();
 		this.listenerId = FurryAttack.getInstance().getEventManager().addListener(this);
 
 		FloatBuffer vertices = BufferUtils.createFloatBuffer(3);
