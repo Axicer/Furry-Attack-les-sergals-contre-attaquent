@@ -10,7 +10,6 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
 import fr.axicer.furryattack.FurryAttack;
-import fr.axicer.furryattack.entity.render.animation.CharacterAnimation;
 import fr.axicer.furryattack.render.Destroyable;
 import fr.axicer.furryattack.render.Updateable;
 import fr.axicer.furryattack.render.shaders.CharacterShader;
@@ -19,22 +18,19 @@ import fr.axicer.furryattack.util.Constants;
 
 public class Character extends Entity implements Updateable,Destroyable{
 
-	private Species race;
 	private Color primaryColor;
 	private Color secondaryColor;
 	private String expression;
 	
 	private Matrix4f modelMatrix;
-	private CharacterAnimation walk;
 	private CharacterShader shader;
 	private int VERTEX_VBO_ID;
 	
-	public Character(Species race, Color primary, Color secondary, String expression, CharacterAnimation walkAnim) {
-		this.race = race;
+	public Character(Species race, Color primary, Color secondary, String expression) {
+		super(race);
 		this.primaryColor = primary;
 		this.secondaryColor = secondary;
 		this.expression = expression;
-		this.walk = walkAnim;
 		this.modelMatrix = new Matrix4f().identity().translate(pos.x, pos.y, 0f);
 		
 		shader = new CharacterShader();
@@ -53,11 +49,12 @@ public class Character extends Entity implements Updateable,Destroyable{
 		shader.setUniformMat4f("viewMatrix", FurryAttack.getInstance().viewMatrix);
 		shader.setUniformvec3f("primaryColor", new Vector3f(primaryColor.x, primaryColor.y, primaryColor.z));
 		shader.setUniformvec3f("secondaryColor", new Vector3f(secondaryColor.x, secondaryColor.y, secondaryColor.z));
-		shader.setUniformf("spriteWidth", walk.getNormalisedSpriteWidth());
-		shader.setUniformf("spriteHeight", walk.getNormalisedSpriteHeight());
+		shader.setUniformf("spriteWidth", animation.getNormalisedSpriteWidth());
+		shader.setUniformf("spriteHeight", animation.getNormalisedSpriteHeight());
 		shader.setUniformf("characterWidth", getWidth());
 		shader.setUniformf("characterHeight", getHeight());
 		shader.setUniformi("tex", 0);
+		shader.setUniformi("revert", 0);
 		shader.unbind();
 	}
 	
@@ -95,11 +92,11 @@ public class Character extends Entity implements Updateable,Destroyable{
 	
 	@Override
 	public void update() {
-		//update collision box
+		//update collision box and animation
 		super.update();
 		
 		//update the animation step
-		walk.updateState();
+		animation.update();
 		//update the model matrix
 		modelMatrix.identity().translate(pos.x, pos.y, 0f);
 		//bind the shader
@@ -107,8 +104,9 @@ public class Character extends Entity implements Updateable,Destroyable{
 		//push matrices
 		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 		shader.setUniformMat4f("modelMatrix", modelMatrix);
+		if(acc.x != 0)shader.setUniformi("revert", acc.x < 0 ? 1 : 0);
 		//push animations offset values
-		walk.setShaderVariables(shader);
+		animation.setShaderVariables(shader);
 		//unbind the shader
 		shader.unbind();
 	}
@@ -120,7 +118,7 @@ public class Character extends Entity implements Updateable,Destroyable{
 		//defines blend functions
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		//bind the animation texture
-		walk.getTexture().bind(0);
+		animation.getTexture().bind(0);
 		//bind the shader
 		shader.bind();
 		//get the vertex attrib location ID from the shader
@@ -151,7 +149,7 @@ public class Character extends Entity implements Updateable,Destroyable{
 		//delete the vertex buffer
 		GL15.glDeleteBuffers(VERTEX_VBO_ID);
 		//delete the animation texture
-		walk.getTexture().delete();
+		animation.destroy();
 	}
 
 	@Override

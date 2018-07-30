@@ -100,6 +100,10 @@ public abstract class AbstractShader implements Destroyable{
 		glUniform1i(glGetUniformLocation(program, name), i);
 	}
 	
+	public int getUniformi(String name) {
+		return glGetUniformi(program, glGetUniformLocation(program, name));
+	}
+	
 	public void setUniformvec2f(String name, Vector2f vec) {
 		glUniform2f(glGetUniformLocation(program, name), vec.x, vec.y);
 	}

@@ -3,6 +3,7 @@ package fr.axicer.furryattack.entity;
 import org.joml.Vector2f;
 
 import fr.axicer.furryattack.FurryAttack;
+import fr.axicer.furryattack.entity.animation.Animation;
 import fr.axicer.furryattack.map.MapObstacle;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
@@ -10,6 +11,8 @@ import fr.axicer.furryattack.util.collision.CollisionBoxM;
 
 public abstract class Entity extends CollisionBoxM implements Renderable, Updateable{
 	
+	//entity's race
+	protected Species race;
 	//position of the entity
 	protected Vector2f pos;
 	//entity's acceleration
@@ -20,6 +23,8 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 	private float airBrakingCoeff = 0.999f;
 	//whether an entity is on ground or not
 	private boolean onGround;
+	//entity's animation
+	protected Animation animation;
 	
 	//amount of step for each movement
 	public static float STEP = 10000.0f;
@@ -27,7 +32,9 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 	/**
 	 * Empty entity constructor
 	 */
-	public Entity() {
+	public Entity(Species race) {
+		this.race = race;
+		this.animation = new Animation(race);
 		this.pos = new Vector2f();
 		this.acc = new Vector2f();
 		setBoxBounds();
@@ -115,6 +122,8 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 			//else stop incrementing
 			else break;
 		}
+		if(Math.abs(acc.x) < 0.1f)acc.x = 0f;
+		if(Math.abs(acc.y) < 0.1f)acc.y = 0f;
 		//aply coef gliding coeff and air braking coeff
 		acc.set(acc.x*glidingCoeff*airBrakingCoeff, acc.y*airBrakingCoeff);
 	}
@@ -143,6 +152,7 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 	
 	@Override
 	public void update() {
+		animation.update();
 		setBoxBounds();
 	}
 	
@@ -192,5 +202,9 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 	 */
 	public float getairBrakingCoeff() {
 		return this.airBrakingCoeff;
+	}
+	
+	public Animation getAnimation() {
+		return this.animation;
 	}
 }

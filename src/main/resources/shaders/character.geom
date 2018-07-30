@@ -16,6 +16,7 @@ uniform float spriteWidth;
 uniform float spriteHeight;
 uniform float offsetX;
 uniform float offsetY;
+uniform int revert;
 
 void createVertex(vec3 offset, vec2 texoffset){
 
@@ -32,13 +33,23 @@ void createVertex(vec3 offset, vec2 texoffset){
 
 void main(){
 	
-	createVertex(vec3(-1.0, 1.0, -0.8), vec2(0.0, 0.0));
-	createVertex(vec3(1.0, 1.0, -0.8), vec2(1.0, 0.0));
-	createVertex(vec3(1.0, -1.0, -0.8), vec2(1.0, 1.0));
-	
-	createVertex(vec3(-1.0, 1.0, -0.8), vec2(0.0, 0.0));
-	createVertex(vec3(1.0, -1.0, -0.8), vec2(1.0, 1.0));
-	createVertex(vec3(-1.0, -1.0, -0.8), vec2(0.0, 1.0));
+	if(revert == 1){
+		createVertex(vec3(-1.0, 1.0, -0.8), vec2(1.0, 0.0));
+		createVertex(vec3(1.0, 1.0, -0.8), vec2(0.0, 0.0));
+		createVertex(vec3(1.0, -1.0, -0.8), vec2(0.0, 1.0));
+
+		createVertex(vec3(-1.0, 1.0, -0.8), vec2(1.0, 0.0));
+		createVertex(vec3(1.0, -1.0, -0.8), vec2(0.0, 1.0));
+		createVertex(vec3(-1.0, -1.0, -0.8), vec2(1.0, 1.0));
+	}else{
+		createVertex(vec3(-1.0, 1.0, -0.8), vec2(0.0, 0.0));
+		createVertex(vec3(1.0, 1.0, -0.8), vec2(1.0, 0.0));
+		createVertex(vec3(1.0, -1.0, -0.8), vec2(1.0, 1.0));
+
+		createVertex(vec3(-1.0, 1.0, -0.8), vec2(0.0, 0.0));
+		createVertex(vec3(1.0, -1.0, -0.8), vec2(1.0, 1.0));
+		createVertex(vec3(-1.0, -1.0, -0.8), vec2(0.0, 1.0));
+	}
 	
 	EndPrimitive();
 	

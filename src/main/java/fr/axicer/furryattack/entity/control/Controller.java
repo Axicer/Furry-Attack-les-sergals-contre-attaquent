@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import org.lwjgl.glfw.GLFW;
 
 import fr.axicer.furryattack.entity.Entity;
+import fr.axicer.furryattack.entity.animation.AnimationsType;
 import fr.axicer.furryattack.generator.config.ControlConfigGenerator;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
@@ -50,6 +51,9 @@ public class Controller implements Updateable, Renderable{
 	@Override
 	public void update() {
 		if(entity == null)return;
+		
+		boolean shift = false;
+		
 		//add direction to the vector
 		if(KeyboardHandler.isKeyDown(c.getInt(ControlConfigGenerator.UP_CONTROL_ID, GLFW.GLFW_KEY_Z))) {
 			//do not move the character just make him look upward
@@ -71,7 +75,21 @@ public class Controller implements Updateable, Renderable{
 		}
 		if(KeyboardHandler.isKeyDown(c.getInt(ControlConfigGenerator.SHIFT_CONTROL_ID, GLFW.GLFW_KEY_LEFT_SHIFT))) {
 			//do not move, just make him shift
-			//vec.add(0f, -SPEED);
+			shift = true;
+		}else {
+			//unshift entity
+			shift = false;
+		}
+		
+		//set entity's animation type
+		if(entity.isOnGround()) {
+			if(entity.getAccelerationVector().x == 0) {
+				entity.getAnimation().setAnimationType(shift ? AnimationsType.SHIFT : AnimationsType.STAY);
+			}else {
+				entity.getAnimation().setAnimationType(AnimationsType.WALK);
+			}
+		}else {
+			entity.getAnimation().setAnimationType(AnimationsType.JUMP);
 		}
 		
 		//move the entity

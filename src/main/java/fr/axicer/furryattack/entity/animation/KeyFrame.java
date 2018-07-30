@@ -1,4 +1,4 @@
-package fr.axicer.furryattack.entity.render.animation;
+package fr.axicer.furryattack.entity.animation;
 
 public class KeyFrame {
 	

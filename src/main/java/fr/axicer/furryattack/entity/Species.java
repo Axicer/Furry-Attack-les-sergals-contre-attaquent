@@ -1,7 +1,6 @@
 package fr.axicer.furryattack.entity;
 
 public enum Species {
-	
 	SERGAL,
 	WOLF,
 	BUNNY,
@@ -16,8 +15,4 @@ public enum Species {
 	OTTER,
 	HYENA,
 	COYOTE;
-	
-	private Species() {
-		//TODO get texture ids
-	}
 }

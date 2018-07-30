@@ -5,7 +5,6 @@ import org.joml.Vector3f;
 import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.entity.Character;
 import fr.axicer.furryattack.entity.Species;
-import fr.axicer.furryattack.entity.render.animation.CharacterAnimation;
 import fr.axicer.furryattack.gui.elements.ComponentFactory;
 import fr.axicer.furryattack.gui.elements.GUIAlignement;
 import fr.axicer.furryattack.gui.elements.GUIComponent;
@@ -167,7 +166,7 @@ public class CharacterCustomisationMenuGUI extends GUI{
 				GUIAlignement.LEFT,
 				new GUISelectorItem<>(Color.WHITE, "Blanc"),
 				new GUISelectorItem<>(Color.BLACK, "Noir")));
-		character = new Character(Species.FOX, Color.WHITE, Color.BLACK, "", new CharacterAnimation("/anim/wolf_head_normal.anim", "/img/human_walk_texture.png"));
+		character = new Character(Species.FOX, Color.WHITE, Color.BLACK, "");
 	}
 
 	@Override
