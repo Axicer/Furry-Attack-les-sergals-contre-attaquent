@@ -4,9 +4,11 @@ import org.joml.Vector2f;
 
 import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.entity.animation.Animation;
+import fr.axicer.furryattack.entity.animation.AnimationsType;
 import fr.axicer.furryattack.map.MapObstacle;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
+import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.collision.CollisionBoxM;
 
 public abstract class Entity extends CollisionBoxM implements Renderable, Updateable{
@@ -25,15 +27,18 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 	private boolean onGround;
 	//entity's animation
 	protected Animation animation;
+	// if an entity is shifted
+	protected boolean shifted;
 	
 	//amount of step for each movement
-	public static float STEP = 10000.0f;
+	public static float STEP = 100.0f;
 	
 	/**
 	 * Empty entity constructor
 	 */
 	public Entity(Species race) {
 		this.race = race;
+		this.shifted = false;
 		this.animation = new Animation(race);
 		this.pos = new Vector2f();
 		this.acc = new Vector2f();
@@ -41,10 +46,12 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 	}
 	
 	private void setBoxBounds() {
-		updatePos(new Vector2f(pos.x - getWidth()/2, pos.y - getHeight()/2),
-				new Vector2f(pos.x - getWidth()/2, pos.y + getHeight()/2),
-				new Vector2f(pos.x + getWidth()/2, pos.y + getHeight()/2),
-				new Vector2f(pos.x + getWidth()/2, pos.y - getHeight()/2));
+		//a character is only made of a point at the entity's bottom (centered) not at center
+		float height = shifted ? getShiftedHeight() : getHeight();
+		updatePos(new Vector2f(pos.x - getWidth()*Constants.WIDTH/2, pos.y),
+				new Vector2f(pos.x - getWidth()*Constants.WIDTH/2, pos.y + height*Constants.HEIGHT),
+				new Vector2f(pos.x + getWidth()*Constants.WIDTH/2, pos.y + height*Constants.HEIGHT),
+				new Vector2f(pos.x + getWidth()*Constants.WIDTH/2, pos.y));
 	}
 	
 	/**
@@ -55,6 +62,10 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 	 * @return float height of the entity used both in rendering and collision detection
 	 */
 	protected abstract float getHeight();
+	/**
+	 * @return float shifted height of the entity used both in rendering and collision detection
+	 */
+	protected abstract float getShiftedHeight();
 	
 	/**
 	 * Move the entity by acc vector
@@ -64,66 +75,63 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 		//first is to apply gravity which is actually not done yet
 		applyGravityToAccelerationVector();
 		
-		//then move on X axis
+		float height = shifted ? getShiftedHeight() : getHeight();
+		
 		//amount of movement on X axis depending of the number of step 
 		float stepX = acc.x/STEP;
 		//var to stop when border is detected
 		boolean stopX = false;
-		//looping for each step
-		for(int i = 0 ; i < STEP ; i++) {
-			//checking for each obstacle
-			for(MapObstacle obstacle : FurryAttack.getInstance().getMapManager().getMap().getObstacles()) {
-				//means "movement on X axis by a step will collide on left"
-				boolean posX = obstacle.isInside(pos.x + stepX - getWidth()/2, pos.y);
-				//means "movement on X axis by a step will collide on right"
-				boolean negX = obstacle.isInside(pos.x + stepX + getWidth()/2, pos.y);
-				//if we collide on any side
-				if(negX || posX) {
-					//should stop incrementing the variable
-					stopX = true;
-					//break this loop
-					break;
-				}
-			}
-			//if there is no collision on the next step add a step
-			if(!stopX)pos.x+=stepX;
-			//else stop incrementing on X axis
-			else break;
-		}
-		
-		//move on Y axis
 		//amout of movement on Y axis to increment depending of the number of steps
 		float stepY = acc.y/STEP;
 		//variable use to stop incrementing Y axis
 		boolean stopY = false;
 		//looping for each step
 		for(int i = 0 ; i < STEP ; i++) {
-			//looping on each obstacle
+			//checking for each obstacle
 			for(MapObstacle obstacle : FurryAttack.getInstance().getMapManager().getMap().getObstacles()) {
-				//means "will collide on next step on Y axis at top"
-				boolean posY = obstacle.isInside(pos.x , pos.y + stepY + getHeight()/2);
-				//means "will collide on next step on Y axis at bottom"
-				boolean negY = obstacle.isInside(pos.x , pos.y + stepY - getHeight()/2);
-				//if a collision is detected on any side
-				if(negY || posY) {
-					//should stop incrementing
-					stopY = true;
-					//if it will collide on bottom
-					if(negY) {
-						//define entity on ground
-						setOnGround(true);
+				//colliding on one border
+				boolean posX = false, negX = false;
+				boolean posY = false, negY = false;
+				//for steps on Y axis
+				for(float k = 0f ; k < height ; k+= height/32f) {
+					//means "movement on X axis by a step will collide on left"
+					posX = obstacle.isInside(pos.x + stepX - getWidth()*Constants.WIDTH/2f, pos.y+k*Constants.HEIGHT);
+					//means "movement on X axis by a step will collide on right"
+					negX = obstacle.isInside(pos.x + stepX + getWidth()*Constants.WIDTH/2f, pos.y+k*Constants.HEIGHT);
+					//if we collide on any side
+					if(negX || posX) {
+						//should stop incrementing the variable
+						stopX = true;
+						break;
 					}
-					//stop checking obstacles
-					break;
+				}
+				for(float j = -getWidth()/2f ; j < getWidth()/2f ; j+=getWidth()/32f) {
+					//means "will collide on next step on Y axis at top"
+					posY = obstacle.isInside(pos.x+j*Constants.WIDTH , pos.y + stepY + (shifted ? getShiftedHeight() : getHeight())*Constants.HEIGHT);
+					//means "will collide on next step on Y axis at bottom"
+					negY = obstacle.isInside(pos.x+j*Constants.WIDTH, pos.y + stepY);
+					//if a collision is detected on any side
+					if(negY || posY) {
+						//should stop incrementing
+						stopY = true;
+						//if it will collide on bottom
+						if(negY) {
+							//define entity on ground
+							setOnGround(true);
+						}
+						break;
+					}
 				}
 			}
+			//if there is no collision on the next step add a step
+			if(!stopX)pos.x+=stepX;
 			//if there is no collision on next step then increment by a step on Y axis
 			if(!stopY)pos.y+=stepY;
-			//else stop incrementing
-			else break;
+			if(stopX && stopY)break;
 		}
-		if(Math.abs(acc.x) < 0.1f)acc.x = 0f;
-		if(Math.abs(acc.y) < 0.1f)acc.y = 0f;
+		//if acceleration is less then 1 pixels cancel
+		if(Math.abs(acc.x) < 1f)acc.x = 0f;
+		if(Math.abs(acc.y) < 1f)acc.y = 0f;
 		//aply coef gliding coeff and air braking coeff
 		acc.set(acc.x*glidingCoeff*airBrakingCoeff, acc.y*airBrakingCoeff);
 	}
@@ -152,8 +160,18 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 	
 	@Override
 	public void update() {
-		animation.update();
+		//set entity's animation type
+		if(onGround) {
+			if(acc.x == 0) {
+				animation.setAnimationType(shifted ? AnimationsType.SHIFT : AnimationsType.STAY);
+			}else {
+				animation.setAnimationType(AnimationsType.WALK);
+			}
+		}else {
+			animation.setAnimationType(AnimationsType.JUMP);
+		}
 		setBoxBounds();
+		animation.update();
 	}
 	
 	public boolean isOnGround() {
@@ -206,5 +224,9 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 	
 	public Animation getAnimation() {
 		return this.animation;
+	}
+	
+	public void setShifted(boolean shift) {
+		this.shifted = shift;
 	}
 }

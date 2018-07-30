@@ -51,8 +51,8 @@ public class Character extends Entity implements Updateable,Destroyable{
 		shader.setUniformvec3f("secondaryColor", new Vector3f(secondaryColor.x, secondaryColor.y, secondaryColor.z));
 		shader.setUniformf("spriteWidth", animation.getNormalisedSpriteWidth());
 		shader.setUniformf("spriteHeight", animation.getNormalisedSpriteHeight());
-		shader.setUniformf("characterWidth", getWidth());
-		shader.setUniformf("characterHeight", getHeight());
+		shader.setUniformf("characterWidth", getWidth()*Constants.WIDTH);
+		shader.setUniformf("characterHeight", (shifted ? getShiftedHeight() : getHeight())*Constants.HEIGHT);
 		shader.setUniformi("tex", 0);
 		shader.setUniformi("revert", 0);
 		shader.unbind();
@@ -104,6 +104,8 @@ public class Character extends Entity implements Updateable,Destroyable{
 		//push matrices
 		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 		shader.setUniformMat4f("modelMatrix", modelMatrix);
+		shader.setUniformf("characterWidth", getWidth()*Constants.WIDTH);
+		shader.setUniformf("characterHeight", (shifted ? getShiftedHeight() : getHeight())*Constants.HEIGHT);
 		if(acc.x != 0)shader.setUniformi("revert", acc.x < 0 ? 1 : 0);
 		//push animations offset values
 		animation.setShaderVariables(shader);
@@ -141,7 +143,7 @@ public class Character extends Entity implements Updateable,Destroyable{
 		GL11.glDisable(GL11.GL_BLEND);
 		
 		//render collision box
-		//super.render();
+		super.render();
 	}
 	
 	@Override
@@ -156,14 +158,21 @@ public class Character extends Entity implements Updateable,Destroyable{
 	protected float getWidth() {
 		//based on a screen of a resolution of 1280 by 720 the character should be 120 pixels wide
 		//so it's 120/1280th of the width which is 0.09375th of the screen
-		return 0.09375f*(float)Constants.WIDTH;
+		return 0.09375f;
 	}
 
 	@Override
 	protected float getHeight() {
 		//based on a screen of a resolution of 1280 by 720 the character should be 170 pixels height
 		//so it's 170/720th of the height which is 0.2361th of the screen
-		return 0.2361f*(float)Constants.HEIGHT;
+		return 0.2361f;
+	}
+
+	@Override
+	protected float getShiftedHeight() {
+		//based on a screen resolution of 1280 by 720 the character should be 130 pixels height
+		//so it's 130/720th of the height which is 0.1806th of the screen
+		return 0.1806f;
 	}
 
 }

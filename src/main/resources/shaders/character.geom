@@ -34,21 +34,21 @@ void createVertex(vec3 offset, vec2 texoffset){
 void main(){
 	
 	if(revert == 1){
-		createVertex(vec3(-1.0, 1.0, -0.8), vec2(1.0, 0.0));
-		createVertex(vec3(1.0, 1.0, -0.8), vec2(0.0, 0.0));
-		createVertex(vec3(1.0, -1.0, -0.8), vec2(0.0, 1.0));
+		createVertex(vec3(-1.0, 2.0, -0.8), vec2(1.0, 0.0));
+		createVertex(vec3(1.0, 2.0, -0.8), vec2(0.0, 0.0));
+		createVertex(vec3(1.0, 0.0, -0.8), vec2(0.0, 1.0));
 
-		createVertex(vec3(-1.0, 1.0, -0.8), vec2(1.0, 0.0));
-		createVertex(vec3(1.0, -1.0, -0.8), vec2(0.0, 1.0));
-		createVertex(vec3(-1.0, -1.0, -0.8), vec2(1.0, 1.0));
+		createVertex(vec3(-1.0, 2.0, -0.8), vec2(1.0, 0.0));
+		createVertex(vec3(1.0, 0.0, -0.8), vec2(0.0, 1.0));
+		createVertex(vec3(-1.0, 0.0, -0.8), vec2(1.0, 1.0));
 	}else{
-		createVertex(vec3(-1.0, 1.0, -0.8), vec2(0.0, 0.0));
-		createVertex(vec3(1.0, 1.0, -0.8), vec2(1.0, 0.0));
-		createVertex(vec3(1.0, -1.0, -0.8), vec2(1.0, 1.0));
+		createVertex(vec3(-1.0, 2.0, -0.8), vec2(0.0, 0.0));
+		createVertex(vec3(1.0, 2.0, -0.8), vec2(1.0, 0.0));
+		createVertex(vec3(1.0, 0.0, -0.8), vec2(1.0, 1.0));
 
-		createVertex(vec3(-1.0, 1.0, -0.8), vec2(0.0, 0.0));
-		createVertex(vec3(1.0, -1.0, -0.8), vec2(1.0, 1.0));
-		createVertex(vec3(-1.0, -1.0, -0.8), vec2(0.0, 1.0));
+		createVertex(vec3(-1.0, 2.0, -0.8), vec2(0.0, 0.0));
+		createVertex(vec3(1.0, 0.0, -0.8), vec2(1.0, 1.0));
+		createVertex(vec3(-1.0, 0.0, -0.8), vec2(0.0, 1.0));
 	}
 	
 	EndPrimitive();

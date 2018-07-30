@@ -29,8 +29,8 @@ public class Animation implements Updateable, Destroyable{
 		if(this.actualAnimation.type == type)return;
 		
 		//reset old animation ticks
-		//this.actualAnimation.actualTick = 0;
-		//this.actualAnimation.actual = 0;
+		this.actualAnimation.actualTick = 0;
+		this.actualAnimation.actual = 0;
 		
 		//change to the new animation
 		switch(type){
