@@ -29,7 +29,7 @@ public class BerettaGun extends AbstractGun{
 		this.gunTexture = Texture.loadTexture(type.getImgPath(), GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
 		this.shader = new GunShader();
 		this.modelMatrix = new Matrix4f().identity()
-				.translate(pos.x, pos.y, 0f)
+				.translate(pos.x*Constants.WIDTH, pos.y*Constants.HEIGHT, 0f)
 				.rotateZ(rot);
 		
 		shader.bind();
@@ -54,9 +54,9 @@ public class BerettaGun extends AbstractGun{
 
 	@Override
 	public void update() {
-		
+		super.update();
 		this.modelMatrix.identity()
-			.translate(pos.x, pos.y, 0f)
+			.translate(pos.x*Constants.WIDTH, pos.y*Constants.HEIGHT, 0f)
 			.rotateZ(rot);
 		shader.bind();
 		shader.setUniformMat4f("modelMatrix", modelMatrix);

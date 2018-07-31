@@ -5,6 +5,8 @@ import org.joml.Vector2f;
 import fr.axicer.furryattack.render.Destroyable;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
+import fr.axicer.furryattack.util.Constants;
+import fr.axicer.furryattack.util.control.MouseHandler;
 
 /**
  * A simple gun 
@@ -84,5 +86,16 @@ public abstract class AbstractGun implements Updateable,Renderable,Destroyable{
 	
 	public boolean isReverted() {
 		return this.revert;
+	}
+	
+	@Override
+	public void update() {
+		Vector2f mousePos = new Vector2f((((float)MouseHandler.getPosX()/Constants.WIDTH)-1/2f+pos.x),
+										 (((float)MouseHandler.getPosY()/Constants.HEIGHT)-1/2f+pos.y)).normalize();
+		float angle = (float) Math.atan2(pos.x - mousePos.x, pos.y - mousePos.y);
+	    if(angle < 0){
+	        angle += 2*Math.PI;
+	    }
+	    this.rot = angle+(float)Math.PI/2f;
 	}
 }

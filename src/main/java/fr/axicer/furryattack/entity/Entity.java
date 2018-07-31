@@ -76,6 +76,11 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 	 */
 	protected abstract float getShiftedHeight();
 	
+	public Vector2f getArmJunctionPosition() {
+		return new Vector2f(pos.x/Constants.WIDTH/*+(revert ? -getWidth() : getWidth())/1.5f*/,
+				pos.y/Constants.HEIGHT+(shifted ? getShiftedHeight() : getHeight())/2f);
+	}
+	
 	/**
 	 * Move the entity by acc vector
 	 * If a collision is detected then the entity is stopped at the last available movement on the corresponding axis
@@ -169,9 +174,18 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 	
 	@Override
 	public void update() {
-		gun.getPos().set(pos.x+(getWidth()*Constants.WIDTH/1.5f)*(revert ? -1f : 1f), pos.y+(shifted ? getShiftedHeight() : getHeight())*Constants.HEIGHT/2f);
+		//set the gun position to the entity shoulder
+		gun.getPos().set(getArmJunctionPosition());
+		//set the gun reverted
 		gun.setReverted(revert);
+		//update gun's rotation
 		gun.update();
+		//change entity orientation depending on the gun orientation
+		if(gun.getRot() < 3f*(float)Math.PI/2f && !revert) {
+			revert = true;
+		}else if(gun.getRot() > 3f*(float)Math.PI/2f && revert) {
+			revert = false;
+		}
 		//set entity's animation type
 		if(onGround) {
 			if(acc.x == 0) {
