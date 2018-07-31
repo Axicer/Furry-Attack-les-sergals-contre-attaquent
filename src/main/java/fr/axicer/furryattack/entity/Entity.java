@@ -5,13 +5,16 @@ import org.joml.Vector2f;
 import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.entity.animation.Animation;
 import fr.axicer.furryattack.entity.animation.AnimationsType;
+import fr.axicer.furryattack.entity.gun.AbstractGun;
+import fr.axicer.furryattack.entity.gun.list.BerettaGun;
 import fr.axicer.furryattack.map.MapObstacle;
+import fr.axicer.furryattack.render.Destroyable;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Updateable;
 import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.collision.CollisionBoxM;
 
-public abstract class Entity extends CollisionBoxM implements Renderable, Updateable{
+public abstract class Entity extends CollisionBoxM implements Renderable, Updateable, Destroyable{
 	
 	//entity's race
 	protected Species race;
@@ -25,10 +28,14 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 	private float airBrakingCoeff = 0.999f;
 	//whether an entity is on ground or not
 	private boolean onGround;
+	//is the entity reverted (look on the left)
+	protected boolean revert;
 	//entity's animation
 	protected Animation animation;
 	// if an entity is shifted
 	protected boolean shifted;
+	//gun the entity is holding
+	protected AbstractGun gun;
 	
 	//amount of step for each movement
 	public static float STEP = 100.0f;
@@ -42,6 +49,8 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 		this.animation = new Animation(race);
 		this.pos = new Vector2f();
 		this.acc = new Vector2f();
+		this.revert = false;
+		this.gun = new BerettaGun(10);
 		setBoxBounds();
 	}
 	
@@ -93,7 +102,7 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 				boolean posX = false, negX = false;
 				boolean posY = false, negY = false;
 				//for steps on Y axis
-				for(float k = 0f ; k < height ; k+= height/32f) {
+				for(float k = 0f ; k < height ; k+= height/20f) {
 					//means "movement on X axis by a step will collide on left"
 					posX = obstacle.isInside(pos.x + stepX - getWidth()*Constants.WIDTH/2f, pos.y+k*Constants.HEIGHT);
 					//means "movement on X axis by a step will collide on right"
@@ -105,7 +114,7 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 						break;
 					}
 				}
-				for(float j = -getWidth()/2f ; j < getWidth()/2f ; j+=getWidth()/32f) {
+				for(float j = -getWidth()/2f ; j < getWidth()/2f ; j+=getWidth()/20f) {
 					//means "will collide on next step on Y axis at top"
 					posY = obstacle.isInside(pos.x+j*Constants.WIDTH , pos.y + stepY + (shifted ? getShiftedHeight() : getHeight())*Constants.HEIGHT);
 					//means "will collide on next step on Y axis at bottom"
@@ -160,6 +169,9 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 	
 	@Override
 	public void update() {
+		gun.getPos().set(pos.x+(getWidth()*Constants.WIDTH/1.5f)*(revert ? -1f : 1f), pos.y+(shifted ? getShiftedHeight() : getHeight())*Constants.HEIGHT/2f);
+		gun.setReverted(revert);
+		gun.update();
 		//set entity's animation type
 		if(onGround) {
 			if(acc.x == 0) {
@@ -172,6 +184,12 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 		}
 		setBoxBounds();
 		animation.update();
+	}
+	
+	@Override
+	public void destroy() {
+		animation.destroy();
+		gun.destroy();
 	}
 	
 	public boolean isOnGround() {

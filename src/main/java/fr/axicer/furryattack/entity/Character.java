@@ -10,13 +10,11 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
 import fr.axicer.furryattack.FurryAttack;
-import fr.axicer.furryattack.render.Destroyable;
-import fr.axicer.furryattack.render.Updateable;
 import fr.axicer.furryattack.render.shaders.CharacterShader;
 import fr.axicer.furryattack.util.Color;
 import fr.axicer.furryattack.util.Constants;
 
-public class Character extends Entity implements Updateable,Destroyable{
+public class Character extends Entity{
 
 	private Color primaryColor;
 	private Color secondaryColor;
@@ -95,6 +93,8 @@ public class Character extends Entity implements Updateable,Destroyable{
 		//update collision box and animation
 		super.update();
 		
+		if(acc.x != 0)revert = acc.x < 0;
+		
 		//update the animation step
 		animation.update();
 		//update the model matrix
@@ -106,7 +106,7 @@ public class Character extends Entity implements Updateable,Destroyable{
 		shader.setUniformMat4f("modelMatrix", modelMatrix);
 		shader.setUniformf("characterWidth", getWidth()*Constants.WIDTH);
 		shader.setUniformf("characterHeight", (shifted ? getShiftedHeight() : getHeight())*Constants.HEIGHT);
-		if(acc.x != 0)shader.setUniformi("revert", acc.x < 0 ? 1 : 0);
+		shader.setUniformi("revert", revert ? 1 : 0);
 		//push animations offset values
 		animation.setShaderVariables(shader);
 		//unbind the shader
@@ -143,7 +143,9 @@ public class Character extends Entity implements Updateable,Destroyable{
 		GL11.glDisable(GL11.GL_BLEND);
 		
 		//render collision box
-		super.render();
+		//super.render();
+		//render gun
+		gun.render();
 	}
 	
 	@Override
