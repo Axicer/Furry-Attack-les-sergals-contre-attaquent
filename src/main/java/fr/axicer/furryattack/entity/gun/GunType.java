@@ -1,5 +1,7 @@
 package fr.axicer.furryattack.entity.gun;
 
+import fr.axicer.furryattack.entity.Species;
+
 public enum GunType {
 	BERETTA(15, 3.0f, 5.0f);
 	
@@ -11,7 +13,7 @@ public enum GunType {
 		this.chargerBulletAmount = chargerBulletAmount;
 		this.bulletsDamage = bulletsDamage;
 		this.bulletsStrength = bulletsStrength;
-		this.imgPath = "/img/gun/"+toString().toLowerCase()+".png"; 
+		this.imgPath = "/img/gun/"+toString().toLowerCase(); 
 	}
 	
 	public int getChargerBulletsAmount() {
@@ -26,7 +28,7 @@ public enum GunType {
 		return this.bulletsStrength;
 	}
 	
-	public String getImgPath() {
-		return this.imgPath;
+	public String getImgPath(Species race) {
+		return this.imgPath+"_"+race.toString().toLowerCase()+".png";
 	}
 }

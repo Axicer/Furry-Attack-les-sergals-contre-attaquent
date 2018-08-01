@@ -20,7 +20,7 @@ public class SpecifiedAnimation implements Updateable, Destroyable{
 	public SpecifiedAnimation(Species race, AnimationsType type) {
 		this.type = type;
 		this.race = race;
-		this.texture = Texture.loadTexture("/img/species/"+race.toString().toLowerCase()+type.getPathName()+".png", GL12.GL_CLAMP_TO_EDGE, GL11.GL_LINEAR);
+		this.texture = Texture.loadTexture("/img/species/"+race.toString().toLowerCase()+type.getPathName()+".png", GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
 		this.config = new Configuration("/anim/species/"+race.toString().toLowerCase()+type.getPathName()+".anim");
 		this.countX = config.getInt("counts.x", 0);
 		this.countY = config.getInt("counts.y", 0);

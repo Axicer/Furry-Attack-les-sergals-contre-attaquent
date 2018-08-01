@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
 import fr.axicer.furryattack.FurryAttack;
+import fr.axicer.furryattack.entity.Species;
 import fr.axicer.furryattack.entity.gun.AbstractGun;
 import fr.axicer.furryattack.entity.gun.GunType;
 import fr.axicer.furryattack.render.shaders.GunShader;
@@ -24,9 +25,9 @@ public class BerettaGun extends AbstractGun{
 	
 	private int VBO_ID;
 	
-	public BerettaGun(int bulletAmount) {
+	public BerettaGun(int bulletAmount, Species race) {
 		super(GunType.BERETTA, bulletAmount);
-		this.gunTexture = Texture.loadTexture(type.getImgPath(), GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
+		this.gunTexture = Texture.loadTexture(type.getImgPath(race), GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
 		this.shader = new GunShader();
 		this.modelMatrix = new Matrix4f().identity()
 				.translate(pos.x*Constants.WIDTH, pos.y*Constants.HEIGHT, 0f)
@@ -106,12 +107,12 @@ public class BerettaGun extends AbstractGun{
 
 	@Override
 	public float getGunWidth() {
-		return 0.05859f/1.5f;
+		return 0.05859f;
 	}
 
 	@Override
 	public float getGunHeight() {
-		return 0.06806f/1.5f;
+		return 0.06806f;
 	}
 	
 }

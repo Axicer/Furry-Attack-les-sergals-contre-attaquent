@@ -90,7 +90,7 @@ public abstract class AbstractGun implements Updateable,Renderable,Destroyable{
 	
 	@Override
 	public void update() {
-		Vector2f mousePos = new Vector2f((((float)MouseHandler.getPosX()/Constants.WIDTH)-1/2f+pos.x),
+		Vector2f mousePos = new Vector2f((((float)MouseHandler.getPosX()/Constants.WIDTH)-1/2f-pos.x),
 										 (((float)MouseHandler.getPosY()/Constants.HEIGHT)-1/2f+pos.y)).normalize();
 		float angle = (float) Math.atan2(pos.x - mousePos.x, pos.y - mousePos.y);
 	    if(angle < 0){

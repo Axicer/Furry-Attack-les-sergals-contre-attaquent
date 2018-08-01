@@ -93,7 +93,7 @@ public class Character extends Entity{
 		//update collision box and animation
 		super.update();
 		
-		if(acc.x != 0)revert = acc.x < 0;
+		//if(acc.x != 0)revert = acc.x < 0;
 		
 		//update the animation step
 		animation.update();

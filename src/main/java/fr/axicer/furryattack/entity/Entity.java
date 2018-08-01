@@ -50,7 +50,7 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 		this.pos = new Vector2f();
 		this.acc = new Vector2f();
 		this.revert = false;
-		this.gun = new BerettaGun(10);
+		this.gun = new BerettaGun(10, Species.FOX);
 		setBoxBounds();
 	}
 	
@@ -77,8 +77,8 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 	protected abstract float getShiftedHeight();
 	
 	public Vector2f getArmJunctionPosition() {
-		return new Vector2f(pos.x/Constants.WIDTH/*+(revert ? -getWidth() : getWidth())/1.5f*/,
-				pos.y/Constants.HEIGHT+(shifted ? getShiftedHeight() : getHeight())/2f);
+		return new Vector2f(pos.x/Constants.WIDTH,
+				pos.y/Constants.HEIGHT+(shifted ? getShiftedHeight() : getHeight())/1.85f);
 	}
 	
 	/**

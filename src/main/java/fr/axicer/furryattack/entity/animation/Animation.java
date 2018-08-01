@@ -81,6 +81,8 @@ public class Animation implements Updateable, Destroyable{
 	public void setShaderVariables(AbstractShader shader) {
 		shader.setUniformf("offsetX", getActualFrame().getPosX());
 		shader.setUniformf("offsetY", getActualFrame().getPosY());
+		shader.setUniformf("spriteWidth", getNormalisedSpriteWidth());
+		shader.setUniformf("spriteHeight", getNormalisedSpriteHeight());
 	}
 	
 	/**
