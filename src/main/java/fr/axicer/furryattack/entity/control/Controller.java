@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 
 import org.lwjgl.glfw.GLFW;
 
+import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.entity.Entity;
 import fr.axicer.furryattack.generator.config.ControlConfigGenerator;
 import fr.axicer.furryattack.render.Renderable;
@@ -12,13 +13,15 @@ import fr.axicer.furryattack.render.Updateable;
 import fr.axicer.furryattack.util.config.Configuration;
 import fr.axicer.furryattack.util.config.FileManager;
 import fr.axicer.furryattack.util.control.KeyboardHandler;
+import fr.axicer.furryattack.util.control.events.MousePressedEvent;
+import fr.axicer.furryattack.util.events.EventListener;
 
 /**
  * Main entity controller
  * @author Axicer
  *
  */
-public class Controller implements Updateable, Renderable{
+public class Controller implements Updateable, Renderable, EventListener{
 
 	//default entity speed
 	public static final float SPEED = 2f;
@@ -45,6 +48,7 @@ public class Controller implements Updateable, Renderable{
 			}
 		}
 		c.save(f);
+		FurryAttack.getInstance().getEventManager().addListener(this);
 	}
 	
 	@Override
@@ -78,6 +82,7 @@ public class Controller implements Updateable, Renderable{
 			entity.setShifted(false);
 		}
 		
+		
 		//move the entity
 		entity.move();
 		
@@ -85,6 +90,12 @@ public class Controller implements Updateable, Renderable{
 		entity.update();
 	}
 
+	public void onMousePressed(MousePressedEvent ev) {
+		if(ev.getMouseButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+			entity.getGun().fire();
+		}
+	}
+	
 	@Override
 	public void render() {
 		if(entity == null)return;

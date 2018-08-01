@@ -5,8 +5,8 @@ import org.joml.Vector2f;
 import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.entity.animation.Animation;
 import fr.axicer.furryattack.entity.animation.AnimationsType;
-import fr.axicer.furryattack.entity.gun.AbstractGun;
-import fr.axicer.furryattack.entity.gun.list.BerettaGun;
+import fr.axicer.furryattack.entity.gun.Gun;
+import fr.axicer.furryattack.entity.gun.GunType;
 import fr.axicer.furryattack.map.MapObstacle;
 import fr.axicer.furryattack.render.Destroyable;
 import fr.axicer.furryattack.render.Renderable;
@@ -35,7 +35,7 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 	// if an entity is shifted
 	protected boolean shifted;
 	//gun the entity is holding
-	protected AbstractGun gun;
+	protected Gun gun;
 	
 	//amount of step for each movement
 	public static float STEP = 100.0f;
@@ -50,7 +50,7 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 		this.pos = new Vector2f();
 		this.acc = new Vector2f();
 		this.revert = false;
-		this.gun = new BerettaGun(10, Species.FOX);
+		this.gun = new Gun(GunType.BERETTA, 10, Species.FOX);
 		setBoxBounds();
 	}
 	
@@ -260,5 +260,9 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 	
 	public void setShifted(boolean shift) {
 		this.shifted = shift;
+	}
+
+	public Gun getGun() {
+		return gun;
 	}
 }
