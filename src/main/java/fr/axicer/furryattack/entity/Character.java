@@ -158,9 +158,9 @@ public class Character extends Entity{
 
 	@Override
 	protected float getWidth() {
-		//based on a screen of a resolution of 1280 by 720 the character should be 120 pixels wide
-		//so it's 120/1280th of the width which is 0.09375th of the screen
-		return 0.09375f;
+		//based on a screen of a resolution of 1280 by 720 the character should be 95 pixels wide
+		//so it's 95/1280th of the width which is 0.07421th of the screen
+		return 0.07421f;
 	}
 
 	@Override
