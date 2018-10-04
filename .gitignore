@@ -1,10 +1,14 @@
 /src/test/
 /target/
+/img/
 
 #Eclipse
 /.settings/
 *.classpath
 *.project
+
+#Visual studio
+/.vs/
 
 # Compiled class file
 *.class
