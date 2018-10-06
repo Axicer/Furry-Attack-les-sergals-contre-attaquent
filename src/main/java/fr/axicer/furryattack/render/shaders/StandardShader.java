@@ -7,4 +7,9 @@ public class StandardShader extends AbstractShader{
 		linkAndValidate();
 	}
 
+	@Override
+	public void fillShader() {
+		// TODO Auto-generated method stub
+		
+	}
 }

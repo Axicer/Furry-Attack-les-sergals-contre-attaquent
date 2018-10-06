@@ -6,6 +6,12 @@ public class BackgroundShader extends AbstractShader{
 		super("background.vert", "background.geom", "background.frag");
 		linkAndValidate();
 	}
+
+	@Override
+	public void fillShader() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 }

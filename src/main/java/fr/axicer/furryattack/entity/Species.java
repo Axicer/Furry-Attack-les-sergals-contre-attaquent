@@ -14,5 +14,7 @@ public enum Species {
 	TIGER,
 	OTTER,
 	HYENA,
-	COYOTE;
+	COYOTE,
+	
+	UNKNOWN;
 }

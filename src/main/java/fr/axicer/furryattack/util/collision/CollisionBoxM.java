@@ -16,29 +16,41 @@ import fr.axicer.furryattack.render.shaders.BorderShader;
 
 public class CollisionBoxM {
 	
-	public Vector2f[] points;
-	
+	protected Vector2f[] points;
 	protected int vbo;
 	protected BorderShader shader;
 	
 	public CollisionBoxM() {
-		this(new Vector2f(),new Vector2f(),new Vector2f(),new Vector2f());
-	}
-	
-	public CollisionBoxM(Vector2f... points) {
-		this.points = points;
 		shader = new BorderShader();
 		shader.bind();
 		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
-	    shader.setUniformMat4f("viewMatrix", FurryAttack.getInstance().viewMatrix);
-	    shader.setUniformMat4f("modelMatrix", new Matrix4f());
+		shader.setUniformMat4f("viewMatrix", FurryAttack.getInstance().viewMatrix);
+		shader.setUniformMat4f("modelMatrix", new Matrix4f());
 		shader.unbind();
 		vbo = GL15.glGenBuffers();
+	}
+	
+	public CollisionBoxM(Vector2f... points) {
+		this();
+		this.points = points;
 		this.updateRender();
+	}
+	
+	public CollisionBoxM(float... coords) {
+		this();
+		updatePos(coords);
 	}
 	
 	public void updatePos(Vector2f... points) {
 		this.points = points;
+		updateRender();
+	}
+	public void updatePos(float... coords) {
+		int pointsNumber = (int) Math.floor(coords.length/2);
+		this.points = new Vector2f[pointsNumber];
+		for(int i = 0 ; i < this.points.length ; i++) {
+			this.points[i] = new Vector2f(coords[i*2], coords[i*2+1]);
+		}
 		updateRender();
 	}
 	
@@ -122,6 +134,34 @@ public class CollisionBoxM {
 		Area area = new Area(polyA);
 		area.intersect(new Area(polyB));
 		return !area.isEmpty();
+	}
+	
+	public void rotateFrom(float x, float y, float angle) {
+		float s = (float)Math.sin(angle);
+		float c = (float)Math.cos(angle);
+		for(Vector2f vec : points) {
+			// translate point back to origin:
+			vec.x -= x;
+			vec.y -= y;
+			// rotate point
+			float xnew = vec.x * c - vec.y * s;
+			float ynew = vec.x * s + vec.y * c;
+			// translate point back:
+			vec.x = xnew + x;
+			vec.y = ynew + y;
+		}
+		updateRender();
+	}
+	public void move(float dx, float dy) {
+		for(Vector2f vec: points){
+			vec.x += dx;
+			vec.y += dy;
+		}
+		updateRender();
+	}
+	
+	public CollisionBoxM clone() {
+		return new CollisionBoxM(points);
 	}
 	
 	@Override

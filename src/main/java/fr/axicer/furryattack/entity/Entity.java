@@ -265,4 +265,8 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 	public Gun getGun() {
 		return gun;
 	}
+	
+	public Vector2f getPosition() {
+		return this.pos;
+	}
 }

@@ -3,8 +3,8 @@ package fr.axicer.furryattack.gui.guis;
 import org.joml.Vector3f;
 
 import fr.axicer.furryattack.FurryAttack;
-import fr.axicer.furryattack.entity.Character;
 import fr.axicer.furryattack.entity.Species;
+import fr.axicer.furryattack.entity.character.old.CharacterOld;
 import fr.axicer.furryattack.gui.elements.ComponentFactory;
 import fr.axicer.furryattack.gui.elements.GUIAlignement;
 import fr.axicer.furryattack.gui.elements.GUIComponent;
@@ -18,7 +18,7 @@ import fr.axicer.furryattack.util.font.FontType;
 
 public class CharacterCustomisationMenuGUI extends GUI{
 
-	public Character character;
+	public CharacterOld character;
 	
 	public CharacterCustomisationMenuGUI() {
 		super("character-customisation-menu");
@@ -166,7 +166,7 @@ public class CharacterCustomisationMenuGUI extends GUI{
 				GUIAlignement.LEFT,
 				new GUISelectorItem<>(Color.WHITE, "Blanc"),
 				new GUISelectorItem<>(Color.BLACK, "Noir")));
-		character = new Character(Species.FOX, Color.WHITE, Color.BLACK, "");
+		character = new CharacterOld(Species.FOX, Color.WHITE, Color.BLACK, "");
 	}
 
 	@Override
