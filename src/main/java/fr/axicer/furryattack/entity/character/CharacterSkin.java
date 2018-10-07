@@ -53,11 +53,11 @@ public class CharacterSkin implements Destroyable{
 	}
 	
 	/**
-	 * Get a {@link Vector4f} bounds for a {@link ModelPart} depending on this skin
+	 * Get a {@link Vector4f} bounds for a {@link ModelPart}
 	 * @return {@link Vector4f} bounds corresponding to the given {@link ModelPart} like this
 	 *			v.x = minX, v.y = minY, v.z = maxX, v.w = maxY
 	 */
-	public Vector4f getModelPartBounds(ModelPart part) {
+	public static Vector4f getModelPartBounds(ModelPart part) {
 		Vector2f max = new Vector2f();
 		Vector2f min = new Vector2f();
 		switch(part) {

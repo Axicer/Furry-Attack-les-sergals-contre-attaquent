@@ -4,7 +4,6 @@ import org.joml.Vector3f;
 
 import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.entity.Species;
-import fr.axicer.furryattack.entity.character.old.CharacterOld;
 import fr.axicer.furryattack.gui.elements.ComponentFactory;
 import fr.axicer.furryattack.gui.elements.GUIAlignement;
 import fr.axicer.furryattack.gui.elements.GUIComponent;
@@ -17,8 +16,8 @@ import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.font.FontType;
 
 public class CharacterCustomisationMenuGUI extends GUI{
-
-	public CharacterOld character;
+	//TODO set a character for example
+//	public CharacterOld character;
 	
 	public CharacterCustomisationMenuGUI() {
 		super("character-customisation-menu");
@@ -166,27 +165,27 @@ public class CharacterCustomisationMenuGUI extends GUI{
 				GUIAlignement.LEFT,
 				new GUISelectorItem<>(Color.WHITE, "Blanc"),
 				new GUISelectorItem<>(Color.BLACK, "Noir")));
-		character = new CharacterOld(Species.FOX, Color.WHITE, Color.BLACK, "");
+//		character = new CharacterOld(Species.FOX, Color.WHITE, Color.BLACK, "");
 	}
 
 	@Override
 	public void render() {
 		for(GUIComponent comp : components)comp.render();
-		character.render();
+//		character.render();
 	}
 
 	@Override
 	public void update() {
 		try {
 			for(GUIComponent comp : components)comp.update();
-			character.update();
+//			character.update();
 		}catch(Exception e) {};
 	}
 	
 	@Override
 	public void destroy() {
 		for(GUIComponent comp : components)comp.destroy();
-		character.destroy();
+//		character.destroy();
 	}
 	
 	@Override

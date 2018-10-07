@@ -66,15 +66,24 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 	/**
 	 * @return float width of the entity used both in rendering and collision detection
 	 */
-	protected abstract float getWidth();
+	protected float getWidth() {
+		//TODO delete this and use new system
+		return 0f;
+	}
 	/**
 	 * @return float height of the entity used both in rendering and collision detection
 	 */
-	protected abstract float getHeight();
+	protected float getHeight() {
+		//TODO delete this and use new system
+		return 0f;
+	}
 	/**
 	 * @return float shifted height of the entity used both in rendering and collision detection
 	 */
-	protected abstract float getShiftedHeight();
+	protected float getShiftedHeight() {
+		//TODO delete this and use new system
+		return 0f;
+	}
 	
 	public Vector2f getArmJunctionPosition() {
 		return new Vector2f(pos.x/Constants.WIDTH,
