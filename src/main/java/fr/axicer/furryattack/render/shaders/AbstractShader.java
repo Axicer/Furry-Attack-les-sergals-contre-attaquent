@@ -1,7 +1,7 @@
 package fr.axicer.furryattack.render.shaders;
 
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
+import static org.lwjgl.opengl.GL32.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,6 +13,7 @@ import java.nio.FloatBuffer;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 
 import fr.axicer.furryattack.render.Destroyable;
@@ -110,6 +111,10 @@ public abstract class AbstractShader implements Destroyable{
 	
 	public void setUniformvec3f(String name, Vector3f vec) {
 		glUniform3f(glGetUniformLocation(program, name), vec.x, vec.y, vec.z);
+	}
+	
+	public void setUniformvec4f(String name, Vector4f vec) {
+		glUniform4f(glGetUniformLocation(program, name), vec.x, vec.y, vec.z, vec.w);
 	}
 	
 	public void setUniformMat4f(String name, Matrix4f mat) {

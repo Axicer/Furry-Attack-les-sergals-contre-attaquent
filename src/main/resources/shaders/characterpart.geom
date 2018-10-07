@@ -11,6 +11,7 @@ uniform mat4 modelMatrix;
 
 uniform float width;
 uniform float height;
+uniform vec4 textureBounds;
 
 void createVertex(vec3 offset, vec2 texoffset){
 
@@ -24,13 +25,13 @@ void createVertex(vec3 offset, vec2 texoffset){
 
 void main(){
 
-	createVertex(vec3(-1.0, 2.0, -0.5), vec2(0.0, 0.0));
-	createVertex(vec3(1.0, 2.0, -0.5), vec2(1.0, 0.0));
-	createVertex(vec3(1.0, 0.0, -0.5), vec2(1.0, 1.0));
+	createVertex(vec3(-1.0, 2.0, -0.5), textureBounds.xy);
+	createVertex(vec3(1.0, 2.0, -0.5), textureBounds.zy);
+	createVertex(vec3(1.0, 0.0, -0.5), textureBounds.zw);
 	
-	createVertex(vec3(-1.0, 2.0, -0.5), vec2(0.0, 0.0));
-	createVertex(vec3(1.0, 0.0, -0.5), vec2(1.0, 1.0));
-	createVertex(vec3(-1.0, 0.0, -0.5), vec2(0.0, 1.0));
+	createVertex(vec3(-1.0, 2.0, -0.5), textureBounds.xy);
+	createVertex(vec3(1.0, 0.0, -0.5), textureBounds.zw);
+	createVertex(vec3(-1.0, 0.0, -0.5), textureBounds.xw);
 	
 	EndPrimitive();
 }
