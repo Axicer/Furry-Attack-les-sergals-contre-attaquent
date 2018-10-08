@@ -18,7 +18,7 @@ public class Character extends Entity implements Updateable,Renderable,Destroyab
 	private String expression;
 	private Matrix4f modelMatrix;
 	private CharacterSkin skin;
-	private ModelPart root;
+	private CharacterPart root;
 	private CharacterAnimation animation;
 	
 	public Character(Species race, String skinpath, String animPath, String expression) {
@@ -68,6 +68,16 @@ public class Character extends Entity implements Updateable,Renderable,Destroyab
 	protected void refreshSkin() {
 		//TODO
 	}
+
+	public CharacterPart getRoot() {
+		return root;
+	}
+
+
+	public void setRoot(CharacterPart root) {
+		this.root = root;
+	}
+
 
 	@Override
 	public void destroy() {

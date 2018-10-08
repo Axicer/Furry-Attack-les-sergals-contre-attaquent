@@ -155,6 +155,25 @@ public class CharacterPart implements Renderable,Updateable,Destroyable{
 		return character;
 	}
 
+	/**
+	 * Set pose to partId given in parameters
+	 * @param partId {@link ModelPart} id corresponding
+	 * @param mat {@link Matrix4f} localBindTransform to apply
+	 * @param rot {@link Float} part rotation
+	 */
+	public void setPose(int partId, Matrix4f mat, float rot) {
+		//if this element is a the part needed
+		if(this.part.getId() == partId) {
+			//then apply pose
+			this.localBindTransform = mat;
+			this.rot = rot;
+			//recalculate matrices
+			this.character.getRoot().calculateRootBindTransform(new Matrix4f());
+		}else {
+			for(CharacterPart part : childrens)part.setPose(partId, mat, rot);
+		}
+	}
+	
 	@Override
 	public void destroy() {
 		//destroy shader and buffers
@@ -179,13 +198,15 @@ public class CharacterPart implements Renderable,Updateable,Destroyable{
 		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, vertexBuffer);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 
+		shader.bind();
+		shader.setUniformMat4f("modelMatrix", rootBindTransform);
+		shader.unbind();
+		
 		// TODO collisionBox
 	}
 	
 	@Override
 	public void render() {
-		// TODO render all things
-		
 		//enable blending
 		GL11.glEnable(GL11.GL_BLEND);
 		//defines blend functions
@@ -216,4 +237,5 @@ public class CharacterPart implements Renderable,Updateable,Destroyable{
 		//disable blending
 		GL11.glDisable(GL11.GL_BLEND);
 	}
+	
 }

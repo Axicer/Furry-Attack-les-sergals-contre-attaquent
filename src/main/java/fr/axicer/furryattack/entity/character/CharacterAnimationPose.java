@@ -6,6 +6,7 @@ import org.joml.Matrix4f;
 import org.json.simple.JSONObject;
 
 import fr.axicer.furryattack.render.Updateable;
+import fr.axicer.furryattack.util.Tuple;
 
 /**
  * A character animation's pose
@@ -14,10 +15,9 @@ import fr.axicer.furryattack.render.Updateable;
  */
 public class CharacterAnimationPose implements Updateable{
 
-	private Map<Integer, Matrix4f> partPos;
+	private Map<Integer, Tuple<Matrix4f, Float>> partPos;
 	private int duration, time;
-	private boolean ended = false;
-
+	
 	public CharacterAnimationPose(JSONObject pose) {
 		//TODO fill poses list from json
 	}
@@ -26,7 +26,9 @@ public class CharacterAnimationPose implements Updateable{
 	 * Apply the current pose to the character
 	 */
 	public void applyPose(Character character) {
-		//TODO
+		for(int id : partPos.keySet()) {
+			character.getRoot().setPose(id, partPos.get(id).getT(), partPos.get(id).getU());
+		}
 	}
 	
 	/**
