@@ -23,6 +23,40 @@ public class CharacterAnimationPose implements Updateable{
 	}
 	
 	/**
+	 * Get the local transformation matrix from a specific part in this pose
+	 * @param part {@link ModelPart} needed
+	 * @return {@link Matrix4f}
+	 */
+	public Matrix4f getLocalTransformationMatrix(ModelPart part) {
+		return getLocalTransformationMatrix(part.getId());
+	}
+	/**
+	 * Get the local transformation matrix from a specific part in this pose
+	 * @param ID part id
+	 * @return {@link Matrix4f}
+	 */
+	public Matrix4f getLocalTransformationMatrix(int ID) {
+		return this.partPos.get(ID).getT();
+	}
+	
+	/**
+	 * Get the rotation from a specific part in this pose
+	 * @param part {@link ModelPart} needed
+	 * @return {@link Float}
+	 */
+	public float getRotation(ModelPart part) {
+		return getRotation(part.getId());
+	}
+	/**
+	 * Get the rotation from a specific part in this pose
+	 * @param ID part id
+	 * @return {@link Float}
+	 */
+	public float getRotation(int ID) {
+		return this.partPos.get(ID).getU();
+	}
+	
+	/**
 	 * Apply the current pose to the character
 	 */
 	public void applyPose(Character character) {

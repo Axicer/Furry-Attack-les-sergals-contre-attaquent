@@ -118,6 +118,14 @@ public class CharacterPart implements Renderable,Updateable,Destroyable{
 	}
 	
 	/**
+	 * Add a children to this characterpart
+	 * @param child
+	 */
+	public void addChildrens(CharacterPart child) {
+		childrens.add(child);
+	}
+	
+	/**
 	 * Reset this model part's texture
 	 */
 	public void resetSkin(CharacterSkin skin, boolean recursive) {
@@ -180,9 +188,7 @@ public class CharacterPart implements Renderable,Updateable,Destroyable{
 		shader.destroy();
 		GL15.glDeleteBuffers(VBO);
 		//the recursively call delete for childrens
-		for(CharacterPart part : childrens) {
-			part.destroy();
-		}
+		for(CharacterPart part : childrens)part.destroy();
 	}
 	
 	@Override
@@ -203,6 +209,9 @@ public class CharacterPart implements Renderable,Updateable,Destroyable{
 		shader.unbind();
 		
 		// TODO collisionBox
+		
+		//update recursively
+		for(CharacterPart child : childrens)child.update();
 	}
 	
 	@Override
@@ -236,6 +245,9 @@ public class CharacterPart implements Renderable,Updateable,Destroyable{
 		Texture.unbind();
 		//disable blending
 		GL11.glDisable(GL11.GL_BLEND);
+		
+		//render recursively
+		for(CharacterPart child : childrens)child.render();
 	}
 	
 }
