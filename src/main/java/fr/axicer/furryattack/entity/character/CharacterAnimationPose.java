@@ -65,6 +65,10 @@ public class CharacterAnimationPose implements Updateable{
 		}
 	}
 	
+	public void resetStatus() {
+		this.time = 0;
+	}
+	
 	/**
 	 * Get whether the pose should change = this pose is ended
 	 * @return {@link Boolean} ended

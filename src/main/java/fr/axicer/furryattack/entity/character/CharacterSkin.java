@@ -42,7 +42,7 @@ public class CharacterSkin implements Destroyable{
 	 */
 	public void reload(Texture tex) {
 		this.tex = tex;
-		character.refreshSkin();
+		character.refreshSkin(this);
 	}
 	
 	/**

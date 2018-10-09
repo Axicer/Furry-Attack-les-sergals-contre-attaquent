@@ -15,7 +15,7 @@ import fr.axicer.furryattack.render.Updateable;
  */
 public class Character extends Entity implements Updateable,Renderable,Destroyable{
 
-	public static Matrix4f ROOT_TRANSFORM = new Matrix4f().translate(0,100,0);
+	public static Matrix4f ROOT_TRANSFORM = new Matrix4f().identity().translate(0,100,0);
 	
 	private String expression;
 	private Matrix4f modelMatrix;
@@ -76,7 +76,7 @@ public class Character extends Entity implements Updateable,Renderable,Destroyab
 		RA.addChildrens(RH);
 		
 		//then calculate root bind transform recursively
-		root.calculateRootBindTransform(ROOT_TRANSFORM);
+		root.calculateRootBindTransform(ROOT_TRANSFORM, 0f);
 		//and return root
 		return root;
 	}
@@ -116,10 +116,19 @@ public class Character extends Entity implements Updateable,Renderable,Destroyab
 	/**
 	 * reset the skin
 	 */
-	protected void refreshSkin() {
-		//TODO
+	protected void refreshSkin(CharacterSkin skin) {
+		this.root.resetSkin(skin, true);
 	}
 
+	/**
+	 * Get the {@link CharacterPart} from a given {@link ModelPart}
+	 * @param part {@link ModelPart}
+	 * @return {@link CharacterPart}
+	 */
+	public CharacterPart getPart(ModelPart part) {
+		return this.root.getPart(part);
+	}
+	
 	/**
 	 * Get the root part (body)
 	 * @return {@link CharacterPart} part
