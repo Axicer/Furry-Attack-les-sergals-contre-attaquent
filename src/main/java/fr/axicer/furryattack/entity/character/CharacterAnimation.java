@@ -37,14 +37,31 @@ public class CharacterAnimation implements Updateable{
 	private void parse(JSONObject json) {
 		//TODO parse the actual animation
 	}
-
+	
+	/**
+	 * Get the first {@link CharacterAnimationPose} of the animation
+	 * @return {@link CharacterAnimationPose} first
+	 */
+	public CharacterAnimationPose getFirstPose() {
+		return this.poses.get(0);
+	}
+	
+	/**
+	 * Get the actual {@link CharacterAnimationPose} of the animation
+	 * @return {@link CharacterAnimationPose} actual
+	 */
+	public CharacterAnimationPose getActualPose() {
+		return this.poses.get(actualPose);
+	}
+	
 	@Override
 	public void update() {
 		if(this.poses.get(actualPose).isEnded()) {
+			this.poses.get(actualPose).resetStatus();
 			actualPose = (actualPose+1)%this.poses.size();
+			this.poses.get(actualPose).applyPose(character);
 		}else {
 			this.poses.get(actualPose).update();
 		}
-		this.poses.get(actualPose).applyPose(character);
 	}
 }

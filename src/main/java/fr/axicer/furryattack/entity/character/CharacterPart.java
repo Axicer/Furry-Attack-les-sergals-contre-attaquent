@@ -108,13 +108,23 @@ public class CharacterPart implements Renderable,Updateable,Destroyable{
 	 * Calculate the rootBindTransform matrix for this model part from parent rootBindTransform
 	 * @param parentRootTransform {@link Matrix4f} parent rootbindTransform
 	 */
-	protected void calculateRootBindTransform(Matrix4f parentRootTransform) {
+	protected void calculateRootBindTransform(Matrix4f parentRootTransform, float parentRotation) {
+		//our localBindTransform rotated by rot
+		Matrix4f rotatedTransform = localBindTransform.rotateZ(parentRotation, new Matrix4f());
 		//calc root bind transform
-		this.rootBindTransform = parentRootTransform.mul(localBindTransform, new Matrix4f());
+		this.rootBindTransform = parentRootTransform.mul(rotatedTransform, new Matrix4f());
 		//recursively call calculation
 		for(CharacterPart part : childrens) {
-			part.calculateRootBindTransform(rootBindTransform);
+			part.calculateRootBindTransform(rootBindTransform, this.rot);
 		}
+	}
+	
+	/**
+	 * Add a children to this characterpart
+	 * @param child
+	 */
+	public void addChildrens(CharacterPart child) {
+		childrens.add(child);
 	}
 	
 	/**
@@ -168,9 +178,29 @@ public class CharacterPart implements Renderable,Updateable,Destroyable{
 			this.localBindTransform = mat;
 			this.rot = rot;
 			//recalculate matrices
-			this.character.getRoot().calculateRootBindTransform(new Matrix4f());
+			this.character.getRoot().calculateRootBindTransform(Character.ROOT_TRANSFORM, 0f);
 		}else {
 			for(CharacterPart part : childrens)part.setPose(partId, mat, rot);
+		}
+	}
+	
+	/**
+	 * Recursive function to get a specific {@link CharacterPart} from {@link ModelPart}
+	 * @param part {@link ModelPart} needed
+	 * @return {@link CharacterPart} if found, null if not
+	 */
+	public CharacterPart getPart(ModelPart part) {
+		if(this.part.equals(part)) {
+			return this;
+		}else if(this.childrens.size() == 0){
+			return null;
+		}else {
+			CharacterPart needed = null;
+			for(CharacterPart child : this.childrens) {
+				needed = child.getPart(part);
+				if(needed != null)return needed;
+			}
+			return null;
 		}
 	}
 	
@@ -180,9 +210,7 @@ public class CharacterPart implements Renderable,Updateable,Destroyable{
 		shader.destroy();
 		GL15.glDeleteBuffers(VBO);
 		//the recursively call delete for childrens
-		for(CharacterPart part : childrens) {
-			part.destroy();
-		}
+		for(CharacterPart part : childrens)part.destroy();
 	}
 	
 	@Override
@@ -202,7 +230,8 @@ public class CharacterPart implements Renderable,Updateable,Destroyable{
 		shader.setUniformMat4f("modelMatrix", rootBindTransform);
 		shader.unbind();
 		
-		// TODO collisionBox
+		//update recursively
+		for(CharacterPart child : childrens)child.update();
 	}
 	
 	@Override
@@ -236,6 +265,9 @@ public class CharacterPart implements Renderable,Updateable,Destroyable{
 		Texture.unbind();
 		//disable blending
 		GL11.glDisable(GL11.GL_BLEND);
+		
+		//render recursively
+		for(CharacterPart child : childrens)child.render();
 	}
 	
 }
