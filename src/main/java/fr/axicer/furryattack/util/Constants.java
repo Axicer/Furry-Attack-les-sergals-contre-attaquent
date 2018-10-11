@@ -7,6 +7,11 @@ import fr.axicer.furryattack.generator.config.MainConfigGenerator;
 import fr.axicer.furryattack.util.config.Configuration;
 import fr.axicer.furryattack.util.config.FileManager;
 
+/**
+ * TODO rename this Environment
+ * @author Axicer
+ *
+ */
 public class Constants {
 	
 	public static int WIDTH;

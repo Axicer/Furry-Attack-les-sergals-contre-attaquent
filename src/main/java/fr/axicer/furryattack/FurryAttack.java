@@ -77,6 +77,7 @@ public class FurryAttack implements Renderable, Updateable{
 		viewMatrix = new Matrix4f().identity();
 
 		eventManager = new EventManager();
+		//TODO check for extension type
 		langManager = new LanguageManager();
 		renderer = new Renderer();
 		mapManager = new MapManager();
