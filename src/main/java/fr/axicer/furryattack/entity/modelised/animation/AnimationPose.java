@@ -28,12 +28,12 @@ public class AnimationPose {
 	public AnimationPose(JSONObject json) {
     	try {
     		//set duration
-    		this.duration = (int)json.get("duration");
+    		this.duration = (int)(long)json.get("duration");
     		//set visibles
     		JSONArray visibles = (JSONArray)json.get("visibles");
     		this.visbleID = new ArrayList<>();
     		visibles.forEach(obj ->{
-    			this.visbleID.add((int)obj);
+    			this.visbleID.add((int)(long)obj);
     		});
     		//set datas
     		this.datas = new ArrayList<>();
@@ -75,5 +75,9 @@ public class AnimationPose {
     		applyPose(entity);
     	}
     	counter++;
+    }
+    
+    public void reset() {
+    	this.counter = 0;
     }
 }

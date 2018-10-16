@@ -50,6 +50,7 @@ public class SingleAnimation {
 
     public void update(ModelisedEntity entity) {
     	if(this.poses.get(actualPoseID).isEnded()) {
+    		this.poses.get(actualPoseID).reset();
     		actualPoseID = (actualPoseID+1)%poseCount;
     	}
     	this.poses.get(actualPoseID).update(entity);

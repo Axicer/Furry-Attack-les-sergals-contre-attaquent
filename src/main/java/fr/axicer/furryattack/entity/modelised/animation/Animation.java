@@ -27,6 +27,7 @@ public class Animation {
     @SuppressWarnings("unchecked")
 	public Animation(ModelisedEntity entity, JSONObject json) {
     	this.entity = entity;
+    	this.animations = new ArrayList<>();
     	try {
     		//load types
     		this.defaultAnimationType = AnimationType.fromString((String)json.get("default"));
@@ -35,7 +36,7 @@ public class Animation {
     		this.animations = new ArrayList<>();
     		JSONArray anims = (JSONArray)json.get("animations");
     		anims.forEach(obj ->{
-    			SingleAnimation anim = new SingleAnimation((JSONObject)json);
+    			SingleAnimation anim = new SingleAnimation((JSONObject)obj);
     			animations.add(anim);
     		});
     	}catch(Exception e) {

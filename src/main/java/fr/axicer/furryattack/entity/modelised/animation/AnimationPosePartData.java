@@ -25,12 +25,16 @@ public class AnimationPosePartData {
      */
     public AnimationPosePartData(JSONObject json) {
     	try {
-    		this.ID = (int)json.get("id");
-    		this.rotation = (float)json.get("rotation");
-    		this.width = (float)json.get("width");
-    		this.height = (float)json.get("height");
-    		JSONArray translation = (JSONArray) json.get("translation");
-    		this.localBindTransform = new Matrix4f().identity().translate((float)translation.get(0), (float)translation.get(1), (float)translation.get(2));
+    		this.ID = (int)(long)json.get("id");
+    		this.rotation = json.containsKey("rotation") ? (float)(double)json.get("rotation") : -1;
+    		this.width = json.containsKey("width") ? (float)(double)json.get("width") : -1;
+    		this.height = json.containsKey("height") ? (float)(double)json.get("height") : -1;
+    		if(json.containsKey("translation")) {
+    			JSONArray translation = (JSONArray) json.get("translation");
+    			this.localBindTransform = new Matrix4f().identity().translate((float)(double)translation.get(0), (float)(double)translation.get(1), (float)(double)translation.get(2));
+    		}else {
+    			this.localBindTransform = null;
+    		}
     	}catch(Exception e) {
     		//if any exception is detected when parsing then set ID to -1 (which means invalid pose)
     		e.printStackTrace();
@@ -45,12 +49,10 @@ public class AnimationPosePartData {
     public void apply(ModelisedEntity entity) {
     	ModelPart target = entity.getSpecificModelPart(ID);
     	if(target != null) {
-	    	target.setRotation(rotation);
-	    	target.setWidth(width);
-	    	target.setHeight(height);
-	    	
-    		//this will also update the root transform
-    		target.setLocalBindTransform(localBindTransform);
+	    	if(rotation != -1)target.setRotation(rotation);
+	    	if(width != -1)target.setWidth(width);
+	    	if(height != -1)target.setHeight(height);
+	    	if(localBindTransform != null)target.setLocalBindTransform(localBindTransform);
     	}else {
     		System.out.println("UNABLE TO LOAD POSE TO A ENTITY WITHOUT THE GIVEN ID FOR MODELPART");
     	}

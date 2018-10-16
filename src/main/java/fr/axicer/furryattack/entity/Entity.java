@@ -3,8 +3,6 @@ package fr.axicer.furryattack.entity;
 import org.joml.Vector2f;
 
 import fr.axicer.furryattack.FurryAttack;
-import fr.axicer.furryattack.entity.animation.Animation;
-import fr.axicer.furryattack.entity.animation.AnimationsType;
 import fr.axicer.furryattack.entity.gun.Gun;
 import fr.axicer.furryattack.entity.gun.GunType;
 import fr.axicer.furryattack.map.MapObstacle;
@@ -30,8 +28,6 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 	private boolean onGround;
 	//is the entity reverted (look on the left)
 	protected boolean revert;
-	//entity's animation
-	protected Animation animation;
 	// if an entity is shifted
 	protected boolean shifted;
 	//gun the entity is holding
@@ -46,7 +42,6 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 	public Entity(Species race) {
 		this.race = race;
 		this.shifted = false;
-		this.animation = new Animation(race);
 		this.pos = new Vector2f();
 		this.acc = new Vector2f();
 		this.revert = false;
@@ -163,14 +158,14 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 	 * Apply gravity on Y axis (depending on the actual map)
 	 */
 	private void applyGravityToAccelerationVector() {
-		//if we're not on ground
-		if(!onGround) {
-			//subtract gravity from Y acceleration
-			acc.set(acc.x, acc.y-FurryAttack.getInstance().getMapManager().getMap().getGravity());
-		} else {
-			//reset acceleration on Y axis
-			acc.set(acc.x, 0);
-		}
+//		//if we're not on ground
+//		if(!onGround) {
+//			//subtract gravity from Y acceleration
+//			acc.set(acc.x, acc.y-FurryAttack.getInstance().getMapManager().getMap().getGravity());
+//		} else {
+//			//reset acceleration on Y axis
+//			acc.set(acc.x, 0);
+//		}
 	}
 
 	/**
@@ -178,41 +173,38 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 	 */
 	@Override
 	public void render() {
-		super.render();
+//		super.render();
 	}
 	
 	@Override
 	public void update() {
-		//set the gun position to the entity shoulder
-		gun.getPos().set(getArmJunctionPosition());
-		//set the gun reverted
-		gun.setReverted(revert);
-		//update gun's rotation
-		gun.update();
-		//change entity orientation depending on the gun orientation
-		if(gun.getRot() < 3f*(float)Math.PI/2f && !revert) {
-			revert = true;
-		}else if(gun.getRot() > 3f*(float)Math.PI/2f && revert) {
-			revert = false;
-		}
-		//set entity's animation type
-		if(onGround) {
-			if(acc.x == 0) {
-				animation.setAnimationType(shifted ? AnimationsType.SHIFT : AnimationsType.STAY);
-			}else {
-				animation.setAnimationType(AnimationsType.WALK);
-			}
-		}else {
-			animation.setAnimationType(AnimationsType.JUMP);
-		}
-		setBoxBounds();
-		animation.update();
+//		//set the gun position to the entity shoulder
+//		gun.getPos().set(getArmJunctionPosition());
+//		//set the gun reverted
+//		gun.setReverted(revert);
+//		//update gun's rotation
+//		gun.update();
+//		//change entity orientation depending on the gun orientation
+//		if(gun.getRot() < 3f*(float)Math.PI/2f && !revert) {
+//			revert = true;
+//		}else if(gun.getRot() > 3f*(float)Math.PI/2f && revert) {
+//			revert = false;
+//		}
+//		//set entity's animation type
+//		if(onGround) {
+//			if(acc.x == 0) {
+////				animation.setAnimationType(shifted ? AnimationsType.SHIFT : AnimationsType.STAY);
+//			}else {
+////				animation.setAnimationType(AnimationsType.WALK);
+//			}
+//		}else {
+////			animation.setAnimationType(AnimationsType.JUMP);
+//		}
+//		setBoxBounds();
 	}
 	
 	@Override
 	public void destroy() {
-		animation.destroy();
-		gun.destroy();
 	}
 	
 	public boolean isOnGround() {
@@ -261,10 +253,6 @@ public abstract class Entity extends CollisionBoxM implements Renderable, Update
 	 */
 	public float getairBrakingCoeff() {
 		return this.airBrakingCoeff;
-	}
-	
-	public Animation getAnimation() {
-		return this.animation;
 	}
 	
 	public void setShifted(boolean shift) {

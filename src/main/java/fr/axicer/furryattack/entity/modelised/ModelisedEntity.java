@@ -20,20 +20,22 @@ public class ModelisedEntity extends Entity{
     public ModelisedEntity(String partPath, String modelPath, String animPath) {
         super(Species.FOX);
     	this.animation = AnimationReader.create(this, animPath);
-    	this.rootPart = ModelPartReader.create(PartReader.getNewPartHolder(partPath), modelPath);
+    	this.rootPart = ModelPartReader.create(this, PartReader.getNewPartHolder(partPath), modelPath);
     }
 
     public ModelPart getSpecificModelPart(int id) {
-    	//TODO
-    	return null;
+    	return rootPart.getPart(id);
     }
     
     public void update() {
+    	//update model state and other data
     	this.animation.update();
-    	this.rootPart.update();
+    	//then recalculate all the parts data
+    	this.rootPart.updateData();
     }
     
     public void render() {
+    	//simply render each parts
     	this.rootPart.render();
     }
 }

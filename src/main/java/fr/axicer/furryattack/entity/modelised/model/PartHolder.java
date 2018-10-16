@@ -1,5 +1,6 @@
 package fr.axicer.furryattack.entity.modelised.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joml.Vector4f;
@@ -13,7 +14,7 @@ import org.json.simple.JSONObject;
  */
 public class PartHolder {
 
-    private List<Part> parts;
+    public List<Part> parts;
 
     /**
      * Constructor of a part holder
@@ -22,12 +23,13 @@ public class PartHolder {
      */
     @SuppressWarnings("unchecked")
 	public PartHolder(JSONObject partJSON) {
+    	this.parts = new ArrayList<>();
         JSONArray jsonpart = (JSONArray)partJSON.get("parts");
         jsonpart.forEach(obj->{
         	JSONObject jobj = (JSONObject)obj;
-        	int id = (int) jobj.get("id");
+        	int id = (int)(long)jobj.get("id");
         	JSONArray boundsjson = (JSONArray)jobj.get("bounds");
-        	Vector4f bounds = new Vector4f((float)boundsjson.get(0), (float)boundsjson.get(1), (float)boundsjson.get(2), (float)boundsjson.get(3));
+        	Vector4f bounds = new Vector4f((float)(double)boundsjson.get(0), (float)(double)boundsjson.get(1), (float)(double)boundsjson.get(2), (float)(double)boundsjson.get(3));
         	if(getPart(id) == null) {
         		Part p = new Part(id, bounds);
         		parts.add(p);
@@ -91,5 +93,4 @@ public class PartHolder {
     	if(required == null)return false;
     	return parts.remove(required);
     }
-
 }

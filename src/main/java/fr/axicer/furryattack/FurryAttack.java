@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fr.axicer.furryattack.entity.control.Controller;
+import fr.axicer.furryattack.entity.modelised.ModelisedEntity;
 import fr.axicer.furryattack.map.MapManager;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Renderer;
@@ -55,6 +56,8 @@ public class FurryAttack implements Renderable, Updateable{
 	
 	private Logger logger = LoggerFactory.getLogger(FurryAttack.class);
 	
+	private ModelisedEntity e;
+	
 	public void run() {
 		logger.info("LWJGL " + Version.getVersion() + "!");
 		logger.info("Initializing frame...");
@@ -82,12 +85,13 @@ public class FurryAttack implements Renderable, Updateable{
 		renderer = new Renderer();
 		mapManager = new MapManager();
 		
+		e = new ModelisedEntity("/entity/mono.part", "/entity/mono.model", "/entity/mono.anim");
 		//TODO
 		//controller = new Controller(new CharacterOld(Species.FOX, Color.WHITE, Color.BLACK, ""));
 		
 		//only show GUI at first launch
 		renderer.getGUIRenderer().setActivated(false);
-		renderer.getMapRenderer().setActivated(true);
+		renderer.getMapRenderer().setActivated(false);
 	}
 	
 	private void initFrame() {
@@ -218,14 +222,16 @@ public class FurryAttack implements Renderable, Updateable{
 	@Override
 	public void update() {
 		renderer.update();
-		controller.update();
+//		controller.update();
+		e.update();
 	}
 
 	@Override
 	public void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 		renderer.render();
-		controller.render();
+//		controller.render();
+		e.render();
 		glfwSwapBuffers(window); // swap the color buffers
 	}
 	

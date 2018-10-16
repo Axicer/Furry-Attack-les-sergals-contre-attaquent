@@ -1,0 +1,13 @@
+{
+	"texture":"/img/species/defaultSkin.png"
+	"model":[
+		{
+			"id":0,
+			"translation":[0.0,0.0,0.0],
+			"rotation":0.0,
+			"width":0.1,
+			"height":0.2,
+			"child":[]
+		}
+	]
+}
