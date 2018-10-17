@@ -5,182 +5,58 @@
 			"name":"idle",
 			"poses":[
 				{
-					"duration":5,
-					"visibles":[0],
+					"duration":60,
+					"visibles":[0,1],
 					"data":[
 						{
 							"id":0,
 							"rotation":0.0
-						}
-					]
-				},
-				{
-					"duration":5,
-					"visibles":[0],
-					"data":[
+						},
 						{
-							"id":0,
-							"rotation":20.0
-						}
-					]
-				},
-				{
-					"duration":5,
-					"visibles":[0],
-					"data":[
-						{
-							"id":0,
-							"rotation":40.0
-						}
-					]
-				},
-				{
-					"duration":5,
-					"visibles":[0],
-					"data":[
-						{
-							"id":0,
-							"rotation":60.0
-						}
-					]
-				},
-				{
-					"duration":5,
-					"visibles":[0],
-					"data":[
-						{
-							"id":0,
-							"rotation":80.0
-						}
-					]
-				},
-				{
-					"duration":5,
-					"visibles":[0],
-					"data":[
-						{
-							"id":0,
-							"rotation":100.0
-						}
-					]
-				},
-				{
-					"duration":5,
-					"visibles":[0],
-					"data":[
-						{
-							"id":0,
-							"rotation":120.0
-						}
-					]
-				},
-				{
-					"duration":5,
-					"visibles":[0],
-					"data":[
-						{
-							"id":0,
-							"rotation":140.0
-						}
-					]
-				},
-				{
-					"duration":5,
-					"visibles":[0],
-					"data":[
-						{
-							"id":0,
-							"rotation":160.0
-						}
-					]
-				},
-				{
-					"duration":5,
-					"visibles":[0],
-					"data":[
-						{
-							"id":0,
+							"id":1,
 							"rotation":180.0
 						}
 					]
 				},
 				{
-					"duration":5,
-					"visibles":[0],
+					"duration":60,
+					"visibles":[0,1],
 					"data":[
 						{
 							"id":0,
-							"rotation":200.0
+							"rotation":45.0
+						},
+						{
+							"id":1,
+							"rotation":180.0
 						}
 					]
 				},
 				{
-					"duration":5,
-					"visibles":[0],
+					"duration":60,
+					"visibles":[0,1],
 					"data":[
 						{
 							"id":0,
-							"rotation":220.0
+							"rotation":45.0
+						},
+						{
+							"id":1,
+							"rotation":90.0
 						}
 					]
 				},
 				{
-					"duration":5,
-					"visibles":[0],
+					"duration":60,
+					"visibles":[0,1],
 					"data":[
 						{
 							"id":0,
-							"rotation":240.0
-						}
-					]
-				},
-				{
-					"duration":5,
-					"visibles":[0],
-					"data":[
+							"rotation":90.0
+						},
 						{
-							"id":0,
-							"rotation":260.0
-						}
-					]
-				},
-				{
-					"duration":5,
-					"visibles":[0],
-					"data":[
-						{
-							"id":0,
-							"rotation":280.0
-						}
-					]
-				},
-				{
-					"duration":5,
-					"visibles":[0],
-					"data":[
-						{
-							"id":0,
-							"rotation":300.0
-						}
-					]
-				},
-				{
-					"duration":5,
-					"visibles":[0],
-					"data":[
-						{
-							"id":0,
-							"rotation":320.0
-						}
-					]
-				},
-				{
-					"duration":5,
-					"visibles":[0],
-					"data":[
-						{
-							"id":0,
-							"rotation":340.0
+							"id":1,
+							"rotation":180.0
 						}
 					]
 				}

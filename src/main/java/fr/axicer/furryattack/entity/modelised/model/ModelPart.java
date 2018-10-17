@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.joml.Math;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
@@ -16,7 +18,6 @@ import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.entity.modelised.ModelisedEntity;
 import fr.axicer.furryattack.render.shaders.CharacterPartShader;
 import fr.axicer.furryattack.render.textures.Texture;
-import fr.axicer.furryattack.util.Constants;
 
 /**
  * Model part class
@@ -25,6 +26,8 @@ import fr.axicer.furryattack.util.Constants;
  */
 public class ModelPart {
 
+	private static final int TMP_TILE_SIZE = 1000;
+	
     private float rotation;
     private Matrix4f localBindTransform;
     private Matrix4f rootBindTransform;
@@ -35,7 +38,6 @@ public class ModelPart {
     private List<ModelPart> childs;
     private int[] childsData;
     public PartHolder partholder;
-    @SuppressWarnings("unused")
 	private ModelisedEntity entity;
 
     private CharacterPartShader shader;
@@ -57,8 +59,8 @@ public class ModelPart {
         this.rotation = rotation;
         this.localBindTransform = localBindTransform;
         this.rootBindTransform = new Matrix4f().identity();
-        this.width = width;
-        this.height = height;
+        this.width = width * TMP_TILE_SIZE;
+        this.height = height * TMP_TILE_SIZE;
         this.texture = texture;
         this.partID = partID;
         this.partholder = partholder;
@@ -72,8 +74,9 @@ public class ModelPart {
 		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 		shader.setUniformMat4f("viewMatrix", FurryAttack.getInstance().viewMatrix);
 		shader.setUniformMat4f("modelMatrix", rootBindTransform);
-		shader.setUniformf("width", width*Constants.WIDTH);
-		shader.setUniformf("height", height*Constants.HEIGHT);
+		//size is given as tile size
+		shader.setUniformf("width", width);
+		shader.setUniformf("height", height);
 		shader.setUniformi("tex", 0);
 		shader.setUniformvec4f("textureBounds", partholder.getPart(partID).getBounds());
 		shader.unbind();
@@ -163,14 +166,21 @@ public class ModelPart {
      * @param parentRotation float parent rotation
      */
     protected void calculateRootBindTransform(Matrix4f parentRoottransform, float parentRotation) {
-    	//our localBindTransform rotated by rot
-		Matrix4f rotatedTransform = localBindTransform.rotateZ((float)Math.toRadians(parentRotation), new Matrix4f());
+    	float rot = this.rotation + parentRotation;
+    	//get parent translation
+    	Vector3f parenttranslation = parentRoottransform.getTranslation(new Vector3f());
+    	//get our local translation
+    	Vector3f localTranslation= localBindTransform.getTranslation(new Vector3f()).rotateZ((float)Math.toRadians(parentRotation));
+    	//we add our translations
+    	Vector3f translate = parenttranslation.add(localTranslation, new Vector3f()).mul(TMP_TILE_SIZE);
 		//calc root bind transform
-		this.rootBindTransform = parentRoottransform.mul(rotatedTransform, new Matrix4f());
+		this.rootBindTransform = new Matrix4f().translate(translate);
 		//recursively call calculation
 		for(ModelPart part : childs) {
-			part.calculateRootBindTransform(this.rootBindTransform, this.rotation);
+			part.calculateRootBindTransform(this.localBindTransform, rot);
 		}
+		this.rootBindTransform.rotateZ((float)Math.toRadians(rot));
+		
     }
     
     /**
@@ -191,13 +201,14 @@ public class ModelPart {
 		//then update shader data
 		shader.bind();
 		shader.setUniformMat4f("modelMatrix", rootBindTransform);
-		shader.setUniformf("width", width*Constants.WIDTH);
-		shader.setUniformf("height", height*Constants.HEIGHT);
+		//size is given as tile size
+		shader.setUniformf("width", width);
+		shader.setUniformf("height", height);
 		shader.setUniformvec4f("textureBounds", partholder.getPart(partID).getBounds());
 		shader.unbind();
 
 		//get the part with ID 0 which is the first and calculate root transform from empty matrix and rotation
-		entity.getSpecificModelPart(0).calculateRootBindTransform(new Matrix4f().identity(), entity.getSpecificModelPart(0).rotation);
+		entity.getSpecificModelPart(0).calculateRootBindTransform(new Matrix4f().identity(), 0f);
 		
 		//render recursively
 		for(ModelPart child : childs)child.updateData();
