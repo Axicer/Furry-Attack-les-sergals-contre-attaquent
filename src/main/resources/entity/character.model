@@ -1,9 +1,9 @@
 {
-	"texture":"monModel.png"
+	"texture":"/img/species/defaultSkin.png"
 	"model":[
 		{
 			"id":0,
-			"translation":[0,0.1,0],
+			"translation":[0.0,0.1,0.0],
 			"rotation":0.0,
 			"width":0.1,
 			"height":0.2,
@@ -11,39 +11,39 @@
 		},
 		{
 			"id":1,
-			"translation":[-0.05,0,0],
-			"rotation":0.0,
-			"width":0.05,
-			"height":0.15,
-			"child":[]
-		},
-		{
-			"id":2,
-			"translation":[0.05,0,0],
-			"rotation":0.0,
-			"width":0.05,
-			"height":0.15,
-			"child":[]
-		},
-		{
-			"id":3,
-			"translation":[-0.05,0.09,0],
-			"rotation":0.0,
+			"translation":[-0.075,0.2,0.0],
+			"rotation":180.0,
 			"width":0.05,
 			"height":0.15,
 			"child":[6]
 		},
 		{
-			"id":4,
-			"translation":[0.05,0.09,0],
-			"rotation":0.0,
+			"id":2,
+			"translation":[0.075,0.2,0.0],
+			"rotation":180.0,
 			"width":0.05,
 			"height":0.15,
 			"child":[7]
 		},
 		{
+			"id":3,
+			"translation":[-0.025,0.0,0.0],
+			"rotation":180.0,
+			"width":0.05,
+			"height":0.15,
+			"child":[]
+		},
+		{
+			"id":4,
+			"translation":[0.025,0.0,0.0],
+			"rotation":180.0,
+			"width":0.05,
+			"height":0.15,
+			"child":[]
+		},
+		{
 			"id":5,
-			"translation":[0,0.1,0],
+			"translation":[0.0,0.2,0.0],
 			"rotation":0.0,
 			"width":0.1,
 			"height":0.1,
@@ -51,7 +51,7 @@
 		},
 		{
 			"id":6,
-			"translation":[0,-0.15,0],
+			"translation":[-0.0,0.05,0.0],
 			"rotation":0.0,
 			"width":0.05,
 			"height":0.05,
@@ -59,9 +59,10 @@
 		},
 		{
 			"id":7,
+			"translation":[0.0,0.05,0.0],
 			"rotation":0.0,
 			"width":0.05,
-			"height":0.15,
+			"height":0.05,
 			"child":[]
 		}
 	]

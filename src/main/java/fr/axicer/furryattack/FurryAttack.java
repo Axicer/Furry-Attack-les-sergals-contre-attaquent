@@ -17,7 +17,6 @@ import org.lwjgl.system.MemoryStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fr.axicer.furryattack.entity.control.Controller;
 import fr.axicer.furryattack.entity.modelised.ModelisedEntity;
 import fr.axicer.furryattack.map.MapManager;
 import fr.axicer.furryattack.render.Renderable;
@@ -52,7 +51,7 @@ public class FurryAttack implements Renderable, Updateable{
 	private EventManager eventManager;
 	private LanguageManager langManager;
 	private MapManager mapManager;
-	private Controller controller;
+//	private Controller controller;
 	
 	private Logger logger = LoggerFactory.getLogger(FurryAttack.class);
 	
@@ -85,7 +84,7 @@ public class FurryAttack implements Renderable, Updateable{
 		renderer = new Renderer();
 		mapManager = new MapManager();
 		
-		e = new ModelisedEntity("/entity/mono.part", "/entity/mono.model", "/entity/mono.anim");
+		e = new ModelisedEntity("/entity/character.part", "/entity/character.model", "/entity/character.anim");
 		//TODO
 		//controller = new Controller(new CharacterOld(Species.FOX, Color.WHITE, Color.BLACK, ""));
 		

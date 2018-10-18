@@ -32,6 +32,9 @@ public class ModelisedEntity extends Entity{
     	this.animation.update();
     	//then recalculate all the parts data
     	this.rootPart.updateData();
+    	//the calculate root transform
+    	//get the part with ID 0 which is the first and calculate root transform from empty matrix and rotation
+    	this.rootPart.calculateRootBindTransform(null);
     }
     
     public void render() {

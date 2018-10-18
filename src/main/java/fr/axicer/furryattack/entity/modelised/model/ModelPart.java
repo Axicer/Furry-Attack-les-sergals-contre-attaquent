@@ -26,11 +26,12 @@ import fr.axicer.furryattack.render.textures.Texture;
  */
 public class ModelPart {
 
-	private static final int TMP_TILE_SIZE = 1000;
+	private static final int TMP_TILE_SIZE = 500;
 	
+	private ModelPart parent;
     private float rotation;
-    private Matrix4f localBindTransform;
-    private Matrix4f rootBindTransform;
+    private Vector3f translation;
+    private Matrix4f modelMatrix;
     private float width;
     private float height;
     private Texture texture;
@@ -55,10 +56,11 @@ public class ModelPart {
      * @param localBindTransform {@link Matrix4f} local bind transform
      * @param childs int[] data to inflate later
      */
-    public ModelPart(ModelisedEntity entity, int partID, PartHolder partholder, float width, float height, float rotation, Texture texture, Matrix4f localBindTransform, int... childs) {
+    public ModelPart(ModelisedEntity entity, int partID, PartHolder partholder, float width, float height, float rotation, Texture texture, Vector3f translation, int... childs) {
         this.rotation = rotation;
-        this.localBindTransform = localBindTransform;
-        this.rootBindTransform = new Matrix4f().identity();
+        this.parent = null;
+        this.translation = translation;
+        this.modelMatrix = new Matrix4f().identity();
         this.width = width * TMP_TILE_SIZE;
         this.height = height * TMP_TILE_SIZE;
         this.texture = texture;
@@ -73,7 +75,7 @@ public class ModelPart {
 		shader.bind();
 		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 		shader.setUniformMat4f("viewMatrix", FurryAttack.getInstance().viewMatrix);
-		shader.setUniformMat4f("modelMatrix", rootBindTransform);
+		shader.setUniformMat4f("modelMatrix", modelMatrix);
 		//size is given as tile size
 		shader.setUniformf("width", width);
 		shader.setUniformf("height", height);
@@ -124,12 +126,12 @@ public class ModelPart {
         return this.height;
     }
 
-    public Matrix4f getLocalBindTransform() {
-        return this.localBindTransform;
+    public Vector3f getTranslation() {
+        return this.translation;
     }
 
     public Matrix4f getRootBindTransform() {
-        return this.rootBindTransform;
+        return this.modelMatrix;
     }
 
     public Texture getTexture() {
@@ -144,8 +146,8 @@ public class ModelPart {
     	this.rotation = value;
     }
 
-    public void setLocalBindTransform(Matrix4f value) {
-    	this.localBindTransform = value;
+    public void setTranslation(Vector3f value) {
+    	this.translation = value;
     }
 
     public void setTexture(Texture texture) {
@@ -165,22 +167,22 @@ public class ModelPart {
      * @param parentRoottransform {@link Matrix4f} parent transform
      * @param parentRotation float parent rotation
      */
-    protected void calculateRootBindTransform(Matrix4f parentRoottransform, float parentRotation) {
-    	float rot = this.rotation + parentRotation;
-    	//get parent translation
-    	Vector3f parenttranslation = parentRoottransform.getTranslation(new Vector3f());
-    	//get our local translation
-    	Vector3f localTranslation= localBindTransform.getTranslation(new Vector3f()).rotateZ((float)Math.toRadians(parentRotation));
-    	//we add our translations
-    	Vector3f translate = parenttranslation.add(localTranslation, new Vector3f()).mul(TMP_TILE_SIZE);
-		//calc root bind transform
-		this.rootBindTransform = new Matrix4f().translate(translate);
+    public void calculateRootBindTransform(ModelPart parent) {
+    	this.parent = parent;
+    	//get our new local translation rotated
+    	Vector3f localTranslation= new Vector3f(translation).rotateZ(parent == null ? 0 :(float)Math.toRadians(parent.getRotation()));
+		Vector3f newTranslation = localTranslation.add(parent == null ? new Vector3f() : parent.getTranslation()).mul(TMP_TILE_SIZE);
+    	//calc model Matrix
+		this.modelMatrix.identity().translate(newTranslation);
+		
+		if(partID == 7) {
+			//TODO
+			System.out.println(modelMatrix);
+		}
 		//recursively call calculation
 		for(ModelPart part : childs) {
-			part.calculateRootBindTransform(this.localBindTransform, rot);
+			part.calculateRootBindTransform(this);
 		}
-		this.rootBindTransform.rotateZ((float)Math.toRadians(rot));
-		
     }
     
     /**
@@ -198,17 +200,16 @@ public class ModelPart {
 		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, vertexBuffer);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 
+		modelMatrix.rotateZ((float)Math.toRadians(rotation + (parent != null ? parent.getRotation() : 0f))); 
+		
 		//then update shader data
 		shader.bind();
-		shader.setUniformMat4f("modelMatrix", rootBindTransform);
+		shader.setUniformMat4f("modelMatrix", modelMatrix);
 		//size is given as tile size
 		shader.setUniformf("width", width);
 		shader.setUniformf("height", height);
 		shader.setUniformvec4f("textureBounds", partholder.getPart(partID).getBounds());
 		shader.unbind();
-
-		//get the part with ID 0 which is the first and calculate root transform from empty matrix and rotation
-		entity.getSpecificModelPart(0).calculateRootBindTransform(new Matrix4f().identity(), 0f);
 		
 		//render recursively
 		for(ModelPart child : childs)child.updateData();

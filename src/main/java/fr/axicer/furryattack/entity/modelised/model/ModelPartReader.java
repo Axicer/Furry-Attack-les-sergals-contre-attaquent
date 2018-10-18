@@ -3,7 +3,7 @@ package fr.axicer.furryattack.entity.modelised.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -44,7 +44,7 @@ public class ModelPartReader {
 		    		float width = (float)(double)modelData.get("width");
 		    		float height = (float)(double)modelData.get("height");
 		    		JSONArray translation = (JSONArray) modelData.get("translation");
-		    		Matrix4f localBindTransform = new Matrix4f().identity().translate((float)(double)translation.get(0), (float)(double)translation.get(1), (float)(double)translation.get(2));
+		    		Vector3f localTransform = new Vector3f((float)(double)translation.get(0), (float)(double)translation.get(1), (float)(double)translation.get(2));
 		    		JSONArray childs = (JSONArray)modelData.get("child");
 		    		int[] childArray = new int[childs.size()];
 		    		for(int i = 0 ; i < childArray.length; i++) {
@@ -52,7 +52,7 @@ public class ModelPartReader {
 		    		}
 		    		
 		    		//create modelPart
-		    		ModelPart part = new ModelPart(entity, id, partholder, width, height, rotation, tex, localBindTransform, childArray);
+		    		ModelPart part = new ModelPart(entity, id, partholder, width, height, rotation, tex, localTransform, childArray);
 		    		tmppart.add(part);
 				}
 			});

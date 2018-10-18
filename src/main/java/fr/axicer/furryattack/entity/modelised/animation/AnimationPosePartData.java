@@ -1,5 +1,5 @@
 package fr.axicer.furryattack.entity.modelised.animation;
-import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -17,7 +17,7 @@ public class AnimationPosePartData {
     private float rotation;
     private float width;
     private float height;
-    private Matrix4f localBindTransform;
+    private Vector3f localTransform;
 
     /**
      * constructor of this data, parse the {@link JSONObject} given in parameters as a pose data
@@ -31,9 +31,9 @@ public class AnimationPosePartData {
     		this.height = json.containsKey("height") ? (float)(double)json.get("height") : -1;
     		if(json.containsKey("translation")) {
     			JSONArray translation = (JSONArray) json.get("translation");
-    			this.localBindTransform = new Matrix4f().identity().translate((float)(double)translation.get(0), (float)(double)translation.get(1), (float)(double)translation.get(2));
+    			this.localTransform = new Vector3f((float)(double)translation.get(0), (float)(double)translation.get(1), (float)(double)translation.get(2));
     		}else {
-    			this.localBindTransform = null;
+    			this.localTransform = null;
     		}
     	}catch(Exception e) {
     		//if any exception is detected when parsing then set ID to -1 (which means invalid pose)
@@ -52,7 +52,7 @@ public class AnimationPosePartData {
 	    	if(rotation != -1)target.setRotation(rotation);
 	    	if(width != -1)target.setWidth(width);
 	    	if(height != -1)target.setHeight(height);
-	    	if(localBindTransform != null)target.setLocalBindTransform(localBindTransform);
+	    	if(localTransform != null)target.setTranslation(localTransform);
     	}else {
     		System.out.println("UNABLE TO LOAD POSE TO A ENTITY WITHOUT THE GIVEN ID FOR MODELPART");
     	}
