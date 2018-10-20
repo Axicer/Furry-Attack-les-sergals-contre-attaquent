@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.joml.Vector2f;
+import org.joml.Vector4f;
+import org.json.simple.JSONArray;
 import org.lwjgl.glfw.GLFW;
 
 public class Util {
@@ -182,6 +185,50 @@ public class Util {
 			return "UNKNOWN";
 		}else {
 			return String.valueOf((char) val);
+		}
+	}
+	
+	/**
+	 * Cast a JSON array of float to a {@link Vector4f}
+	 * @param array {@link JSONArray} of float
+	 * @return {@link Vector4f} or null if a parsing error occurs
+	 */
+	public static Vector4f fromJSONToVector4f(JSONArray array) {
+		//preconditions check
+		if(array == null)return null;
+		if(array.size() != 4)return null;
+		try {
+			//get all values
+			float x = (float)(double)array.get(0);
+			float y = (float)(double)array.get(1);
+			float z = (float)(double)array.get(2);
+			float w = (float)(double)array.get(3);
+			//return a new vector
+			return new Vector4f(x, y, z, w);
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**
+	 * Cast a JSON array of float to a {@link Vector2f}
+	 * @param array {@link JSONArray} of float
+	 * @return {@link Vector2f} or null if a parsing error occurs
+	 */
+	public static Vector2f fromJSONToVector2f(JSONArray array) {
+		//preconditions check
+		if(array == null)return null;
+		if(array.size() != 2)return null;
+		try {
+			//get all values
+			float x = (float)(double)array.get(0);
+			float y = (float)(double)array.get(1);
+			//return a new vector
+			return new Vector2f(x, y);
+		}catch(Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 }

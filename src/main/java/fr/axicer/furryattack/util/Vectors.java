@@ -29,4 +29,30 @@ public class Vectors {
 	public static final Vector3f RIGHT_3F = new Vector3f(1,0,0);
 	public static final Vector3f FRONT_3F = new Vector3f(0,0,1);
 	public static final Vector3f BACK_3F = new Vector3f(0,0,-1);
+	
+	/**
+	 * Rotate the current vector by a given angle
+	 * @param v {@link Vector2f} to rotate
+	 * @param rot {@link Float} angle in radians
+	 * @return the given {@link Vector2f} rotated
+	 */
+	public static Vector2f rotate(Vector2f v, float rot) {
+		float x = (float) (v.x*Math.cos(rot)-v.y*Math.sin(rot));
+		float y = (float) (v.x*Math.sin(rot)+v.y*Math.cos(rot));
+		v.x = x;
+		v.y = y;
+		return v;
+	}
+	
+	/**
+	 * Rotate the current vector by a given angle and get a copy
+	 * @param v {@link Vector2f} to rotate
+	 * @param rot {@link Float} angle in radians
+	 * @return a new {@link Vector2f} corresponding to the given vector rotated
+	 */
+	public static Vector2f rotateCopy(Vector2f v, float rot) {
+		Vector2f copy = new Vector2f(v);
+		rotate(copy, rot);
+		return copy;
+	}
 }

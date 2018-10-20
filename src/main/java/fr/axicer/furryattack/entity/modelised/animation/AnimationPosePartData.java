@@ -1,10 +1,11 @@
 package fr.axicer.furryattack.entity.modelised.animation;
-import org.joml.Vector3f;
+import org.joml.Vector2f;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import fr.axicer.furryattack.entity.modelised.ModelisedEntity;
 import fr.axicer.furryattack.entity.modelised.model.ModelPart;
+import fr.axicer.furryattack.util.Util;
 
 /**
  * A single part data for a specified animation class
@@ -17,7 +18,7 @@ public class AnimationPosePartData {
     private float rotation;
     private float width;
     private float height;
-    private Vector3f localTransform;
+    private Vector2f localTransform;
 
     /**
      * constructor of this data, parse the {@link JSONObject} given in parameters as a pose data
@@ -31,7 +32,7 @@ public class AnimationPosePartData {
     		this.height = json.containsKey("height") ? (float)(double)json.get("height") : -1;
     		if(json.containsKey("translation")) {
     			JSONArray translation = (JSONArray) json.get("translation");
-    			this.localTransform = new Vector3f((float)(double)translation.get(0), (float)(double)translation.get(1), (float)(double)translation.get(2));
+    			this.localTransform = Util.fromJSONToVector2f(translation);
     		}else {
     			this.localTransform = null;
     		}

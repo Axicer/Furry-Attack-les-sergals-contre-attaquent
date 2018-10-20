@@ -3,16 +3,11 @@ package fr.axicer.furryattack.entity.modelised.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joml.Vector3f;
+import org.joml.Vector2f;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 import fr.axicer.furryattack.entity.modelised.ModelisedEntity;
-import fr.axicer.furryattack.render.textures.Texture;
 import fr.axicer.furryattack.util.Util;
 
 /**
@@ -29,49 +24,70 @@ public class ModelPartReader {
 	 * @return the root of all the parts which should be id 0
 	 */
     @SuppressWarnings("unchecked")
-	public static ModelPart create(ModelisedEntity entity, PartHolder partholder, String modelPath) {
+	public static ModelPart create(ModelisedEntity entity, JSONObject modelJson) {
     	try {
-			JSONObject modelJson = (JSONObject)new JSONParser().parse(Util.getStringFromInputStream(ModelPartReader.class.getResourceAsStream(modelPath)));
-			Texture tex = Texture.loadTexture((String) modelJson.get("texture"), GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
-			List<ModelPart> tmppart = new ArrayList<>();
-			JSONArray models = (JSONArray) modelJson.get("model");
-			models.forEach(obj ->{
+    		//load the bound holder
+    		String holderPath = (String) modelJson.getOrDefault("part", null);
+    		ModelPartBoundHolder holder = new ModelPartBoundHolder(holderPath);
+			//create a list of loaded parts
+			List<ModelPart> loadedParts = new ArrayList<>();
+			//read parts array
+			JSONArray partsModelsArray = (JSONArray) modelJson.getOrDefault("model", null);
+			//if null then return null
+			if(partsModelsArray == null)return null;
+			//iterate through each object readed
+			for(Object obj : partsModelsArray) {
+				//cats as a jsonObject
 				JSONObject modelData = (JSONObject)obj;
-				int id = (int)(long)modelData.get("id");
-				if(partholder.getPart(id) != null) {
-					//get data
-					float rotation = (float)(double)modelData.get("rotation");
-		    		float width = (float)(double)modelData.get("width");
-		    		float height = (float)(double)modelData.get("height");
-		    		JSONArray translation = (JSONArray) modelData.get("translation");
-		    		Vector3f localTransform = new Vector3f((float)(double)translation.get(0), (float)(double)translation.get(1), (float)(double)translation.get(2));
-		    		JSONArray childs = (JSONArray)modelData.get("child");
-		    		int[] childArray = new int[childs.size()];
+				//read the id
+				int id = (int)(long)modelData.getOrDefault("id", -1);
+				//if -1 then do not load this part
+				if(id == -1)continue;
+				//else read data
+				float rotation = (float)(double)modelData.getOrDefault("rotation", 0f);
+				//load sizes times map's tile size
+	    		float width = (float)(double)modelData.getOrDefault("width", 0f)*ModelPart.TMP_TILE_SIZE;
+	    		float height = (float)(double)modelData.getOrDefault("height", 0f)*ModelPart.TMP_TILE_SIZE;
+	    		
+	    		//load translation
+	    		JSONArray translationArray = (JSONArray) modelData.getOrDefault("translation", null);
+	    		Vector2f translation = Util.fromJSONToVector2f(translationArray);
+	    		if(translation == null)translation = new Vector2f();
+	    		translation.mul(ModelPart.TMP_TILE_SIZE);
+	    		
+	    		//load child array
+	    		JSONArray childs = (JSONArray)modelData.getOrDefault("child", null);
+	    		int[] childArray = new int[0];
+	    		if(childs != null) {
+		    		childArray = new int[childs.size()];
 		    		for(int i = 0 ; i < childArray.length; i++) {
 		    			childArray[i] = (int)(long)childs.get(i);
 		    		}
-		    		
-		    		//create modelPart
-		    		ModelPart part = new ModelPart(entity, id, partholder, width, height, rotation, tex, localTransform, childArray);
-		    		tmppart.add(part);
-				}
-			});
+	    		}
+	    		
+	    		//create modelPart
+	    		ModelPart part = new ModelPart(entity, id, width, height, rotation, translation, holder, childArray);
+	    		//and add part to loaded ones
+	    		loadedParts.add(part);
+			}
 			ModelPart p = null;
 			//get the part width id 0 which is the root
-			for(ModelPart part : tmppart) {
+			for(ModelPart part : loadedParts) {
 				//inflate data to part
-				part.inflate(tmppart);
+				part.inflate(loadedParts);
 				//check for id ==0
-				if(part.getID()==0) {
-					//and return it
+				if(part.partID==0) {
+					//and set it
 					p = part;
 				}
 			}
 			return p;
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
     	return null;
     }
+    
+    
 
 }

@@ -8,7 +8,6 @@ import java.util.List;
 import org.joml.Math;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
@@ -18,6 +17,7 @@ import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.entity.modelised.ModelisedEntity;
 import fr.axicer.furryattack.render.shaders.CharacterPartShader;
 import fr.axicer.furryattack.render.textures.Texture;
+import fr.axicer.furryattack.util.Vectors;
 
 /**
  * Model part class
@@ -26,19 +26,20 @@ import fr.axicer.furryattack.render.textures.Texture;
  */
 public class ModelPart {
 
-	private static final int TMP_TILE_SIZE = 500;
+	public static final int TMP_TILE_SIZE = 500;
 	
-	private ModelPart parent;
-    private float rotation;
-    private Vector3f translation;
-    private Matrix4f modelMatrix;
+	private List<ModelPart> childs;
+
+	private float rotation;
+	private float rootRotation;
+    private Vector2f translation;
+    private Vector2f rootTranslation;
     private float width;
     private float height;
-    private Texture texture;
-    private int partID;
-    private List<ModelPart> childs;
+    protected int partID;
+    private Matrix4f modelMatrix;
     private int[] childsData;
-    public PartHolder partholder;
+    private ModelPartBoundHolder boundHolder;
 	private ModelisedEntity entity;
 
     private CharacterPartShader shader;
@@ -56,19 +57,21 @@ public class ModelPart {
      * @param localBindTransform {@link Matrix4f} local bind transform
      * @param childs int[] data to inflate later
      */
-    public ModelPart(ModelisedEntity entity, int partID, PartHolder partholder, float width, float height, float rotation, Texture texture, Vector3f translation, int... childs) {
+    public ModelPart(ModelisedEntity entity, int partID, float width, float height, float rotation, Vector2f translation, ModelPartBoundHolder boundHolder, int... childs) {
+    	this.entity = entity;
+    	this.partID = partID;
+    	this.width = width;
+    	this.height = height;
         this.rotation = rotation;
-        this.parent = null;
+        this.rootRotation = 0f;
+        this.rootTranslation = new Vector2f();
         this.translation = translation;
-        this.modelMatrix = new Matrix4f().identity();
-        this.width = width * TMP_TILE_SIZE;
-        this.height = height * TMP_TILE_SIZE;
-        this.texture = texture;
-        this.partID = partID;
-        this.partholder = partholder;
-        this.entity = entity;
+        this.boundHolder = boundHolder;
+
         this.childs = new ArrayList<>();
         this.childsData = childs;        
+        
+        this.modelMatrix = new Matrix4f().identity();
         this.shader = new CharacterPartShader();
         
     	//store shader data
@@ -80,7 +83,7 @@ public class ModelPart {
 		shader.setUniformf("width", width);
 		shader.setUniformf("height", height);
 		shader.setUniformi("tex", 0);
-		shader.setUniformvec4f("textureBounds", partholder.getPart(partID).getBounds());
+		shader.setUniformvec4f("textureBounds", boundHolder.getBounds(partID));
 		shader.unbind();
 		
 		FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(3);
@@ -88,7 +91,7 @@ public class ModelPart {
 		vertexBuffer.flip();
 		this.VBO = GL15.glGenBuffers();
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.VBO);
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertexBuffer, GL15.GL_STREAM_DRAW);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertexBuffer, GL15.GL_STATIC_DRAW);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
     }
     
@@ -102,16 +105,12 @@ public class ModelPart {
     		//check each part given in data
     		for(ModelPart p : data) {
     			//if id matches
-    			if(p.getID() == childsData[i]) {
+    			if(p.partID == childsData[i]) {
     				//add this child
     				this.childs.add(p);
     			}
     		}
     	}
-    }
-    
-    public int getID() {
-    	return this.partID;
     }
     
     public float getRotation() {
@@ -126,32 +125,31 @@ public class ModelPart {
         return this.height;
     }
 
-    public Vector3f getTranslation() {
+    public Vector2f getTranslation() {
         return this.translation;
     }
-
-    public Matrix4f getRootBindTransform() {
-        return this.modelMatrix;
-    }
-
-    public Texture getTexture() {
-        return this.texture;
-    }
-
-    public List<ModelPart> getChilds() {
-        return this.childs;
+    
+    public ModelPart getPart(int id) {
+    	//if we are the needed part then return this
+    	if(this.partID == id)return this;
+    	else {
+    		//check for the part in childrens
+    		for(ModelPart part : childs) {
+    			ModelPart p =  part.getPart(id);
+    			//if found then return it
+    			if(p != null)return p;
+    		}
+    		//else return null
+    		return null;
+    	}
     }
 
     public void setRotation(float value) {
     	this.rotation = value;
     }
 
-    public void setTranslation(Vector3f value) {
+    public void setTranslation(Vector2f value) {
     	this.translation = value;
-    }
-
-    public void setTexture(Texture texture) {
-    	this.texture = texture;
     }
 
     public void setWidth(float width) {
@@ -163,25 +161,20 @@ public class ModelPart {
     }
 
     /**
-     * Calculate the root bind transform depending on the parent transform and rotation
-     * @param parentRoottransform {@link Matrix4f} parent transform
-     * @param parentRotation float parent rotation
+     * Calculate this part data depending on the parent
+     * @param parent {@link ModelPart} parent
      */
-    public void calculateRootBindTransform(ModelPart parent) {
-    	this.parent = parent;
-    	//get our new local translation rotated
-    	Vector3f localTranslation= new Vector3f(translation).rotateZ(parent == null ? 0 :(float)Math.toRadians(parent.getRotation()));
-		Vector3f newTranslation = localTranslation.add(parent == null ? new Vector3f() : parent.getTranslation()).mul(TMP_TILE_SIZE);
-    	//calc model Matrix
-		this.modelMatrix.identity().translate(newTranslation);
-		
-		if(partID == 7) {
-			//TODO
-			System.out.println(modelMatrix);
-		}
+    public void updateRecursive(ModelPart parent) {
+    	if(parent != null) {
+    		rootTranslation = parent.rootTranslation.add(Vectors.rotateCopy(translation, (float)Math.toRadians(parent.rootRotation)), new Vector2f());
+    		rootRotation = parent.rootRotation+rotation;
+    	}else {
+    		rootTranslation= translation;
+    		rootRotation = rotation;
+    	}
 		//recursively call calculation
 		for(ModelPart part : childs) {
-			part.calculateRootBindTransform(this);
+			part.updateRecursive(this);
 		}
     }
     
@@ -189,26 +182,17 @@ public class ModelPart {
      * Calculate all bind transforms and data
      */
     public void updateData() {
-    	//update pos VBO
+    	/* ---------- Update shader -------------*/
     	Vector2f pos = entity.getPosition();
-		FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(3);
-		vertexBuffer.put(new float[] {pos.x, pos.y, 0f});
-		vertexBuffer.flip();
-		
-		//simply reset vertex not deleting VBO
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, VBO);
-		GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, vertexBuffer);
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-
-		modelMatrix.rotateZ((float)Math.toRadians(rotation + (parent != null ? parent.getRotation() : 0f))); 
-		
+		modelMatrix.identity().translate(rootTranslation.x+pos.x, rootTranslation.y+pos.y, 0f);
+		modelMatrix.rotateZ((float)Math.toRadians(rootRotation)); 
 		//then update shader data
 		shader.bind();
 		shader.setUniformMat4f("modelMatrix", modelMatrix);
 		//size is given as tile size
 		shader.setUniformf("width", width);
 		shader.setUniformf("height", height);
-		shader.setUniformvec4f("textureBounds", partholder.getPart(partID).getBounds());
+		shader.setUniformvec4f("textureBounds", boundHolder.getBounds(partID));
 		shader.unbind();
 		
 		//render recursively
@@ -221,7 +205,7 @@ public class ModelPart {
 		//defines blend functions
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		//bind the part texture at location 0 (default for this shader)
-		texture.bind(0);
+		entity.getTexture().bind(0);
 		//bind the shader
 		shader.bind();
 		//get the vertex attrib location ID from the shader
@@ -248,20 +232,5 @@ public class ModelPart {
 		
 		//render recursively
 		for(ModelPart child : childs)child.render();
-    }
-    
-    public ModelPart getPart(int id) {
-    	//if we are the needed part then return this
-    	if(this.partID == id)return this;
-    	else {
-    		//check for the part in childrens
-    		for(ModelPart part : childs) {
-    			ModelPart p =  part.getPart(id);
-    			//if found then return it
-    			if(p != null)return p;
-    		}
-    		//else return null
-    		return null;
-    	}
     }
 }

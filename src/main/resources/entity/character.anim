@@ -10,57 +10,7 @@
 					"data":[
 						{
 							"id":0,
-							"rotation":210.0
-						}
-					]
-				},
-				{
-					"duration":60,
-					"visibles":[0,1,2,3,4,5,6,7],
-					"data":[
-						{
-							"id":0,
-							"rotation":240.0
-						}
-					]
-				},
-				{
-					"duration":60,
-					"visibles":[0,1,2,3,4,5,6,7],
-					"data":[
-						{
-							"id":0,
-							"rotation":270.0
-						}
-					]
-				},
-				{
-					"duration":60,
-					"visibles":[0,1,2,3,4,5,6,7],
-					"data":[
-						{
-							"id":0,
-							"rotation":240.0
-						}
-					]
-				},
-				{
-					"duration":60,
-					"visibles":[0,1,2,3,4,5,6,7],
-					"data":[
-						{
-							"id":0,
-							"rotation":210.0
-						}
-					]
-				},
-				{
-					"duration":60,
-					"visibles":[0,1,2,3,4,5,6,7],
-					"data":[
-						{
-							"id":0,
-							"rotation":180.0
+							"rotation":0.0
 						}
 					]
 				}

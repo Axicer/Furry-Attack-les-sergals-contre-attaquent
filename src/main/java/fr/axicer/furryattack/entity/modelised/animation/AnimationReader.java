@@ -5,7 +5,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import fr.axicer.furryattack.entity.modelised.ModelisedEntity;
-import fr.axicer.furryattack.entity.modelised.model.PartReader;
 import fr.axicer.furryattack.util.Util;
 
 /**
@@ -22,7 +21,7 @@ public class AnimationReader {
 	 * @return
 	 */
     public static Animation create(ModelisedEntity entity, String animPath) {
-    	String jsonString = Util.getStringFromInputStream(PartReader.class.getResourceAsStream(animPath));
+    	String jsonString = Util.getStringFromInputStream(AnimationReader.class.getResourceAsStream(animPath));
 		try {
 			JSONObject jobj = (JSONObject) new JSONParser().parse(jsonString);
 			return new Animation(entity, jobj);

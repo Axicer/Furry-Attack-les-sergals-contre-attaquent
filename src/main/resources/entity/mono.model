@@ -1,9 +1,10 @@
 {
-	"texture":"/img/species/defaultSkin.png"
+	"texture":"/img/species/defaultSkin.png",
+	"part":"/entity/mono.part",
 	"model":[
 		{
 			"id":0,
-			"translation":[0.0,0.0,0.0],
+			"translation":[0.0,0.0],
 			"rotation":0.0,
 			"width":0.1,
 			"height":0.2,
@@ -11,7 +12,7 @@
 		},
 		{
 			"id":1,
-			"translation":[0.02, 0.18, 0.0],
+			"translation":[0.1, 0.2],
 			"rotation":180.0,
 			"width":0.05,
 			"height":0.15,
