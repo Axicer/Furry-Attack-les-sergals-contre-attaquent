@@ -57,29 +57,34 @@ public class Controller implements Updateable, Renderable, EventListener{
 		
 		//add direction to the vector
 		if(KeyboardHandler.isKeyDown(c.getInt(ControlConfigGenerator.UP_CONTROL_ID, GLFW.GLFW_KEY_Z))) {
+			//TODO remove when collision will be done
 			//do not move the character just make him look upward
-			//vec.add(0f, SPEED);
+			entity.getAccelerationVector().add(0f, SPEED);
 		}
 		if(KeyboardHandler.isKeyDown(c.getInt(ControlConfigGenerator.LEFT_CONTROL_ID, GLFW.GLFW_KEY_Q))) {
 			entity.getAccelerationVector().add(-SPEED,0f);
 		}
 		if(KeyboardHandler.isKeyDown(c.getInt(ControlConfigGenerator.DOWN_CONTROL_ID, GLFW.GLFW_KEY_S))) {
+			//TODO remove movement when collision will be done
 			//do not move the character just make him look downward
-			//vec.add(0f, -SPEED);
+			entity.getAccelerationVector().add(0f, -SPEED);
 		}
 		if(KeyboardHandler.isKeyDown(c.getInt(ControlConfigGenerator.RIGHT_CONTROL_ID, GLFW.GLFW_KEY_D))) {
 			entity.getAccelerationVector().add(SPEED, 0f);
 		}
 		if(entity.isOnGround() && KeyboardHandler.isKeyDown(c.getInt(ControlConfigGenerator.JUMP_CONTROL_ID, GLFW.GLFW_KEY_SPACE))) {
-			entity.getAccelerationVector().add(0f, 9*SPEED);
-			entity.setOnGround(false);
+			entity.getAccelerationVector().add(0f, SPEED);
+			//TODO apply gravity when collision will be done
+//			entity.setGrounded(false);
 		}
 		if(KeyboardHandler.isKeyDown(c.getInt(ControlConfigGenerator.SHIFT_CONTROL_ID, GLFW.GLFW_KEY_LEFT_SHIFT))) {
+			//TODO delete movement just change shift status
+			entity.getAccelerationVector().add(0f, -SPEED);
 			//do not move, just make him shift
-			entity.setShifted(true);
+//			entity.setShifted(true);
 		}else {
 			//unshift entity
-			entity.setShifted(false);
+//			entity.setShifted(false);
 		}
 		
 		
@@ -91,9 +96,7 @@ public class Controller implements Updateable, Renderable, EventListener{
 	}
 
 	public void onMousePressed(MousePressedEvent ev) {
-		if(ev.getMouseButton() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-			entity.getGun().fire();
-		}
+		//TODO gun management
 	}
 	
 	@Override

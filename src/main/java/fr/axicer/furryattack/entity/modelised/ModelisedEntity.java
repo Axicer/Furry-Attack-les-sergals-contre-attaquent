@@ -8,6 +8,7 @@ import fr.axicer.furryattack.entity.Entity;
 import fr.axicer.furryattack.entity.Species;
 import fr.axicer.furryattack.entity.modelised.animation.Animation;
 import fr.axicer.furryattack.entity.modelised.animation.AnimationReader;
+import fr.axicer.furryattack.entity.modelised.animation.AnimationType;
 import fr.axicer.furryattack.entity.modelised.model.ModelPart;
 import fr.axicer.furryattack.entity.modelised.model.ModelPartReader;
 import fr.axicer.furryattack.render.textures.Texture;
@@ -42,6 +43,16 @@ public class ModelisedEntity extends Entity{
     }
     
     public void update() {
+    	//set entity's animation type
+		if(onGround) {
+			if(acc.x == 0) {
+				animation.setActualAnimationType(shifted ? AnimationType.SNEAK : AnimationType.IDLE);
+			}else {
+				animation.setActualAnimationType(AnimationType.WALK);
+			}
+		}else {
+			animation.setActualAnimationType(AnimationType.JUMP);
+		}
     	//update model state and other data
     	this.animation.update();
     	//then recalculate all the parts data
