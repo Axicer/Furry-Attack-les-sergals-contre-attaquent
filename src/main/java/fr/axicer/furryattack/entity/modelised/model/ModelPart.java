@@ -26,7 +26,7 @@ import fr.axicer.furryattack.util.Vectors;
  */
 public class ModelPart {
 
-	public static final int TMP_TILE_SIZE = 500;
+	public static final int TMP_TILE_SIZE = 10;
 	
 	private List<ModelPart> childs;
 

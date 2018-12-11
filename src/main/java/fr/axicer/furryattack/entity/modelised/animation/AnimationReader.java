@@ -24,6 +24,7 @@ public class AnimationReader {
     	String jsonString = Util.getStringFromInputStream(AnimationReader.class.getResourceAsStream(animPath));
 		try {
 			JSONObject jobj = (JSONObject) new JSONParser().parse(jsonString);
+			//return new animation
 			return new Animation(entity, jobj);
 		} catch (ParseException e) {
 			e.printStackTrace();

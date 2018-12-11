@@ -17,6 +17,7 @@ import org.lwjgl.system.MemoryStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fr.axicer.furryattack.entity.Species;
 import fr.axicer.furryattack.entity.control.Controller;
 import fr.axicer.furryattack.entity.modelised.ModelisedEntity;
 import fr.axicer.furryattack.map.MapManager;
@@ -83,11 +84,11 @@ public class FurryAttack implements Renderable, Updateable{
 		renderer = new Renderer();
 		mapManager = new MapManager();
 		
-		controller = new Controller(new ModelisedEntity("/entity/character.part", "/entity/character.model", "/entity/character.anim"));
+		controller = new Controller(new ModelisedEntity(Species.FOX));
 		
 		//only show GUI at first launch
 		renderer.getGUIRenderer().setActivated(false);
-		renderer.getMapRenderer().setActivated(false);
+		renderer.getMapRenderer().setActivated(true);
 	}
 	
 	private void initFrame() {
@@ -150,8 +151,8 @@ public class FurryAttack implements Renderable, Updateable{
 		// bindings available for use.
 		GL.createCapabilities();
 
-		// Set the clear color
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		// Set the clear color to white
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		
 		FontType.initalize(Util.contains(args, "-forcechars"));
 		

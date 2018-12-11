@@ -140,4 +140,8 @@ public abstract class Entity implements Renderable, Updateable, Destroyable{
 		this.shifted = value;
 	}
 	
+	public boolean isReverted() {
+		return revert;
+	}
+	
 }

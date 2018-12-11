@@ -21,12 +21,18 @@ import fr.axicer.furryattack.util.Util;
  */
 public class ModelisedEntity extends Entity{
 
+	private static final String MODEL_EXT = ".model";
+	private static final String ANIM_EXT = ".anim";
+	private static final String PATH_TO_CONFIG = "/entity/";
+	
 	private Animation animation;
     private ModelPart rootPart;
     private Texture texture;
 
-    public ModelisedEntity(String partPath, String modelPath, String animPath) {
-        super(Species.FOX);
+    public ModelisedEntity(Species species) {
+        super(species);
+        String modelPath = PATH_TO_CONFIG+species.toString().toLowerCase()+MODEL_EXT;
+        String animPath = PATH_TO_CONFIG+species.toString().toLowerCase()+ANIM_EXT;
         try {
         	//parse the json file
     		JSONObject modelJson = (JSONObject)new JSONParser().parse(Util.getStringFromInputStream(ModelPartReader.class.getResourceAsStream(modelPath)));
@@ -61,9 +67,15 @@ public class ModelisedEntity extends Entity{
     	this.rootPart.updateRecursive(null);
     }
     
+    @Override
     public void render() {
     	//simply render each parts
     	this.rootPart.render();
+    }
+    
+    @Override
+    public void destroy() {
+    	this.texture.delete();
     }
 
 	public Texture getTexture() {

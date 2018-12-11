@@ -29,6 +29,7 @@ public class ModelPartReader {
     		//load the bound holder
     		String holderPath = (String) modelJson.getOrDefault("part", null);
     		ModelPartBoundHolder holder = new ModelPartBoundHolder(holderPath);
+    		
 			//create a list of loaded parts
 			List<ModelPart> loadedParts = new ArrayList<>();
 			//read parts array
@@ -37,7 +38,7 @@ public class ModelPartReader {
 			if(partsModelsArray == null)return null;
 			//iterate through each object readed
 			for(Object obj : partsModelsArray) {
-				//cats as a jsonObject
+				//cast as a jsonObject
 				JSONObject modelData = (JSONObject)obj;
 				//read the id
 				int id = (int)(long)modelData.getOrDefault("id", -1);

@@ -1,0 +1,79 @@
+{
+	"texture":"/img/species/fox.png",
+	"part":"/entity/fox.part",
+	"model":[
+		{
+			"id":0,
+			"translation":[0.0,		2.0],
+			"rotation":0.0,
+			"width":2.0,
+			"height":3.0,
+			"child":[8,1,2,3,4,5]
+		},
+		{
+			"id":5,
+			"translation":[0.0,		3.0],
+			"rotation":0.0,
+			"width":2.5,
+			"height":2.5,
+			"child":[]
+		},
+		{
+			"id":1,
+			"translation":[-1.0,	3.0],
+			"rotation":180.0,
+			"width":1.0,
+			"height":2.8,
+			"child":[6]
+		},
+		{
+			"id":2,
+			"translation":[1.0,		3.0],
+			"rotation":180.0,
+			"width":1.0,
+			"height":2.8,
+			"child":[7]
+		},
+		{
+			"id":3,
+			"translation":[-0.5,	0.0],
+			"rotation":180.0,
+			"width":1.0,
+			"height":2.0,
+			"child":[]
+		},
+		{
+			"id":4,
+			"translation":[0.5,		0.0],
+			"rotation":180.0,
+			"width":1.0,
+			"height":2.0,
+			"child":[]
+		},
+		{
+			"id":8,
+			"translation":[0.0,		0.0],
+			"rotation":90.0,
+			"width":1.5,
+			"height":2.5,
+			"child":[]
+		},
+		{
+			"id":6,
+			"translation":[0.0,		2.7],
+			"rotation":0.0,
+			"width":1.0,
+			"height":1.0,
+			"child":[]
+		},
+		{
+			"id":7,
+			"translation":[0.0,		2.7],
+			"rotation":0.0,
+			"width":1.0,
+			"height":1.0,
+			"child":[]
+		}
+		
+	]
+}
