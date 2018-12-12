@@ -36,4 +36,8 @@ public class Debugger {
 		shouldCount = false;
 		logger.info("Duration = "+count+" milliseconds");
 	}
+	
+	public static void debug(String text) {
+		logger.info(text);
+	}
 }
