@@ -29,8 +29,11 @@ public class ModelisedEntity extends Entity{
     private ModelPart rootPart;
     private Texture texture;
 
-    public ModelisedEntity(Species species) {
+    public ModelisedEntity(Species species, int x, int y) {
         super(species);
+        //set pos
+        pos.x = x;
+        pos.y = y;
         String modelPath = PATH_TO_CONFIG+species.toString().toLowerCase()+MODEL_EXT;
         String animPath = PATH_TO_CONFIG+species.toString().toLowerCase()+ANIM_EXT;
         try {
@@ -49,6 +52,7 @@ public class ModelisedEntity extends Entity{
     }
     
     public void update() {
+    	super.update();
     	//set entity's animation type
 		if(onGround) {
 			if(acc.x == 0) {

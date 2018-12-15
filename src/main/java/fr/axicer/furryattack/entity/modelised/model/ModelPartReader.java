@@ -8,6 +8,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import fr.axicer.furryattack.entity.modelised.ModelisedEntity;
+import fr.axicer.furryattack.map.TileContainer;
 import fr.axicer.furryattack.util.Util;
 
 /**
@@ -47,14 +48,14 @@ public class ModelPartReader {
 				//else read data
 				float rotation = (float)(double)modelData.getOrDefault("rotation", 0f);
 				//load sizes times map's tile size
-	    		float width = (float)(double)modelData.getOrDefault("width", 0f)*ModelPart.TMP_TILE_SIZE;
-	    		float height = (float)(double)modelData.getOrDefault("height", 0f)*ModelPart.TMP_TILE_SIZE;
+	    		float width = (float)(double)modelData.getOrDefault("width", 0f)*TileContainer.TILE_SIZE;
+	    		float height = (float)(double)modelData.getOrDefault("height", 0f)*TileContainer.TILE_SIZE;
 	    		
 	    		//load translation
 	    		JSONArray translationArray = (JSONArray) modelData.getOrDefault("translation", null);
 	    		Vector2f translation = Util.fromJSONToVector2f(translationArray);
 	    		if(translation == null)translation = new Vector2f();
-	    		translation.mul(ModelPart.TMP_TILE_SIZE);
+	    		translation.mul(TileContainer.TILE_SIZE);
 	    		
 	    		//load child array
 	    		JSONArray childs = (JSONArray)modelData.getOrDefault("child", null);

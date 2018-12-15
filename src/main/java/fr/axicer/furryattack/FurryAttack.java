@@ -82,9 +82,9 @@ public class FurryAttack implements Renderable, Updateable{
 		//TODO check for extension type
 		langManager = new LanguageManager();
 		renderer = new Renderer();
-		
-		controller = new Controller(new ModelisedEntity(Species.FOX));
 		map = new Map(50);
+		
+		controller = new Controller(new ModelisedEntity(Species.FOX, 500, 500));
 		
 		//only show GUI at first launch
 		renderer.getGUIRenderer().setActivated(false);
@@ -242,6 +242,10 @@ public class FurryAttack implements Renderable, Updateable{
 	
 	public LanguageManager getLangManager() {
 		return langManager;
+	}
+	
+	public Map getMap() {
+		return map;
 	}
 	
 	//******************** Launch ********************//

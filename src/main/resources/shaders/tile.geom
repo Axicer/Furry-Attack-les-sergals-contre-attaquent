@@ -21,11 +21,11 @@ void main(){
 
 	createVertex(vec3(0.0, 0.0, -1.0));
 	createVertex(vec3(1.0, 0.0, -1.0));
-	createVertex(vec3(1.0, -1.0, -1.0));
+	createVertex(vec3(1.0, 1.0, -1.0));
 	
 	createVertex(vec3(0.0, 0.0, -1.0));
-	createVertex(vec3(1.0, -1.0, -1.0));
-	createVertex(vec3(0.0, -1.0, -1.0));
+	createVertex(vec3(1.0, 1.0, -1.0));
+	createVertex(vec3(0.0, 1.0, -1.0));
 	
 	EndPrimitive();
 }

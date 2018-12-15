@@ -5,6 +5,7 @@ import org.json.simple.JSONObject;
 
 import fr.axicer.furryattack.entity.modelised.ModelisedEntity;
 import fr.axicer.furryattack.entity.modelised.model.ModelPart;
+import fr.axicer.furryattack.map.TileContainer;
 import fr.axicer.furryattack.util.Util;
 
 /**
@@ -28,8 +29,8 @@ public class AnimationPosePartData {
     	try {
     		this.ID = (int)(long)json.get("id");
     		this.rotation = json.containsKey("rotation") ? (float)(double)json.get("rotation") : -1;
-    		this.width = json.containsKey("width") ? (float)(double)json.get("width") : -1;
-    		this.height = json.containsKey("height") ? (float)(double)json.get("height") : -1;
+    		this.width = json.containsKey("width") ? (float)(double)json.get("width")*TileContainer.TILE_SIZE : -1;
+    		this.height = json.containsKey("height") ? (float)(double)json.get("height")*TileContainer.TILE_SIZE : -1;
     		if(json.containsKey("translation")) {
     			JSONArray translation = (JSONArray) json.get("translation");
     			this.localTransform = Util.fromJSONToVector2f(translation);

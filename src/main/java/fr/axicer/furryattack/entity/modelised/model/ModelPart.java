@@ -13,7 +13,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 
-import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.entity.modelised.ModelisedEntity;
 import fr.axicer.furryattack.render.shaders.CharacterPartShader;
 import fr.axicer.furryattack.render.textures.Texture;
@@ -75,14 +74,12 @@ public class ModelPart {
         this.shader = new CharacterPartShader();
         
     	//store shader data
+        shader.fillShader(modelMatrix);
+        
+        //set default shader value
 		shader.bind();
-		shader.setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
-		shader.setUniformMat4f("viewMatrix", FurryAttack.getInstance().viewMatrix);
-		shader.setUniformMat4f("modelMatrix", modelMatrix);
-		//size is given as tile size
 		shader.setUniformf("width", width);
 		shader.setUniformf("height", height);
-		shader.setUniformi("tex", 0);
 		shader.setUniformvec4f("textureBounds", boundHolder.getBounds(partID));
 		shader.unbind();
 		

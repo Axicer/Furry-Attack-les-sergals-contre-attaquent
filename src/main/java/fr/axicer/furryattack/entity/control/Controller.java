@@ -24,7 +24,7 @@ import fr.axicer.furryattack.util.events.EventListener;
 public class Controller implements Updateable, Renderable, EventListener{
 
 	//default entity speed
-	public static final float SPEED = 2f;
+	public static final float SPEED = 0.1f;
 	//enrolled entity to move
 	private Entity entity;
 	
@@ -56,40 +56,32 @@ public class Controller implements Updateable, Renderable, EventListener{
 		if(entity == null)return;
 		
 		//add direction to the vector
-		if(KeyboardHandler.isKeyDown(c.getInt(ControlConfigGenerator.UP_CONTROL_ID, GLFW.GLFW_KEY_Z))) {
-			//TODO remove when collision will be done
+		if(KeyboardHandler.isKeyDown(c.getInt(ControlConfigGenerator.UP_CONTROL_ID, GLFW.GLFW_KEY_W))) {
 			//do not move the character just make him look upward
-			entity.getAccelerationVector().add(0f, SPEED);
+//			entity.getAccelerationVector().add(0f, SPEED);
 		}
-		if(KeyboardHandler.isKeyDown(c.getInt(ControlConfigGenerator.LEFT_CONTROL_ID, GLFW.GLFW_KEY_Q))) {
+		if(KeyboardHandler.isKeyDown(c.getInt(ControlConfigGenerator.LEFT_CONTROL_ID, GLFW.GLFW_KEY_A))) {
 			entity.getAccelerationVector().add(-SPEED,0f);
 		}
 		if(KeyboardHandler.isKeyDown(c.getInt(ControlConfigGenerator.DOWN_CONTROL_ID, GLFW.GLFW_KEY_S))) {
-			//TODO remove movement when collision will be done
 			//do not move the character just make him look downward
-			entity.getAccelerationVector().add(0f, -SPEED);
+//			entity.getAccelerationVector().add(0f, -SPEED);
 		}
 		if(KeyboardHandler.isKeyDown(c.getInt(ControlConfigGenerator.RIGHT_CONTROL_ID, GLFW.GLFW_KEY_D))) {
 			entity.getAccelerationVector().add(SPEED, 0f);
 		}
 		if(entity.isOnGround() && KeyboardHandler.isKeyDown(c.getInt(ControlConfigGenerator.JUMP_CONTROL_ID, GLFW.GLFW_KEY_SPACE))) {
-			entity.getAccelerationVector().add(0f, SPEED);
-			//TODO apply gravity when collision will be done
+			entity.getAccelerationVector().add(0f, 5*SPEED);
 //			entity.setGrounded(false);
 		}
 		if(KeyboardHandler.isKeyDown(c.getInt(ControlConfigGenerator.SHIFT_CONTROL_ID, GLFW.GLFW_KEY_LEFT_SHIFT))) {
-			//TODO delete movement just change shift status
-			entity.getAccelerationVector().add(0f, -SPEED);
+//			entity.getAccelerationVector().add(0f, -SPEED);
 			//do not move, just make him shift
-//			entity.setShifted(true);
+			entity.setShifted(true);
 		}else {
 			//unshift entity
-//			entity.setShifted(false);
+			entity.setShifted(false);
 		}
-		
-		
-		//move the entity
-		entity.move();
 		
 		//apply any update to the entity
 		entity.update();
