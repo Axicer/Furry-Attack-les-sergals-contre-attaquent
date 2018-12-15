@@ -2,26 +2,7 @@ package fr.axicer.furryattack.map;
 
 import fr.axicer.furryattack.util.debug.Debugger;
 
-public class TileEncoder {
-	
-	/*-------------------- SIMPLE METHODS ---------------------*/
-	
-	public static long setSolid(long tile, int value) {
-		//solid is pos 0
-		return setBit(tile, value, 0);
-	}
-	
-	public static long setColor(long tile, int color) {
-		//set the 4 first octets to the color starting from 0
-		return setNbits(tile, color, 4*8, 0);
-	}
-	
-	public static long setHeal(long tile, int heal) {
-		//set the 3 bits value of heal inside the tile at pos 35
-		return setNbits(tile, heal, 3, 35);
-	}
-	
-	/* -------------------- RAW METHODS ----------------------*/
+public interface TileEncoder {
 	
 	/**
 	 * Set the tile's n bit and set it's value to value
@@ -30,7 +11,7 @@ public class TileEncoder {
 	 * @param n the position of the bit
 	 * @return the modified tile
 	 */
-	public static long setBit(long tile, int value, int n) {
+	public default long setBit(long tile, int value, int n) {
 		if(value != 0 && value != 1) {
 			Debugger.debug("valeur non binaire !");
 			return tile;
@@ -47,7 +28,7 @@ public class TileEncoder {
 	 * @param pos the position of the first bit from LSB
 	 * @return the modified tile
 	 */
-	public static long setNbits(long tile, int value, int n, int pos) {
+	public default long setNbits(long tile, int value, int n, int pos) {
 		long working = tile;
 		//iterate trough each bits
 		for(int i = 0 ; i < n ; i++) {

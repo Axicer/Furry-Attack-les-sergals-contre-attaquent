@@ -10,7 +10,6 @@ public class CharacterPartShader extends AbstractShader{
 		linkAndValidate();
 	}
 
-	@Override
 	public void fillShader() {
 		setUniformMat4f("projectionMatrix", FurryAttack.getInstance().projectionMatrix);
 	    setUniformMat4f("viewMatrix", FurryAttack.getInstance().viewMatrix);

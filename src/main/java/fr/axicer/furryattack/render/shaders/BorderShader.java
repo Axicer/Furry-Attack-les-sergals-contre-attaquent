@@ -6,10 +6,4 @@ public class BorderShader extends AbstractShader{
 		super("border.vert", null, "border.frag");
 		linkAndValidate();
 	}
-	
-	@Override
-	public void fillShader() {
-		// TODO Auto-generated method stub
-		
-	}
 }

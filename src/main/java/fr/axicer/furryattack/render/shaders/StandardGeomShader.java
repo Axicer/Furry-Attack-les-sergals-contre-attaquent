@@ -6,10 +6,4 @@ public class StandardGeomShader extends AbstractShader{
 		super("standardGeom.vert", "standardGeom.geom", "standardGeom.frag");
 		linkAndValidate();
 	}
-
-	@Override
-	public void fillShader() {
-		// TODO Auto-generated method stub
-		
-	}
 }

@@ -1,4 +1,4 @@
-package fr.axicer.furryattack.map;
+package fr.axicer.furryattack.map.old;
 
 import org.lwjgl.opengl.GL11;
 

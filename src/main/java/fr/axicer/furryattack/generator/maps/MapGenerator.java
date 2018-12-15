@@ -12,10 +12,10 @@ import org.json.simple.JSONObject;
 
 import fr.axicer.furryattack.gui.elements.GUIAlignement;
 import fr.axicer.furryattack.gui.elements.GUIImage;
-import fr.axicer.furryattack.map.AbstractMap;
-import fr.axicer.furryattack.map.MapObstacle;
-import fr.axicer.furryattack.map.MapObstaclesTextures;
-import fr.axicer.furryattack.map.MapType;
+import fr.axicer.furryattack.map.old.AbstractMap;
+import fr.axicer.furryattack.map.old.MapObstacle;
+import fr.axicer.furryattack.map.old.MapObstaclesTextures;
+import fr.axicer.furryattack.map.old.MapType;
 import fr.axicer.furryattack.util.Constants;
 import fr.axicer.furryattack.util.config.Configuration;
 

@@ -6,11 +6,4 @@ public class GunShader extends AbstractShader {
 		super("gun.vert", "gun.geom", "gun.frag");
 		linkAndValidate();
 	}
-	
-	@Override
-	public void fillShader() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

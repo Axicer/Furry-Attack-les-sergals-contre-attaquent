@@ -1,4 +1,4 @@
-package fr.axicer.furryattack.map;
+package fr.axicer.furryattack.map.old;
 
 import fr.axicer.furryattack.FurryAttack;
 import fr.axicer.furryattack.generator.maps.MapGenerator;

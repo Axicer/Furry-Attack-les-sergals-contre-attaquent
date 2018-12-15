@@ -1,4 +1,4 @@
-package fr.axicer.furryattack.map;
+package fr.axicer.furryattack.map.old;
 
 import fr.axicer.furryattack.render.Destroyable;
 import fr.axicer.furryattack.render.FrameBuffer;

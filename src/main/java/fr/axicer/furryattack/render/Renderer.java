@@ -1,7 +1,7 @@
 package fr.axicer.furryattack.render;
 
 import fr.axicer.furryattack.gui.render.GuiRenderer;
-import fr.axicer.furryattack.map.MapRenderer;
+import fr.axicer.furryattack.map.old.MapRenderer;
 import fr.axicer.furryattack.util.Constants;
 
 /**

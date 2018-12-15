@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import fr.axicer.furryattack.entity.Species;
 import fr.axicer.furryattack.entity.control.Controller;
 import fr.axicer.furryattack.entity.modelised.ModelisedEntity;
-import fr.axicer.furryattack.map.MapManager;
+import fr.axicer.furryattack.map.Map;
 import fr.axicer.furryattack.render.Renderable;
 import fr.axicer.furryattack.render.Renderer;
 import fr.axicer.furryattack.render.Updateable;
@@ -52,8 +52,8 @@ public class FurryAttack implements Renderable, Updateable{
 	private Renderer renderer;
 	private EventManager eventManager;
 	private LanguageManager langManager;
-	private MapManager mapManager;
 	private Controller controller;
+	private Map map;
 	
 	private Logger logger = LoggerFactory.getLogger(FurryAttack.class);
 	
@@ -82,13 +82,13 @@ public class FurryAttack implements Renderable, Updateable{
 		//TODO check for extension type
 		langManager = new LanguageManager();
 		renderer = new Renderer();
-		mapManager = new MapManager();
 		
 		controller = new Controller(new ModelisedEntity(Species.FOX));
+		map = new Map(50);
 		
 		//only show GUI at first launch
 		renderer.getGUIRenderer().setActivated(false);
-		renderer.getMapRenderer().setActivated(true);
+		renderer.getMapRenderer().setActivated(false);
 	}
 	
 	private void initFrame() {
@@ -219,6 +219,7 @@ public class FurryAttack implements Renderable, Updateable{
 	@Override
 	public void update() {
 		renderer.update();
+		map.update();
 		controller.update();
 	}
 
@@ -226,6 +227,7 @@ public class FurryAttack implements Renderable, Updateable{
 	public void render() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 		renderer.render();
+		map.render();
 		controller.render();
 		glfwSwapBuffers(window); // swap the color buffers
 	}
@@ -240,10 +242,6 @@ public class FurryAttack implements Renderable, Updateable{
 	
 	public LanguageManager getLangManager() {
 		return langManager;
-	}
-	
-	public MapManager getMapManager() {
-		return mapManager;
 	}
 	
 	//******************** Launch ********************//

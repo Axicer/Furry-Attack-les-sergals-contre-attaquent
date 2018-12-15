@@ -1,4 +1,4 @@
-package fr.axicer.furryattack.map;
+package fr.axicer.furryattack.map.old;
 
 /**
  * A simple map with nothing more

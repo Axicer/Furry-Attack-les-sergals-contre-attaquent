@@ -6,10 +6,4 @@ public class TextShader extends AbstractShader{
 		super("text.vert", null, "text.frag");
 		linkAndValidate();
 	}
-	
-	@Override
-	public void fillShader() {
-		// TODO Auto-generated method stub
-		
-	}
 }

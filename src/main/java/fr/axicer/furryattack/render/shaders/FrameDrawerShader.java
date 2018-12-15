@@ -6,10 +6,4 @@ public class FrameDrawerShader extends AbstractShader{
 		super("frameDrawer.vert", "frameDrawer.geom", "frameDrawer.frag");
 		linkAndValidate();
 	}
-
-	@Override
-	public void fillShader() {
-		// TODO Auto-generated method stub
-		
-	}
 }

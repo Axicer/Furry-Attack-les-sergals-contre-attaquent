@@ -139,10 +139,4 @@ public abstract class AbstractShader implements Destroyable{
 		}
 		return string.toString();
 	}
-	
-	/**
-	 * Fill default shader data
-	 * ASSUMING THE SHADER IS BOUND
-	 */
-	public abstract void fillShader();
 }
