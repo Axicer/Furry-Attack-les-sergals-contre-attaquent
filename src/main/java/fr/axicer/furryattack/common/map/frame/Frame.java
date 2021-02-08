@@ -10,11 +10,13 @@ import fr.axicer.furryattack.common.entity.Removable;
 import fr.axicer.furryattack.common.entity.Renderable;
 import fr.axicer.furryattack.common.entity.Updatable;
 import fr.axicer.furryattack.common.events.EventListener;
+import fr.axicer.furryattack.common.map.background.Background;
 import fr.axicer.furryattack.common.map.layout.Layout;
 import fr.axicer.furryattack.util.NumberUtils;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.slf4j.Logger;
@@ -42,6 +44,7 @@ public class Frame implements Renderable, Updatable, Removable, EventListener {
     private final FrameBlock[][] blocks; //all blocks
     private RawModel model;
     private final Layout layout;
+    private Background background;
 
     private boolean showLightFromCursor = false;
     private boolean useDarkBackground = false;
@@ -51,7 +54,7 @@ public class Frame implements Renderable, Updatable, Removable, EventListener {
     public Frame(Layout layout) {
         blocks = new FrameBlock[FRAME_BLOCK_HEIGHT][FRAME_BLOCK_WIDTH];
         this.layout = layout;
-        generateBlocks();
+        generate();
         eventListenerId = FAClient.getEventManager().addListener(this);
     }
 
@@ -75,7 +78,9 @@ public class Frame implements Renderable, Updatable, Removable, EventListener {
                 NumberUtils.toFloatArray(texCoords));
     }
 
-    private void generateBlocks() {
+    private void generate() {
+        background = Background.loadBackground("/img/background1.png", GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
+
         //generate blocks
         for (int y = 0; y < FRAME_BLOCK_HEIGHT; y++) {
             for (int x = 0; x < FRAME_BLOCK_WIDTH; x++) {
@@ -149,6 +154,7 @@ public class Frame implements Renderable, Updatable, Removable, EventListener {
 
     @Override
     public void render() {
+        background.render();
         shader.bind();
         shader.setUniformInt("atlas", 0);
         shader.setUniformVec2f("cursorPos", FAClient.getCursorPos());
