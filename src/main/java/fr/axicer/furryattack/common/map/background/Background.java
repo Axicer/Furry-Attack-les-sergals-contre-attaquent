@@ -2,7 +2,7 @@ package fr.axicer.furryattack.common.map.background;
 
 import fr.axicer.furryattack.client.render.Loader;
 import fr.axicer.furryattack.client.render.RawModel;
-import fr.axicer.furryattack.client.render.Texture;
+import fr.axicer.furryattack.client.render.texture.Texture;
 import fr.axicer.furryattack.common.entity.Removable;
 import fr.axicer.furryattack.common.entity.Renderable;
 import fr.axicer.furryattack.common.entity.Updatable;

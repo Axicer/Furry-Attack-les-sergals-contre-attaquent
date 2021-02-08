@@ -5,7 +5,7 @@ import fr.axicer.furryattack.client.control.MouseButtonHandler;
 import fr.axicer.furryattack.client.control.MouseHandler;
 import fr.axicer.furryattack.client.render.ClientRenderer;
 import fr.axicer.furryattack.client.render.Loader;
-import fr.axicer.furryattack.client.render.TextureAtlas;
+import fr.axicer.furryattack.client.render.texture.TextureAtlas;
 import fr.axicer.furryattack.client.update.ClientUpdater;
 import fr.axicer.furryattack.common.events.EventListener;
 import fr.axicer.furryattack.common.events.EventManager;
@@ -45,7 +45,6 @@ public class FAClient implements EventListener {
     }
 
     private void initGame(){
-        TextureAtlas.getAtlas();//load texture atlas
         final Layout randomLayout = LayoutManager.getRandomLayout(true, true, false, false);
         frame = new Frame(randomLayout);
         frame.loadModel();
@@ -124,7 +123,6 @@ public class FAClient implements EventListener {
 
         stop();
 
-        TextureAtlas.getAtlas().delete();//load texture atlas
         Loader.clearAll();
         renderer.remove();
         updater.remove();

@@ -1,6 +1,6 @@
 package fr.axicer.furryattack.common.map.frame;
 
-import fr.axicer.furryattack.client.render.TextureAtlas;
+import fr.axicer.furryattack.client.render.texture.TextureAtlas;
 import org.joml.Vector2f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,12 +25,16 @@ public class FrameBlock {
         return solid;
     }
 
-    public boolean isNeighborSolid(FrameOrientation orientation){
-        var n = neighbor[orientation.ordinal()];
+    public FrameBlock getNeighbor(FrameOrientation orientation) {
+        return neighbor[orientation.ordinal()];
+    }
+
+    public boolean isNeighborSolid(FrameOrientation orientation) {
+        var n = getNeighbor(orientation);
         return n == null || n.isSolid();
     }
 
-    public void setNeighbor(FrameBlock block, FrameOrientation orientation){
+    public void setNeighbor(FrameBlock block, FrameOrientation orientation) {
         neighbor[orientation.ordinal()] = block;
     }
 
@@ -39,45 +43,86 @@ public class FrameBlock {
     private final List<Integer> leftIndex = Arrays.asList(2, 6, 7, 9, 10, 11, 13, 14);
     private final List<Integer> rightIndex = Arrays.asList(4, 5, 8, 9, 11, 12, 13, 14);
 
-    public Vector2f getTextureCoords(){
+    public Vector2f getBorderTexCoords(TextureAtlas atlas) {
         List<Integer> possible = new ArrayList<>(15);
-        IntStream.rangeClosed(1,15).forEach(possible::add);
+        IntStream.rangeClosed(1, 15).forEach(possible::add);
 
-        if(!isNeighborSolid(FrameOrientation.TOP)){
+        if (!isNeighborSolid(FrameOrientation.TOP)) {
             possible = possible.stream()
                     .filter(topIndex::contains)
                     .collect(Collectors.toList());
-        }else{
+        } else {
             possible.removeAll(topIndex);
         }
-        if(!isNeighborSolid(FrameOrientation.RIGHT)){
+        if (!isNeighborSolid(FrameOrientation.RIGHT)) {
             possible = possible.stream()
                     .filter(rightIndex::contains)
                     .collect(Collectors.toList());
-        }else{
+        } else {
             possible.removeAll(rightIndex);
         }
-        if(!isNeighborSolid(FrameOrientation.BOTTOM)){
+        if (!isNeighborSolid(FrameOrientation.BOTTOM)) {
             possible = possible.stream()
                     .filter(bottomIndex::contains)
                     .collect(Collectors.toList());
-        }else{
+        } else {
             possible.removeAll(bottomIndex);
         }
-        if(!isNeighborSolid(FrameOrientation.LEFT)){
+        if (!isNeighborSolid(FrameOrientation.LEFT)) {
             possible = possible.stream()
                     .filter(leftIndex::contains)
                     .collect(Collectors.toList());
-        }else{
+        } else {
             possible.removeAll(leftIndex);
         }
 
         float x = possible.stream().findFirst().orElse(0);
 
-        return new Vector2f(x/(float)TextureAtlas.ATLAS_COUNT_X,0f);
+        //check for single corner
+        if (x == 0) {
+            FrameBlock bottom = getNeighbor(FrameOrientation.BOTTOM);
+            if (bottom != null) {
+                if (!bottom.isNeighborSolid(FrameOrientation.RIGHT)) {
+                    x = 18;
+                } else if (!bottom.isNeighborSolid(FrameOrientation.LEFT)) {
+                    x = 17;
+                }
+            }
+            FrameBlock top = getNeighbor(FrameOrientation.TOP);
+            if (top != null) {
+                if (!top.isNeighborSolid(FrameOrientation.RIGHT)) {
+                    x = 19;
+                } else if (!top.isNeighborSolid(FrameOrientation.LEFT)) {
+                    x = 16;
+                }
+            }
+        }
+
+        int y = 0;//TODO no variant for the moment
+
+        return new Vector2f(x * atlas.getRatioX(), y * atlas.getRatioY());
     }
 
-    public enum FrameOrientation{
+    public Vector2f getDecorationTexCoord(TextureAtlas atlas) {
+        int x;
+        int y = 0;
+
+        x = (int) Math.floor(Math.random() * atlas.getCountX());
+        y = (int) Math.floor(Math.random() * 2);//TODO add more decoration
+
+        return new Vector2f(x * atlas.getRatioX(), y * atlas.getRatioY());
+    }
+
+    public Vector2f getStoneTexCoord(TextureAtlas atlas) {
+        int x = 0;
+        int y = 0;
+
+        //TODO add more stone variant
+
+        return new Vector2f(x * atlas.getRatioX(), y * atlas.getRatioY());
+    }
+
+    public enum FrameOrientation {
         TOP,
         BOTTOM,
         LEFT,

@@ -4,8 +4,8 @@ import fr.axicer.furryattack.client.FAClient;
 import fr.axicer.furryattack.client.control.KeyPressedEvent;
 import fr.axicer.furryattack.client.render.Loader;
 import fr.axicer.furryattack.client.render.RawModel;
-import fr.axicer.furryattack.client.render.Texture;
-import fr.axicer.furryattack.client.render.TextureAtlas;
+import fr.axicer.furryattack.client.render.texture.Texture;
+import fr.axicer.furryattack.client.render.texture.TextureAtlas;
 import fr.axicer.furryattack.common.entity.Removable;
 import fr.axicer.furryattack.common.entity.Renderable;
 import fr.axicer.furryattack.common.entity.Updatable;
@@ -45,6 +45,9 @@ public class Frame implements Renderable, Updatable, Removable, EventListener {
     private RawModel model;
     private final Layout layout;
     private Background background;
+    private TextureAtlas borderAtlas;
+    private TextureAtlas decorationAtlas;
+    private TextureAtlas stoneAtlas;
 
     private boolean showLightFromCursor = false;
     private boolean useDarkBackground = false;
@@ -63,23 +66,34 @@ public class Frame implements Renderable, Updatable, Removable, EventListener {
 
         //load vertices
         var vertexList = new LinkedList<Float>();
-        var texCoords = new LinkedList<Float>();
+        var borderTexCoords = new LinkedList<Float>();
+        var decorationTexCoords = new LinkedList<Float>();
+        var stoneTexCoords = new LinkedList<Float>();
         for (int y = 0; y < FRAME_BLOCK_HEIGHT; y++) {
             for (int x = 0; x < FRAME_BLOCK_WIDTH; x++) {
                 if (blocks[y][x].isSolid()) {
                     addQuadFloats(vertexList, x, y);
-                    Vector2f texOrigin = blocks[y][x].getTextureCoords();
-                    addTextureFloats(texCoords, texOrigin.x, texOrigin.y);
+                    Vector2f _borderTexCoords = blocks[y][x].getBorderTexCoords(borderAtlas);
+                    Vector2f _decorationTexCoords = blocks[y][x].getDecorationTexCoord(decorationAtlas);
+                    Vector2f _stoneTexCoords = blocks[y][x].getStoneTexCoord(stoneAtlas);
+                    addTextureFloats(borderTexCoords, _borderTexCoords.x, _borderTexCoords.y, borderAtlas.getRatioX(), borderAtlas.getRatioY());
+                    addTextureFloats(decorationTexCoords, _decorationTexCoords.x, _decorationTexCoords.y, decorationAtlas.getRatioX(), decorationAtlas.getRatioY());
+                    addTextureFloats(stoneTexCoords, _stoneTexCoords.x, _stoneTexCoords.y, stoneAtlas.getRatioX(), stoneAtlas.getRatioY());
                 }
             }
         }
 
-        model = Loader.loadToVAO(NumberUtils.toFloatArray(vertexList), 2,
-                NumberUtils.toFloatArray(texCoords));
+        model = Loader.loadFrameToVAO(NumberUtils.toFloatArray(vertexList), 2,
+                NumberUtils.toFloatArray(decorationTexCoords),
+                NumberUtils.toFloatArray(borderTexCoords),
+                NumberUtils.toFloatArray(stoneTexCoords));
     }
 
     private void generate() {
-        background = Background.loadBackground("/img/background1.png", GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
+        background = Background.loadBackground("/img/background.png", GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
+        borderAtlas = TextureAtlas.loadAtlas("/img/atlas/border_atlas.png", 20, 20, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
+        decorationAtlas = TextureAtlas.loadAtlas("/img/atlas/decoration_atlas.png", 20, 20, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
+        stoneAtlas = TextureAtlas.loadAtlas("/img/atlas/stone_atlas.png", 20, 20, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
 
         //generate blocks
         for (int y = 0; y < FRAME_BLOCK_HEIGHT; y++) {
@@ -130,16 +144,16 @@ public class Frame implements Renderable, Updatable, Removable, EventListener {
         vertexList.add(y * BLOCK_HEIGHT);
     }
 
-    private void addTextureFloats(List<Float> textureCoords, float startX, float startY) {
+    private void addTextureFloats(List<Float> textureCoords, float startX, float startY, float ratioX, float ratioY) {
         float[] coord = {
                 //bottom left triangle
-                startX, startY + TextureAtlas.ATLAS_RATIO_Y,
+                startX, startY + ratioY,
                 startX, startY,
-                startX + TextureAtlas.ATLAS_RATIO_X, startY,
+                startX + ratioX, startY,
                 //top right triangle
-                startX + TextureAtlas.ATLAS_RATIO_X, startY,
-                startX + TextureAtlas.ATLAS_RATIO_X, startY + TextureAtlas.ATLAS_RATIO_Y,
-                startX, startY + TextureAtlas.ATLAS_RATIO_Y
+                startX + ratioX, startY,
+                startX + ratioX, startY + ratioY,
+                startX, startY + ratioY
         };
         for (float f : coord) {
             textureCoords.add(f);
@@ -149,6 +163,9 @@ public class Frame implements Renderable, Updatable, Removable, EventListener {
     @Override
     public void remove() {
         model.destroy();
+        stoneAtlas.getTexture().delete();
+        borderAtlas.getTexture().delete();
+        decorationAtlas.getTexture().delete();
         FAClient.getEventManager().removeListener(eventListenerId);
     }
 
@@ -156,21 +173,22 @@ public class Frame implements Renderable, Updatable, Removable, EventListener {
     public void render() {
         background.render();
         shader.bind();
-        shader.setUniformInt("atlas", 0);
-        shader.setUniformVec2f("cursorPos", FAClient.getCursorPos());
-        shader.setUniformFloat("screenWidth", (float)FAClient.getRenderer().getWindowWidth());
-        shader.setUniformFloat("screenHeight", (float)FAClient.getRenderer().getWindowHeight());
-        shader.setUniformBoolean("useCursorLight", showLightFromCursor);
-        shader.setUniformBoolean("useDarkBackground", useDarkBackground);
-        shader.setUniformFloat("lightRadius", cursorLightRadius);
-        shader.setUniformFloat("darkFactor", darkFactor);
-        TextureAtlas.getAtlas().bind(0);
+        shader.setUniformInt("stoneAtlas", 0);
+        stoneAtlas.getTexture().bind(0);
+        shader.setUniformInt("borderAtlas", 1);
+        borderAtlas.getTexture().bind(1);
+        shader.setUniformInt("decorationAtlas", 2);
+        decorationAtlas.getTexture().bind(2);
         GL30.glBindVertexArray(model.getVaoID());
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(1);
+        GL20.glEnableVertexAttribArray(2);
+        GL20.glEnableVertexAttribArray(3);
         GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, model.getVertexCount());
         GL20.glDisableVertexAttribArray(0);
         GL20.glDisableVertexAttribArray(1);
+        GL20.glDisableVertexAttribArray(2);
+        GL20.glDisableVertexAttribArray(3);
         GL30.glBindVertexArray(0);
         Texture.unbind();
         shader.unbind();

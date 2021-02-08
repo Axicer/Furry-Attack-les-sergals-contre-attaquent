@@ -23,6 +23,16 @@ public class Loader {
         unbindVAO();
         return new RawModel(vao, position.length/positionDimensions);
     }
+    public static RawModel loadFrameToVAO(float[] position, int positionDimensions,
+                                     float[] decorationTexCoord, float[] borderTexCoord, float[] stoneTexCoord){
+        int vao = createVAO();
+        storeDataInAttributeList(0, position, positionDimensions);
+        storeDataInAttributeList(1, stoneTexCoord, 2);
+        storeDataInAttributeList(2, borderTexCoord, 2);
+        storeDataInAttributeList(3, decorationTexCoord, 2);
+        unbindVAO();
+        return new RawModel(vao, position.length/positionDimensions);
+    }
 
     public static void clearAll(){
         vaoIds.forEach(GL30::glDeleteVertexArrays);

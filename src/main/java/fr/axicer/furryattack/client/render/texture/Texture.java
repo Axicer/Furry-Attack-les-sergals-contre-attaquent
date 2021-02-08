@@ -1,4 +1,4 @@
-package fr.axicer.furryattack.client.render;
+package fr.axicer.furryattack.client.render.texture;
 
 import org.lwjgl.BufferUtils;
 
