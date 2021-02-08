@@ -104,18 +104,17 @@ public class FrameBlock {
     }
 
     public Vector2f getDecorationTexCoord(TextureAtlas atlas) {
-        int x;
-        int y = 0;
+        int x = (int) Math.floor(Math.random() * atlas.getCountX());
+        int y = (int) Math.floor(Math.random() * 2);
 
-        x = (int) Math.floor(Math.random() * atlas.getCountX());
-        y = (int) Math.floor(Math.random() * 2);//TODO add more decoration
+        //TODO add more decoration
 
         return new Vector2f(x * atlas.getRatioX(), y * atlas.getRatioY());
     }
 
     public Vector2f getStoneTexCoord(TextureAtlas atlas) {
-        int x = 0;
-        int y = 0;
+        int x = (int) Math.floor(Math.random()*5);
+        int y = (int) Math.floor(Math.random()*5);
 
         //TODO add more stone variant
 
