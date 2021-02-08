@@ -1,1 +1,1 @@
-mvn compile exec:java -Dexec.mainClass=fr.axicer.furryattack.FurryAttack -Dexec.args="-vsync" -Dwidth=1366 -Dheight=768
+mvn clean compile exec:java -Dexec.mainClass=fr.axicer.furryattack.bootstrap.Main "-Dexec.args=-w 1366 -h 768"

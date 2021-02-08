@@ -1,17 +1,36 @@
-/src/test/
-/target/
-
-#Eclipse
-/.settings/
-*.classpath
-*.project
-
-# Compiled class file
 *.class
 
-# Log file
-*.log
+# Package Files #
+*.jar
+*.war
+*.ear
+/bin
 
-# virtual machine crash logs
-hs_err_pid*
-/target/
+# Eclipse
+*.classpath
+*.project
+/.settings
+
+# Intellij
+/.idea
+*.iml
+*.iws
+*.ipr
+
+# Mac
+*.DS_Store
+
+# Maven
+/log
+/target
+
+/build.xml
+/build
+/dist
+/manifest.mf
+/dependency-reduced-pom.xml
+*.php~
+
+# Floobits
+*.floo
+*.flooignore
