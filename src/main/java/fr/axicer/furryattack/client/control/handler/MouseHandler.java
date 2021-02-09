@@ -1,4 +1,4 @@
-package fr.axicer.furryattack.client.control;
+package fr.axicer.furryattack.client.control.handler;
 
 import org.lwjgl.glfw.GLFWCursorPosCallbackI;
 

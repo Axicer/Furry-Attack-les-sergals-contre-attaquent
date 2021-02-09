@@ -1,6 +1,8 @@
-package fr.axicer.furryattack.client.control;
+package fr.axicer.furryattack.client.control.handler;
 
 import fr.axicer.furryattack.client.FAClient;
+import fr.axicer.furryattack.client.control.event.MousePressedEvent;
+import fr.axicer.furryattack.client.control.event.MouseReleasedEvent;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 

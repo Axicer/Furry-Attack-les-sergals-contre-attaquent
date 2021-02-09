@@ -1,12 +1,11 @@
 package fr.axicer.furryattack.client.render;
 
 import fr.axicer.furryattack.client.FAClient;
-import fr.axicer.furryattack.client.control.KeyPressedEvent;
+import fr.axicer.furryattack.client.control.event.KeyPressedEvent;
 import fr.axicer.furryattack.common.entity.Removable;
 import fr.axicer.furryattack.common.entity.Renderable;
 import fr.axicer.furryattack.common.events.EventListener;
 import org.joml.Matrix4f;
-import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;

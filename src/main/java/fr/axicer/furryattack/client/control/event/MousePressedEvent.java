@@ -1,4 +1,4 @@
-package fr.axicer.furryattack.client.control;
+package fr.axicer.furryattack.client.control.event;
 
 import fr.axicer.furryattack.common.events.AEvent;
 

@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.Objects;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
@@ -14,14 +15,14 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 public class Texture {
 
-    private final int ID, width, height, wrapMode, filtermode;
+    private final int ID, width, height, wrapMode, filterMode;
 
     public Texture(int id, int width, int height, int wrapMode, int filterMode) {
         this.ID = id;
         this.width = width;
         this.height = height;
         this.wrapMode = wrapMode;
-        this.filtermode = filterMode;
+        this.filterMode = filterMode;
     }
 
     public void bind(int sampler){
@@ -49,8 +50,8 @@ public class Texture {
         return wrapMode;
     }
 
-    public int getFiltermode() {
-        return filtermode;
+    public int getFilterMode() {
+        return filterMode;
     }
 
     private final static int BYTES_PER_PIXEL = 4;
@@ -60,7 +61,6 @@ public class Texture {
     }
 
     public static Texture loadTexture(InputStream stream, int wrapMode, int filterMode){
-
         BufferedImage image = null;
         try {
             image = ImageIO.read(stream);
@@ -68,7 +68,7 @@ public class Texture {
             e.printStackTrace();
         }
 
-        int[] pixels = image.getRGB(0, 0, image.getWidth(), image.getHeight(), null, 0, image.getWidth());
+        int[] pixels = Objects.requireNonNull(image).getRGB(0, 0, image.getWidth(), image.getHeight(), null, 0, image.getWidth());
 
         ByteBuffer buffer = BufferUtils.createByteBuffer(image.getWidth() * image.getHeight() * BYTES_PER_PIXEL); //4 for RGBA, 3 for RGB
 

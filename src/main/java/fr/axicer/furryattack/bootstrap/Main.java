@@ -2,11 +2,8 @@ package fr.axicer.furryattack.bootstrap;
 
 import fr.axicer.furryattack.client.FAClient;
 import fr.axicer.furryattack.client.control.EscapeListener;
-import fr.axicer.furryattack.client.control.KeyPressedEvent;
-import fr.axicer.furryattack.common.events.EventListener;
 import fr.axicer.furryattack.util.NumberUtils;
 import org.apache.commons.cli.*;
-import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

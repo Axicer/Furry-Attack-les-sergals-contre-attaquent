@@ -1,6 +1,7 @@
 package fr.axicer.furryattack.client.control;
 
 import fr.axicer.furryattack.client.FAClient;
+import fr.axicer.furryattack.client.control.event.KeyPressedEvent;
 import fr.axicer.furryattack.common.events.EventListener;
 import org.lwjgl.glfw.GLFW;
 

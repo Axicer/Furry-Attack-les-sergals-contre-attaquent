@@ -1,11 +1,10 @@
 package fr.axicer.furryattack.client;
 
-import fr.axicer.furryattack.client.control.KeyboardHandler;
-import fr.axicer.furryattack.client.control.MouseButtonHandler;
-import fr.axicer.furryattack.client.control.MouseHandler;
+import fr.axicer.furryattack.client.control.handler.KeyboardHandler;
+import fr.axicer.furryattack.client.control.handler.MouseButtonHandler;
+import fr.axicer.furryattack.client.control.handler.MouseHandler;
 import fr.axicer.furryattack.client.render.ClientRenderer;
 import fr.axicer.furryattack.client.render.Loader;
-import fr.axicer.furryattack.client.render.texture.TextureAtlas;
 import fr.axicer.furryattack.client.update.ClientUpdater;
 import fr.axicer.furryattack.common.events.EventListener;
 import fr.axicer.furryattack.common.events.EventManager;
@@ -17,6 +16,8 @@ import org.joml.Vector2f;
 import org.lwjgl.opengl.GL11;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Objects;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -50,6 +51,12 @@ public class FAClient implements EventListener {
         frame.loadModel();
         updater.addUpdatableItem(frame);
         renderer.addRenderableItem(frame);
+    }
+
+    private void cleanUp(){
+        Loader.clearAll();
+        renderer.remove();
+        updater.remove();
     }
 
     public static Vector2f getCursorPos() {
@@ -123,9 +130,7 @@ public class FAClient implements EventListener {
 
         stop();
 
-        Loader.clearAll();
-        renderer.remove();
-        updater.remove();
+        cleanUp();
 
         // Free the window callbacks and destroy the window
         glfwFreeCallbacks(renderer.getWindowID());
@@ -133,7 +138,7 @@ public class FAClient implements EventListener {
 
         // Terminate GLFW and free the error callback
         glfwTerminate();
-        glfwSetErrorCallback(null).free();
+        Objects.requireNonNull(glfwSetErrorCallback(null)).free();
     }
 
     /**
