@@ -2,6 +2,7 @@ package fr.axicer.furryattack.client.control;
 
 import fr.axicer.furryattack.client.FAClient;
 import fr.axicer.furryattack.client.control.event.KeyPressedEvent;
+import fr.axicer.furryattack.client.control.handler.EventHandler;
 import fr.axicer.furryattack.common.events.EventListener;
 import org.lwjgl.glfw.GLFW;
 
@@ -10,12 +11,13 @@ import org.lwjgl.glfw.GLFW;
  */
 public class EscapeListener implements EventListener {
 
-    FAClient client;
+    private final FAClient client;
 
     public EscapeListener(FAClient client) {
         this.client = client;
     }
 
+    @EventHandler
     public void keyPressed(KeyPressedEvent event){
         if(event.getKey() == GLFW.GLFW_KEY_ESCAPE){
             client.stop();

@@ -148,7 +148,7 @@ public class FAClient implements EventListener {
      * Init renderer
      */
     public void init(int width, int height, boolean fullscreen, boolean vsync, int screenID) throws RuntimeException{
-        renderer = new ClientRenderer(this);
+        renderer = new ClientRenderer();
         renderer.createFrame(width, height, fullscreen, vsync, screenID);
         renderer.setProjectionMatrix(width, height);
         renderer.setViewMatrix(new Matrix4f().identity());

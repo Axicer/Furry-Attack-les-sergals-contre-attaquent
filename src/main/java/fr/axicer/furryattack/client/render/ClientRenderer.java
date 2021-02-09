@@ -1,6 +1,7 @@
 package fr.axicer.furryattack.client.render;
 
 import fr.axicer.furryattack.client.FAClient;
+import fr.axicer.furryattack.client.control.handler.EventHandler;
 import fr.axicer.furryattack.client.control.event.KeyPressedEvent;
 import fr.axicer.furryattack.common.entity.Removable;
 import fr.axicer.furryattack.common.entity.Renderable;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.IntBuffer;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -33,14 +35,12 @@ public class ClientRenderer implements Renderable, Removable, EventListener {
     private Matrix4f projectionMatrix, viewMatrix;
     private boolean wireframeMode = false;
 
-    private final FAClient client;
     private final Set<Renderable> renderableSet;
 
-    public ClientRenderer(FAClient client) {
+    public ClientRenderer() {
         frameCreated = false;
         renderableSet = new HashSet<>();
-        this.client = client;
-        client.getEventManager().addListener(this);
+        FAClient.getEventManager().addListener(this);
     }
 
     @SuppressWarnings("IntegerDivisionInFloatingPointContext")
@@ -96,7 +96,7 @@ public class ClientRenderer implements Renderable, Removable, EventListener {
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // the window will not be resizable
         glfwWindowHint(GLFW_DECORATED, fullscreen ? GLFW_FALSE : GLFW_TRUE); //remove decoration
 
-        long screen = glfwGetMonitors().get(screenID);
+        long screen = Objects.requireNonNull(glfwGetMonitors()).get(screenID);
 
         // Create the window
         windowID = glfwCreateWindow(width, height, "Awesome AAA incoming", fullscreen ? screen : NULL, NULL);
@@ -114,14 +114,18 @@ public class ClientRenderer implements Renderable, Removable, EventListener {
             glfwGetWindowSize(windowID, pWidth, pHeight);
 
             // Get the resolution of the primary monitor
-            GLFWVidMode vidmode = glfwGetVideoMode(screen);
+            GLFWVidMode vidMode = glfwGetVideoMode(screen);
 
             // Center the window
-            glfwSetWindowPos(
-                    windowID,
-                    (vidmode.width() - pWidth.get(0)) / 2,
-                    (vidmode.height() - pHeight.get(0)) / 2
-            );
+            if (vidMode != null) {
+                glfwSetWindowPos(
+                        windowID,
+                        (vidMode.width() - pWidth.get(0)) / 2,
+                        (vidMode.height() - pHeight.get(0)) / 2
+                );
+            } else {
+                LOGGER.error("glfwGetVideoMode({}) returned null videoMode :(", screen);
+            }
         } // the stack frame is popped automatically
 
         // Make the OpenGL context current
@@ -158,10 +162,9 @@ public class ClientRenderer implements Renderable, Removable, EventListener {
      * Add an item to render
      *
      * @param toRender {@link Renderable} item to render
-     * @return true if added false otherwise
      */
-    public boolean addRenderableItem(Renderable toRender) {
-        return renderableSet.add(toRender);
+    public void addRenderableItem(Renderable toRender) {
+        renderableSet.add(toRender);
     }
 
     /**
@@ -177,9 +180,9 @@ public class ClientRenderer implements Renderable, Removable, EventListener {
     @Override
     public void render() {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-        if(wireframeMode){
+        if (wireframeMode) {
             GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-        }else{
+        } else {
             GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
         }
         renderableSet.forEach(Renderable::render);
@@ -194,8 +197,9 @@ public class ClientRenderer implements Renderable, Removable, EventListener {
         renderableSet.clear();
     }
 
-    public void onKeyPressed(KeyPressedEvent ev){
-        if(ev.getKey() == GLFW_KEY_F){
+    @EventHandler
+    public void onKeyPressed(KeyPressedEvent ev) {
+        if (ev.getKey() == GLFW_KEY_F) {
             wireframeMode = !wireframeMode;
         }
     }
