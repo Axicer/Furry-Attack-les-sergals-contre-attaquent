@@ -2,16 +2,12 @@ package fr.axicer.furryattack.common.map.frame;
 
 import fr.axicer.furryattack.client.render.texture.TextureAtlas;
 import org.joml.Vector2f;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class FrameBlock {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(FrameBlock.class);
 
     private final FrameBlock[] neighbor;
     private final boolean solid;
@@ -98,7 +94,14 @@ public class FrameBlock {
             }
         }
 
-        int y = 0;//TODO no variant for the moment
+        int y;
+        if(isNeighborSolid(FrameOrientation.BOTTOM)){
+            y = 0;
+        }else{
+            y = 1;
+        }
+
+        //TODO add more decoration
 
         return new Vector2f(x * atlas.getRatioX(), y * atlas.getRatioY());
     }
@@ -125,6 +128,6 @@ public class FrameBlock {
         TOP,
         BOTTOM,
         LEFT,
-        RIGHT;
+        RIGHT
     }
 }
