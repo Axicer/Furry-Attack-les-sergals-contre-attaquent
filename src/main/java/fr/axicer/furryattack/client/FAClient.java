@@ -114,14 +114,8 @@ public class FAClient implements EventListener {
                 frames = 0;
                 ticks = 0;
                 eventManager.update();
-            }else{
-                try {
-                    //noinspection BusyWait
-                    Thread.sleep(1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             }
+
             // Poll for window events. The key callback above will only be
             // invoked during this call.
             glfwPollEvents();
