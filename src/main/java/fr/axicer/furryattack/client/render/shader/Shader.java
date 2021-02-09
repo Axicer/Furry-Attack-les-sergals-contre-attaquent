@@ -4,10 +4,7 @@ import org.joml.Vector2f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.net.URISyntaxException;
 
 import static org.lwjgl.opengl.GL20.*;
@@ -154,19 +151,30 @@ public class Shader {
 //    }
 
     private String readFile(String filename){
-        StringBuilder string = new StringBuilder();
-        BufferedReader br;
-        try {
-            br = new BufferedReader(new FileReader(new File(Shader.class.getResource("/shaders/"+filename).toURI())));
+        var inputStream = Shader.class.getResourceAsStream("/shaders/"+filename);
+        var inputStreamReader = new InputStreamReader(inputStream);
+        var reader = new BufferedReader(inputStreamReader);
+        var builder = new StringBuilder();
+
+        try{
             String line;
-            while((line = br.readLine()) != null){
-                string.append(line);
-                string.append("\n");
+            while((line = reader.readLine()) != null){
+                builder.append(line);
+                builder.append("\n");
             }
-            br.close();
-        } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
+        }catch (IOException ex){
+            LOGGER.error(ex.getMessage());
+            return "";
+        }finally {
+            try {
+                reader.close();
+                inputStreamReader.close();
+                inputStream.close();
+            } catch (IOException e) {
+                LOGGER.error(e.getMessage());
+            }
         }
-        return string.toString();
+
+        return builder.toString();
     }
 }

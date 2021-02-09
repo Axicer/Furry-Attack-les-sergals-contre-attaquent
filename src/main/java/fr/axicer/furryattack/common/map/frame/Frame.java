@@ -29,8 +29,8 @@ import java.util.List;
 public class Frame implements Renderable, Updatable, Removable, EventListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Frame.class);
-    public static final int FRAME_BLOCK_WIDTH = 40;
-    public static final int FRAME_BLOCK_HEIGHT = 24;
+    public static final int FRAME_BLOCK_WIDTH = 48;
+    public static final int FRAME_BLOCK_HEIGHT = 27;
     public static final float BLOCK_WIDTH = 1.0f / FRAME_BLOCK_WIDTH;
     public static final float BLOCK_HEIGHT = 1.0f / FRAME_BLOCK_HEIGHT;
 
@@ -89,7 +89,13 @@ public class Frame implements Renderable, Updatable, Removable, EventListener {
         //generate blocks
         for (int y = 0; y < FRAME_BLOCK_HEIGHT; y++) {
             for (int x = 0; x < FRAME_BLOCK_WIDTH; x++) {
-                var pixColor = new Color(layout.getPixels()[y][x]);
+                Color pixColor;
+                try{
+                    pixColor = new Color(layout.getPixels()[y][x]);
+                }catch (ArrayIndexOutOfBoundsException ex){
+                    pixColor = Color.BLACK;
+                }
+
                 if (pixColor.equals(Color.BLACK)) {
                     //solid block
                     blocks[y][x] = new FrameBlock(true);
