@@ -35,7 +35,7 @@ public class Frame implements Renderable, Updatable, Removable, EventListener {
     public static final float BLOCK_HEIGHT = 1.0f / FRAME_BLOCK_HEIGHT;
 
     private static FrameShader shader;
-    private final FrameBlock[][] blocks; //all blocks
+    private FrameBlock[][] blocks; //all blocks
     private RawModel model;
     private final Layout layout;
     private Background background;
@@ -44,13 +44,19 @@ public class Frame implements Renderable, Updatable, Removable, EventListener {
     private TextureAtlas stoneAtlas;
 
     public Frame(Layout layout) {
-        blocks = new FrameBlock[FRAME_BLOCK_HEIGHT][FRAME_BLOCK_WIDTH];
         this.layout = layout;
-        generate();
     }
 
     public void loadModel() {
+        if(blocks == null){
+            LOGGER.error("Attempted to load frame model but frame is not generated yet.");
+            return;
+        }
         if (shader == null) shader = new FrameShader();
+        background = Background.loadBackground("/img/background.png", GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
+        borderAtlas = TextureAtlas.loadAtlas("/img/atlas/border_atlas.png", 20, 20, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
+        decorationAtlas = TextureAtlas.loadAtlas("/img/atlas/decoration_atlas.png", 20, 20, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
+        stoneAtlas = TextureAtlas.loadAtlas("/img/atlas/stone_atlas.png", 20, 20, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
 
         //load vertices
         var vertexList = new LinkedList<Float>();
@@ -77,11 +83,8 @@ public class Frame implements Renderable, Updatable, Removable, EventListener {
                 NumberUtils.toFloatArray(stoneTexCoords));
     }
 
-    private void generate() {
-        background = Background.loadBackground("/img/background.png", GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
-        borderAtlas = TextureAtlas.loadAtlas("/img/atlas/border_atlas.png", 20, 20, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
-        decorationAtlas = TextureAtlas.loadAtlas("/img/atlas/decoration_atlas.png", 20, 20, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
-        stoneAtlas = TextureAtlas.loadAtlas("/img/atlas/stone_atlas.png", 20, 20, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
+    public void generate() {
+        blocks = new FrameBlock[FRAME_BLOCK_HEIGHT][FRAME_BLOCK_WIDTH];
 
         //generate blocks
         for (int y = 0; y < FRAME_BLOCK_HEIGHT; y++) {

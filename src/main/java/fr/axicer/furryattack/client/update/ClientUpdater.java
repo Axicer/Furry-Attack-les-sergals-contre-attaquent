@@ -32,5 +32,6 @@ public class ClientUpdater implements Updatable, Removable {
         updatableSet.stream()
                 .filter(updatable -> updatable.getClass().isAssignableFrom(Removable.class))
                 .forEach(updatable -> ((Removable) updatable).remove());
+        updatableSet.clear();
     }
 }

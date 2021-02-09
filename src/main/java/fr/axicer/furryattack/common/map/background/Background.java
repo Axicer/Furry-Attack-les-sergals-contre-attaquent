@@ -10,21 +10,37 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Background implements Updatable, Renderable, Removable {
 
+    private static final Map<String, Background> loadedBackgrounds = new HashMap<>();
+
     public static Background loadBackground(String path, int wrapMode, int filterMode){
-        Texture tex = Texture.loadTexture(path, wrapMode, filterMode);
-        float[] vertices = {
-                -1f, 1f, -1f,-1f,  1f,-1f,
-                 1f,-1f,  1f, 1f, -1f, 1f
-        };
-        float[] texCoord = {
-                0f,1f, 0f,0f, 1f,0f,
-                1f,0f, 1f,1f, 0f,1f
-        };
-        RawModel model = Loader.loadToVAO(vertices, 2, texCoord);
-        if(shader == null)shader = new BackgroundShader();
-        return new Background(model, tex);
+        if(loadedBackgrounds.get(path) != null){
+            return loadedBackgrounds.get(path);
+        }else{
+            Texture tex = Texture.loadTexture(path, wrapMode, filterMode);
+            float[] vertices = {
+                    -1f, 1f, -1f,-1f,  1f,-1f,
+                    1f,-1f,  1f, 1f, -1f, 1f
+            };
+            float[] texCoord = {
+                    0f,1f, 0f,0f, 1f,0f,
+                    1f,0f, 1f,1f, 0f,1f
+            };
+            RawModel model = Loader.loadToVAO(vertices, 2, texCoord);
+            if(shader == null)shader = new BackgroundShader();
+            final Background background = new Background(model, tex);
+            loadedBackgrounds.put(path, background);
+            return background;
+        }
+    }
+
+    public static void cleanUp(){
+        loadedBackgrounds.values().forEach(Background::remove);
+        loadedBackgrounds.clear();
     }
 
     private static BackgroundShader shader;

@@ -191,6 +191,7 @@ public class ClientRenderer implements Renderable, Removable, EventListener {
         renderableSet.stream()
                 .filter(renderable -> renderable.getClass().isAssignableFrom(Removable.class))
                 .forEach(renderable -> ((Removable) renderable).remove());
+        renderableSet.clear();
     }
 
     public void onKeyPressed(KeyPressedEvent ev){

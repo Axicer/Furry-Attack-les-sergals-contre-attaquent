@@ -34,7 +34,7 @@ public class Loader {
         return new RawModel(vao, position.length/positionDimensions);
     }
 
-    public static void clearAll(){
+    public static void cleanUp(){
         vaoIds.forEach(GL30::glDeleteVertexArrays);
         vboIds.forEach(GL15::glDeleteBuffers);
     }

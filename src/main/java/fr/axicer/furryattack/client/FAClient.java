@@ -5,9 +5,11 @@ import fr.axicer.furryattack.client.control.handler.MouseButtonHandler;
 import fr.axicer.furryattack.client.control.handler.MouseHandler;
 import fr.axicer.furryattack.client.render.ClientRenderer;
 import fr.axicer.furryattack.client.render.Loader;
+import fr.axicer.furryattack.client.render.texture.Texture;
 import fr.axicer.furryattack.client.update.ClientUpdater;
 import fr.axicer.furryattack.common.events.EventListener;
 import fr.axicer.furryattack.common.events.EventManager;
+import fr.axicer.furryattack.common.map.background.Background;
 import fr.axicer.furryattack.common.map.frame.Frame;
 import fr.axicer.furryattack.common.map.layout.Layout;
 import fr.axicer.furryattack.common.map.layout.LayoutManager;
@@ -26,8 +28,6 @@ public class FAClient implements EventListener {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(FAClient.class);
 
-    private Thread contextThread;
-
     private static final EventManager eventManager = new EventManager();
     private static ClientRenderer renderer;
     private static ClientUpdater updater;
@@ -35,9 +35,10 @@ public class FAClient implements EventListener {
     private KeyboardHandler keyboardHandler;
     private MouseHandler mouseHandler;
     private MouseButtonHandler mouseButtonHandler;
+    private Thread contextThread;
     private static double xPos, yPos;
-
     private boolean running;
+
     Frame frame;
 
     public FAClient() {
@@ -48,13 +49,16 @@ public class FAClient implements EventListener {
     private void initGame(){
         final Layout randomLayout = LayoutManager.getRandomLayout(true, true, false, false);
         frame = new Frame(randomLayout);
+        frame.generate();
         frame.loadModel();
         updater.addUpdatableItem(frame);
         renderer.addRenderableItem(frame);
     }
 
     private void cleanUp(){
-        Loader.clearAll();
+        Texture.cleanUp();
+        Background.cleanUp();
+        Loader.cleanUp();
         renderer.remove();
         updater.remove();
     }
@@ -129,7 +133,6 @@ public class FAClient implements EventListener {
         }
 
         stop();
-
         cleanUp();
 
         // Free the window callbacks and destroy the window
