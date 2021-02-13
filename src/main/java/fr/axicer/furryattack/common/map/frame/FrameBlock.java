@@ -101,7 +101,7 @@ public class FrameBlock {
             y = 1;
         }
 
-        //TODO add more decoration
+        //TODO add more borders
 
         return new Vector2f(x * atlas.getRatioX(), y * atlas.getRatioY());
     }

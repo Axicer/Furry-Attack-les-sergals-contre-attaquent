@@ -47,7 +47,7 @@ public class FAClient implements EventListener {
     }
 
     private void initGame(){
-        final Layout randomLayout = LayoutManager.getRandomLayout(true, true, false, false);
+        final Layout randomLayout = LayoutManager.getRandomLayout(true, true, true, true);
         frame = new Frame(randomLayout);
         frame.generate();
         frame.loadModel();

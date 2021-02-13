@@ -104,6 +104,8 @@ public class Frame implements Renderable, Updatable, Removable, EventListener {
                     blocks[y][x] = new FrameBlock(false);
                 } else {
                     LOGGER.error("pixel {} is unknown", pixColor);
+                    blocks[y][x] = new FrameBlock(false);
+                    //TODO check for spawn, and other
                 }
             }
         }
