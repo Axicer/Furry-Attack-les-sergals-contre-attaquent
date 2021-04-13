@@ -11,15 +11,17 @@ import fr.axicer.furryattack.common.events.EventListener;
 import fr.axicer.furryattack.common.events.EventManager;
 import fr.axicer.furryattack.common.map.background.Background;
 import fr.axicer.furryattack.common.map.frame.Frame;
-import fr.axicer.furryattack.common.map.layout.Layout;
-import fr.axicer.furryattack.common.map.layout.LayoutManager;
+import fr.axicer.furryattack.common.map.layer.Layer;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.lwjgl.opengl.GL11;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -43,12 +45,10 @@ public class FAClient implements EventListener {
 
     public FAClient() {
         running = false;
-        LayoutManager.loadLayouts();
     }
 
     private void initGame(){
-        final Layout randomLayout = LayoutManager.getRandomLayout(true, true, true, true);
-        frame = new Frame(randomLayout);
+        frame = new Frame(Layer.getStoneFullMap());
         frame.generate();
         frame.loadModel();
         updater.addUpdatableItem(frame);
@@ -97,6 +97,8 @@ public class FAClient implements EventListener {
 
         long timer = System.currentTimeMillis();
 
+        double[] xPosArray = new double[1];
+        double[] yPosArray = new double[1];
         while ( !glfwWindowShouldClose(renderer.getWindowID()) && running) {
             if(System.nanoTime() - lastTimeTick > tickTime){
                 updater.update();
@@ -119,8 +121,6 @@ public class FAClient implements EventListener {
             // Poll for window events. The key callback above will only be
             // invoked during this call.
             glfwPollEvents();
-            double[] xPosArray = new double[1];
-            double[] yPosArray = new double[1];
             org.lwjgl.glfw.GLFW.glfwGetCursorPos(renderer.getWindowID(), xPosArray, yPosArray);
             xPos = xPosArray[0];
             yPos = yPosArray[0];

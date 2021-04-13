@@ -3,7 +3,11 @@ package fr.axicer.furryattack.client.render.texture;
 public class TextureAtlas {
 
     public static TextureAtlas loadAtlas(String path, int xCellCount, int yCellCount, int wrapMode, int filterMode){
-        Texture texture = Texture.loadTexture(path, wrapMode, filterMode);
+        return loadAtlas(path, xCellCount, yCellCount, wrapMode, wrapMode, filterMode, filterMode);
+    }
+
+    public static TextureAtlas loadAtlas(String path, int xCellCount, int yCellCount, int wrapModeS, int wrapModeT, int filterModeMIN, int filterModeMAG){
+        Texture texture = Texture.loadTexture(path, wrapModeS, wrapModeT, filterModeMIN, filterModeMAG);
         return new TextureAtlas(texture, xCellCount, yCellCount);
     }
 
@@ -29,11 +33,11 @@ public class TextureAtlas {
         return texture;
     }
 
-    public float getRatioX(){
-        return 1f/getCountX();
+    public double getRatioX(){
+        return 1D/(double)getCountX();
     }
 
-    public float getRatioY(){
-        return 1f/getCountY();
+    public double getRatioY(){
+        return 1D/(double)getCountY();
     }
 }

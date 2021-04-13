@@ -1,6 +1,8 @@
 package fr.axicer.furryattack.client.render.texture;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -17,14 +19,16 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 public class Texture {
 
-    private final int ID, width, height, wrapMode, filterMode;
+    private final int ID, width, height, wrapModeS, wrapModeT, filterModeMIN, filterModeMAG;
 
-    public Texture(int id, int width, int height, int wrapMode, int filterMode) {
+    public Texture(int id, int width, int height, int wrapModeS, int wrapModeT, int filterModeMIN, int filterModeMAG) {
         this.ID = id;
         this.width = width;
         this.height = height;
-        this.wrapMode = wrapMode;
-        this.filterMode = filterMode;
+        this.wrapModeS = wrapModeS;
+        this.wrapModeT = wrapModeT;
+        this.filterModeMIN = filterModeMIN;
+        this.filterModeMAG = filterModeMAG;
     }
 
     public void bind(int sampler){
@@ -48,23 +52,34 @@ public class Texture {
         return height;
     }
 
-    public int getWrapMode() {
-        return wrapMode;
+    public int getFilterModeMAG() {
+        return filterModeMAG;
     }
 
-    public int getFilterMode() {
-        return filterMode;
+    public int getFilterModeMIN() {
+        return filterModeMIN;
     }
 
+    public int getWrapModeS() {
+        return wrapModeS;
+    }
+
+    public int getWrapModeT() {
+        return wrapModeT;
+    }
 
     private static final Map<String, Texture> loadedTextures = new HashMap<>();
     private final static int BYTES_PER_PIXEL = 4;
 
     public static Texture loadTexture(String path, int wrapMode, int filterMode) {
-        return loadTexture(path, Texture.class.getResourceAsStream(path), wrapMode, filterMode);
+        return loadTexture(path, Texture.class.getResourceAsStream(path), wrapMode, wrapMode, filterMode, filterMode);
     }
 
-    public static Texture loadTexture(String path, InputStream stream, int wrapMode, int filterMode){
+    public static Texture loadTexture(String path, int wrapModeS, int wrapModeT, int filterModeMIN, int filterModeMAG) {
+        return loadTexture(path, Texture.class.getResourceAsStream(path), wrapModeS, wrapModeT, filterModeMIN, filterModeMAG);
+    }
+
+    public static Texture loadTexture(String path, InputStream stream, int wrapModeS, int wrapModeT, int filterModeMIN, int filterModeMAG){
         if(loadedTextures.get(path) != null){
             return loadedTextures.get(path);
         }else{
@@ -97,12 +112,12 @@ public class Texture {
             int textureID = glGenTextures(); //Generate texture ID
             glBindTexture(GL_TEXTURE_2D, textureID);
             //Setup wrap mode
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapModeS);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapModeT);
 
             //Setup texture scaling filtering
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterMode);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filterMode);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filterModeMIN);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filterModeMAG);
 
             //Send texel data to OpenGL
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
@@ -113,7 +128,7 @@ public class Texture {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            final Texture texture = new Texture(textureID, image.getWidth(), image.getHeight(), wrapMode, filterMode);
+            final Texture texture = new Texture(textureID, image.getWidth(), image.getHeight(), wrapModeS, wrapModeT, filterModeMIN, filterModeMAG);
             loadedTextures.put(path, texture);
             return texture;
         }

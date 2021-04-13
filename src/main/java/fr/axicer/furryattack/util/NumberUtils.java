@@ -3,20 +3,14 @@ package fr.axicer.furryattack.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.IntStream;
 
 public class NumberUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NumberUtils.class);
-
-    public static float[] toFloatArray(List<Float> list){
-        float[] array = new float[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            array[i] = list.get(i);
-        }
-        return array;
-    }
 
     /**
      * Try to parse a String to a Integer returns Integer.MIN_VALUE if failed

@@ -6,7 +6,10 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
+import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,13 +27,14 @@ public class Loader {
         return new RawModel(vao, position.length/positionDimensions);
     }
     public static RawModel loadFrameToVAO(float[] position, int positionDimensions,
-                                     float[] decorationTexCoord, float[] borderTexCoord, float[] stoneTexCoord){
+                                     double[] decorationTexCoord, double[] borderTexCoord, double[] stoneTexCoord){
         int vao = createVAO();
         storeDataInAttributeList(0, position, positionDimensions);
         storeDataInAttributeList(1, stoneTexCoord, 2);
         storeDataInAttributeList(2, borderTexCoord, 2);
         storeDataInAttributeList(3, decorationTexCoord, 2);
         unbindVAO();
+
         return new RawModel(vao, position.length/positionDimensions);
     }
 
@@ -60,8 +64,25 @@ public class Loader {
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
     }
 
+    private static void storeDataInAttributeList(int attributeNumber, double[] data, int dataDimensions){
+        int vbo = GL15.glGenBuffers();
+        vboIds.add(vbo);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+        DoubleBuffer buffer = storeDataInDoubleBuffer(data);
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
+        GL20.glVertexAttribPointer(attributeNumber, dataDimensions, GL11.GL_DOUBLE, false, 0 ,0);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+    }
+
     private static FloatBuffer storeDataInFloatBuffer(float[] data){
         FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
+        buffer.put(data);
+        buffer.flip();
+        return buffer;
+    }
+
+    private static DoubleBuffer storeDataInDoubleBuffer(double[] data){
+        DoubleBuffer buffer = BufferUtils.createDoubleBuffer(data.length);
         buffer.put(data);
         buffer.flip();
         return buffer;
