@@ -1,5 +1,6 @@
 package fr.axicer.furryattack.client.render;
 
+import fr.axicer.furryattack.util.NumberUtils;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
@@ -16,24 +17,23 @@ public class Loader {
     private static final List<Integer> vaoIds = new LinkedList<>();
     private static final List<Integer> vboIds = new LinkedList<>();
 
-    public static RawModel loadToVAO(float[] position, int positionDimensions,
-                                     float[] texCoords){
+    public static RawModel loadToVAO(float[] position, int positionDimensions, float[] texCoords){
         int vao = createVAO();
-        storeDataInAttributeList(0, position, positionDimensions);
-        storeDataInAttributeList(1, texCoords, 2);
+        storeDataInAttributeList(0, NumberUtils.storeDataInFloatBuffer(position), positionDimensions, GL15.GL_STATIC_DRAW);
+        storeDataInAttributeList(1, NumberUtils.storeDataInFloatBuffer(texCoords), 2, GL15.GL_STATIC_DRAW);
         unbindVAO();
         return new RawModel(vao, position.length/positionDimensions);
     }
-    public static RawModel loadFrameToVAO(float[] position, int positionDimensions,
-                                     double[] decorationTexCoord, double[] borderTexCoord, double[] texCoord){
+
+    public static FrameModel loadFrameToVAO(FloatBuffer position, DoubleBuffer decorationTexCoord, DoubleBuffer borderTexCoord, DoubleBuffer texCoord){
         int vao = createVAO();
-        storeDataInAttributeList(0, position, positionDimensions);
-        storeDataInAttributeList(1, texCoord, 2);
-        storeDataInAttributeList(2, borderTexCoord, 2);
-        storeDataInAttributeList(3, decorationTexCoord, 2);
+        int vertexVBOID = storeDataInAttributeList(0, position, 2, GL15.GL_DYNAMIC_DRAW);
+        int texelVBOID = storeDataInAttributeList(1, texCoord, 2, GL15.GL_DYNAMIC_DRAW);
+        int borderTexelVBOID = storeDataInAttributeList(2, borderTexCoord, 2, GL15.GL_DYNAMIC_DRAW);
+        int decorationTexelVBOID = storeDataInAttributeList(3, decorationTexCoord, 2, GL15.GL_DYNAMIC_DRAW);
         unbindVAO();
 
-        return new RawModel(vao, position.length/positionDimensions);
+        return new FrameModel(vao, position.capacity()/2, vertexVBOID, texelVBOID, borderTexelVBOID, decorationTexelVBOID);
     }
 
     public static void cleanUp(){
@@ -41,7 +41,7 @@ public class Loader {
         vboIds.forEach(GL15::glDeleteBuffers);
     }
 
-    private static int createVAO(){
+    public static int createVAO(){
         int vao = GL30.glGenVertexArrays();
         vaoIds.add(vao);
         GL30.glBindVertexArray(vao);
@@ -52,37 +52,35 @@ public class Loader {
         GL30.glBindVertexArray(0);
     }
 
-    private static void storeDataInAttributeList(int attributeNumber, float[] data, int dataDimensions){
+    public static int storeDataInAttributeList(int attributeNumber, FloatBuffer buffer, int dataDimensions, int bufferUsage){
         int vbo = GL15.glGenBuffers();
         vboIds.add(vbo);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
-        FloatBuffer buffer = storeDataInFloatBuffer(data);
-        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, bufferUsage);
         GL20.glVertexAttribPointer(attributeNumber, dataDimensions, GL11.GL_FLOAT, false, 0 ,0);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+        return vbo;
     }
 
-    private static void storeDataInAttributeList(int attributeNumber, double[] data, int dataDimensions){
+    public static int storeDataInAttributeList(int attributeNumber, DoubleBuffer buffer, int dataDimensions, int bufferUsage){
         int vbo = GL15.glGenBuffers();
         vboIds.add(vbo);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
-        DoubleBuffer buffer = storeDataInDoubleBuffer(data);
-        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, bufferUsage);
         GL20.glVertexAttribPointer(attributeNumber, dataDimensions, GL11.GL_DOUBLE, false, 0 ,0);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+        return vbo;
+    }
+
+    public static void updateVBO(int vboID, FloatBuffer buffer, int offset){
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
+        GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, offset, buffer);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
     }
 
-    private static FloatBuffer storeDataInFloatBuffer(float[] data){
-        FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
-        buffer.put(data);
-        buffer.flip();
-        return buffer;
-    }
-
-    private static DoubleBuffer storeDataInDoubleBuffer(double[] data){
-        DoubleBuffer buffer = BufferUtils.createDoubleBuffer(data.length);
-        buffer.put(data);
-        buffer.flip();
-        return buffer;
+    public static void updateVBO(int vboID, DoubleBuffer buffer, int offset){
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
+        GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, offset, buffer);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
     }
 }

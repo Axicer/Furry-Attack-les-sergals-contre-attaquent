@@ -1,7 +1,8 @@
 package fr.axicer.furryattack.common.map.frame;
 
+import fr.axicer.furryattack.client.control.handler.KeyboardHandler;
+import fr.axicer.furryattack.client.render.FrameModel;
 import fr.axicer.furryattack.client.render.Loader;
-import fr.axicer.furryattack.client.render.RawModel;
 import fr.axicer.furryattack.client.render.texture.Texture;
 import fr.axicer.furryattack.client.render.texture.TextureAtlas;
 import fr.axicer.furryattack.common.entity.Removable;
@@ -12,6 +13,8 @@ import fr.axicer.furryattack.common.map.background.Background;
 import fr.axicer.furryattack.common.map.layer.Layer;
 import fr.axicer.furryattack.util.Direction;
 import org.joml.Vector2d;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL20;
@@ -21,7 +24,6 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
-import java.util.Arrays;
 
 public class Frame implements Renderable, Updatable, Removable, EventListener {
 
@@ -29,60 +31,87 @@ public class Frame implements Renderable, Updatable, Removable, EventListener {
 
     private static FrameShader shader;
     private FrameBlock[][] blocks; //all blocks
-    private RawModel model;
+    private FrameModel model;
     private Background background;
     private TextureAtlas borderAtlas;
     private TextureAtlas decorationAtlas;
     private TextureAtlas textureAtlas;
 
-    private final Layer layer;
-    private final float blockWidth, blockHeight;
+    private Layer layer;
+    protected float blockWidth, blockHeight;
+
+    private boolean readyToUpdate = false;
 
     public Frame(Layer layer) {
         this.layer = layer;
         this.blockWidth = 1.0f / layer.getWidth();
         this.blockHeight = 1.0f / layer.getHeight();
+        loadModel();
     }
 
     public void loadModel() {
-        if (blocks == null) {
-            LOGGER.error("Attempted to load frame model but frame is not generated yet.");
-            return;
-        }
-        if (shader == null) shader = new FrameShader();
-        background = Background.loadBackground("/img/background.png", GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
-        borderAtlas = TextureAtlas.loadAtlas("/img/atlas/border_atlas.png", 36, 36, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
-        decorationAtlas = TextureAtlas.loadAtlas("/img/atlas/decoration_atlas.png", 20, 20, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
-        textureAtlas = TextureAtlas.loadAtlas("/img/atlas/texture_atlas.png", 20, 20, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
-
-        //load vertices
-        var vertexBuffer = FloatBuffer.allocate(layer.getWidth() * layer.getHeight() * 2 * 2 * 3);
-        var borderTexBuffer = DoubleBuffer.allocate(layer.getWidth() * layer.getHeight() * 2 * 2 * 3);
-        var decorationTexBuffer = DoubleBuffer.allocate(layer.getWidth() * layer.getHeight() * 2 * 2 * 3);
-        var texBuffer = DoubleBuffer.allocate(layer.getWidth() * layer.getHeight() * 2 * 2 * 3);
-        for (int y = 0; y < layer.getHeight(); y++) {
-            for (int x = 0; x < layer.getWidth(); x++) {
-                final FrameBlock block = blocks[y][x];
-                addQuadFloats(vertexBuffer, x, y);
-                addTextureFloats(borderTexBuffer, block.getBorderTexCoords(borderAtlas), borderAtlas.getRatioX(), borderAtlas.getRatioY());
-                addTextureFloats(decorationTexBuffer, block.getDecorationTexCoord(decorationAtlas), decorationAtlas.getRatioX(), decorationAtlas.getRatioY());
-                addTextureFloats(texBuffer, block.getTexCoord(textureAtlas), textureAtlas.getRatioX(), textureAtlas.getRatioY());
-            }
-        }
-
-        model = Loader.loadFrameToVAO(vertexBuffer.array(), 2, decorationTexBuffer.array(), borderTexBuffer.array(), texBuffer.array());
-    }
-
-    public void generate() {
         blocks = new FrameBlock[layer.getHeight()][layer.getWidth()];
-
-        //generate blocks
         for (int y = 0; y < layer.getHeight(); y++) {
             for (int x = 0; x < layer.getWidth(); x++) {
                 blocks[y][x] = new FrameBlock(this, layer.getData()[y * layer.getWidth() + x], x, y);
             }
         }
 
+        if (shader == null) shader = new FrameShader();
+        if (background == null) background = Background.loadBackground("/img/background.png", GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
+        if (borderAtlas == null) borderAtlas = TextureAtlas.loadAtlas("/img/atlas/border_atlas.png", 36, 36, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
+        if (decorationAtlas == null) decorationAtlas = TextureAtlas.loadAtlas("/img/atlas/decoration_atlas.png", 20, 20, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
+        if (textureAtlas == null) textureAtlas = TextureAtlas.loadAtlas("/img/atlas/texture_atlas.png", 20, 20, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
+
+        //load vertices
+        var vertexBuffer = BufferUtils.createFloatBuffer(layer.getWidth() * layer.getHeight() * 2 * 2 * 3);
+        var borderTexBuffer = BufferUtils.createDoubleBuffer(layer.getWidth() * layer.getHeight() * 2 * 2 * 3);
+        var decorationTexBuffer = BufferUtils.createDoubleBuffer(layer.getWidth() * layer.getHeight() * 2 * 2 * 3);
+        var texBuffer = BufferUtils.createDoubleBuffer(layer.getWidth() * layer.getHeight() * 2 * 2 * 3);
+        for (int y = 0; y < layer.getHeight(); y++) {
+            for (int x = 0; x < layer.getWidth(); x++) {
+                final FrameBlock block = blocks[y][x];
+                block.addQuadFloats(vertexBuffer, x, y);
+                block.addTextureFloats(borderTexBuffer, block.getBorderTexCoords(borderAtlas), borderAtlas.getRatioX(), borderAtlas.getRatioY());
+                block.addTextureFloats(decorationTexBuffer, block.getDecorationTexCoord(decorationAtlas), decorationAtlas.getRatioX(), decorationAtlas.getRatioY());
+                block.addTextureFloats(texBuffer, block.getTexCoord(textureAtlas), textureAtlas.getRatioX(), textureAtlas.getRatioY());
+            }
+        }
+        vertexBuffer.flip();
+        decorationTexBuffer.flip();
+        borderTexBuffer.flip();
+        texBuffer.flip();
+
+        if(model != null){
+            model.updateAll(vertexBuffer, decorationTexBuffer, borderTexBuffer, texBuffer);
+        }else{
+            model = Loader.loadFrameToVAO(vertexBuffer, decorationTexBuffer, borderTexBuffer, texBuffer);
+        }
+
+        readyToUpdate = true;
+    }
+
+    public Layer getLayer() {
+        return layer;
+    }
+
+    public TextureAtlas getBorderAtlas() {
+        return borderAtlas;
+    }
+
+    public TextureAtlas getDecorationAtlas() {
+        return decorationAtlas;
+    }
+
+    public TextureAtlas getTextureAtlas() {
+        return textureAtlas;
+    }
+
+    public void setBlock(int x, int y, FrameBlock block){
+        if (x < 0 || x >= layer.getWidth()) return;
+        if (y < 0 || y >= layer.getHeight()) return;
+        blocks[y][x] = block;
+        model.update(x, y, this);
     }
 
     public FrameBlock getBlock(int x, int y) {
@@ -104,38 +133,6 @@ public class Frame implements Renderable, Updatable, Removable, EventListener {
             case BOTTOM_LEFT -> getBlock(x - 1, y + 1);
             case BOTTOM_RIGHT -> getBlock(x + 1, y + 1);
         };
-    }
-
-    private void addQuadFloats(FloatBuffer buffer, int x, int y) {
-        buffer.put(x * blockWidth);
-        buffer.put(y * blockHeight);
-        buffer.put(x * blockWidth);
-        buffer.put(y * blockHeight + blockHeight);
-        buffer.put(x * blockWidth + blockWidth);
-        buffer.put(y * blockHeight + blockHeight);
-
-        buffer.put(x * blockWidth + blockWidth);
-        buffer.put(y * blockHeight + blockHeight);
-        buffer.put(x * blockWidth + blockWidth);
-        buffer.put(y * blockHeight);
-        buffer.put(x * blockWidth);
-        buffer.put(y * blockHeight);
-    }
-
-    private void addTextureFloats(DoubleBuffer buffer, Vector2d start, double ratioX, double ratioY) {
-        buffer.put(start.x);
-        buffer.put(start.y);
-        buffer.put(start.x);
-        buffer.put(start.y + ratioY);
-        buffer.put(start.x + ratioX);
-        buffer.put(start.y + ratioY);
-
-        buffer.put(start.x + ratioX);
-        buffer.put(start.y + ratioY);
-        buffer.put(start.x + ratioX);
-        buffer.put(start.y);
-        buffer.put(start.x);
-        buffer.put(start.y);
     }
 
     @Override
@@ -176,5 +173,16 @@ public class Frame implements Renderable, Updatable, Removable, EventListener {
 
     @Override
     public void update() {
+        if(!readyToUpdate)return;
+        int x = (int) (Math.random()*layer.getWidth());
+        int y = (int) (Math.random()*layer.getHeight());
+
+        final var block = getBlock(x, y);
+        if(block.getFrameType().equals(FrameBlockType.COBBLESTONE)){
+            block.setBlockType(FrameBlockType.AIR);
+        }else{
+            block.setBlockType(FrameBlockType.COBBLESTONE);
+        }
+        setBlock(x, y, block);
     }
 }

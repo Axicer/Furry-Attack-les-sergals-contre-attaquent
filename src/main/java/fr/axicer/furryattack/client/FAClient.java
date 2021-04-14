@@ -49,8 +49,6 @@ public class FAClient implements EventListener {
 
     private void initGame(){
         frame = new Frame(Layer.getStoneFullMap());
-        frame.generate();
-        frame.loadModel();
         updater.addUpdatableItem(frame);
         renderer.addRenderableItem(frame);
     }
@@ -89,8 +87,8 @@ public class FAClient implements EventListener {
         long lastTimeTick = System.nanoTime();
         long lastRenderTime = System.nanoTime();
 
-        double tickTime = 1000000000.0/10.0; //60 TPS
-        double renderTime = 1000000000.0/60.0; //60 FPS
+        double tickTime = 1000000000.0/20.0; //20 TPS
+        double renderTime = 1000000000.0/120.0; //120 FPS
 
         int frames = 0;
         int ticks = 0;

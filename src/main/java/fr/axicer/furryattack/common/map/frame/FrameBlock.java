@@ -4,6 +4,8 @@ import fr.axicer.furryattack.client.render.texture.TextureAtlas;
 import fr.axicer.furryattack.util.Direction;
 import org.joml.Vector2d;
 
+import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
@@ -22,7 +24,7 @@ public class FrameBlock {
      * 00000000000000001111111100000000 -> block type
      * other are to define
      */
-    private final int data; // data of the block
+    private int data; // data of the block
     private final Frame frame;
     private final int[] position; // position of the block as 0 = x and 1 = y
 
@@ -58,6 +60,10 @@ public class FrameBlock {
 
     public FrameBlockType getFrameType() {
         return FrameBlockType.getTypeFromOrdinal((data & 0x0000FF00) >>> 8);
+    }
+
+    public void setBlockType(FrameBlockType type){
+        this.data = (data & 0xFFFF00FF) | (type.ordinal() << 8);
     }
 
     public int[] getPosition() {
@@ -150,6 +156,38 @@ public class FrameBlock {
         double y = (range.y + Math.floor(Math.random() * (range.w - range.y + 1))) * atlas.getRatioY();
 
         return new Vector2d(x, y);
+    }
+
+    public void addQuadFloats(FloatBuffer buffer, int x, int y) {
+        buffer.put(x * frame.blockWidth);
+        buffer.put(y * frame.blockHeight);
+        buffer.put(x * frame.blockWidth);
+        buffer.put(y * frame.blockHeight + frame.blockHeight);
+        buffer.put(x * frame.blockWidth + frame.blockWidth);
+        buffer.put(y * frame.blockHeight + frame.blockHeight);
+
+        buffer.put(x * frame.blockWidth + frame.blockWidth);
+        buffer.put(y * frame.blockHeight + frame.blockHeight);
+        buffer.put(x * frame.blockWidth + frame.blockWidth);
+        buffer.put(y * frame.blockHeight);
+        buffer.put(x * frame.blockWidth);
+        buffer.put(y * frame.blockHeight);
+    }
+
+    public void addTextureFloats(DoubleBuffer buffer, Vector2d start, double ratioX, double ratioY) {
+        buffer.put(start.x);
+        buffer.put(start.y);
+        buffer.put(start.x);
+        buffer.put(start.y + ratioY);
+        buffer.put(start.x + ratioX);
+        buffer.put(start.y + ratioY);
+
+        buffer.put(start.x + ratioX);
+        buffer.put(start.y + ratioY);
+        buffer.put(start.x + ratioX);
+        buffer.put(start.y);
+        buffer.put(start.x);
+        buffer.put(start.y);
     }
 
     @Override

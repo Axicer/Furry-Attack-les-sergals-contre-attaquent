@@ -1,8 +1,11 @@
 package fr.axicer.furryattack.util;
 
+import org.lwjgl.BufferUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -36,5 +39,19 @@ public class NumberUtils {
      */
     public static boolean isAny(int comp, int... values){
         return IntStream.of(values).anyMatch(value -> value == comp);
+    }
+
+    public static FloatBuffer storeDataInFloatBuffer(float[] data){
+        FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
+        buffer.put(data);
+        buffer.flip();
+        return buffer;
+    }
+
+    public static DoubleBuffer storeDataInDoubleBuffer(double[] data){
+        DoubleBuffer buffer = BufferUtils.createDoubleBuffer(data.length);
+        buffer.put(data);
+        buffer.flip();
+        return buffer;
     }
 }

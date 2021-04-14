@@ -163,7 +163,7 @@ public class Layer {
         int height = 54;
         int width = (int) (height*(16.0/9.0));
 
-        OpenSimplexNoise noise = new OpenSimplexNoise(new Random().nextLong());
+        OpenSimplexNoise noise = new OpenSimplexNoise(0);
         var octave = 20f;
         ByteBuffer contentBuffer = ByteBuffer.allocate(width * height * 4);
         for (int i = 0; i < width * height; i++) {
