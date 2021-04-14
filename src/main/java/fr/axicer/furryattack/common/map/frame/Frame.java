@@ -10,6 +10,7 @@ import fr.axicer.furryattack.common.entity.Updatable;
 import fr.axicer.furryattack.common.events.EventListener;
 import fr.axicer.furryattack.common.map.background.Background;
 import fr.axicer.furryattack.common.map.layer.Layer;
+import fr.axicer.furryattack.util.Direction;
 import org.joml.Vector2d;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
+import java.util.Arrays;
 
 public class Frame implements Renderable, Updatable, Removable, EventListener {
 
@@ -49,7 +51,7 @@ public class Frame implements Renderable, Updatable, Removable, EventListener {
         }
         if (shader == null) shader = new FrameShader();
         background = Background.loadBackground("/img/background.png", GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
-        borderAtlas = TextureAtlas.loadAtlas("/img/atlas/border_atlas.png", 20, 20, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
+        borderAtlas = TextureAtlas.loadAtlas("/img/atlas/border_atlas.png", 36, 36, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
         decorationAtlas = TextureAtlas.loadAtlas("/img/atlas/decoration_atlas.png", 20, 20, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
         textureAtlas = TextureAtlas.loadAtlas("/img/atlas/texture_atlas.png", 20, 20, GL12.GL_CLAMP_TO_EDGE, GL11.GL_NEAREST);
 
@@ -80,6 +82,7 @@ public class Frame implements Renderable, Updatable, Removable, EventListener {
                 blocks[y][x] = new FrameBlock(this, layer.getData()[y * layer.getWidth() + x], x, y);
             }
         }
+
     }
 
     public FrameBlock getBlock(int x, int y) {
@@ -88,14 +91,18 @@ public class Frame implements Renderable, Updatable, Removable, EventListener {
         return blocks[y][x];
     }
 
-    public FrameBlock getNeighbor(FrameBlock current, FrameBlock.FrameOrientation orientation) {
+    public FrameBlock getNeighbor(FrameBlock current, Direction orientation) {
         int x = current.getPosition()[0];
         int y = current.getPosition()[1];
         return switch (orientation) {
             case TOP -> getBlock(x, y - 1);
             case BOTTOM -> getBlock(x, y + 1);
             case RIGHT -> getBlock(x + 1, y);
-            case LEFT -> getBlock(x - 1, 0);
+            case LEFT -> getBlock(x - 1, y);
+            case TOP_LEFT -> getBlock(x - 1, y - 1);
+            case TOP_RIGHT -> getBlock(x + 1, y - 1);
+            case BOTTOM_LEFT -> getBlock(x - 1, y + 1);
+            case BOTTOM_RIGHT -> getBlock(x + 1, y + 1);
         };
     }
 
@@ -117,18 +124,18 @@ public class Frame implements Renderable, Updatable, Removable, EventListener {
 
     private void addTextureFloats(DoubleBuffer buffer, Vector2d start, double ratioX, double ratioY) {
         buffer.put(start.x);
-        buffer.put(start.y + ratioY);
+        buffer.put(start.y);
         buffer.put(start.x);
-        buffer.put(start.y);
+        buffer.put(start.y + ratioY);
         buffer.put(start.x + ratioX);
-        buffer.put(start.y);
+        buffer.put(start.y + ratioY);
 
         buffer.put(start.x + ratioX);
-        buffer.put(start.y);
+        buffer.put(start.y + ratioY);
         buffer.put(start.x + ratioX);
-        buffer.put(start.y + ratioY);
+        buffer.put(start.y);
         buffer.put(start.x);
-        buffer.put(start.y + ratioY);
+        buffer.put(start.y);
     }
 
     @Override
@@ -143,7 +150,7 @@ public class Frame implements Renderable, Updatable, Removable, EventListener {
     public void render() {
         background.render();
         shader.bind();
-        shader.setUniformInt("stoneAtlas", 0);
+        shader.setUniformInt("texAtlas", 0);
         textureAtlas.getTexture().bind(0);
         shader.setUniformInt("borderAtlas", 1);
         borderAtlas.getTexture().bind(1);

@@ -8,8 +8,6 @@ import org.lwjgl.opengl.GL30;
 
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,10 +25,10 @@ public class Loader {
         return new RawModel(vao, position.length/positionDimensions);
     }
     public static RawModel loadFrameToVAO(float[] position, int positionDimensions,
-                                     double[] decorationTexCoord, double[] borderTexCoord, double[] stoneTexCoord){
+                                     double[] decorationTexCoord, double[] borderTexCoord, double[] texCoord){
         int vao = createVAO();
         storeDataInAttributeList(0, position, positionDimensions);
-        storeDataInAttributeList(1, stoneTexCoord, 2);
+        storeDataInAttributeList(1, texCoord, 2);
         storeDataInAttributeList(2, borderTexCoord, 2);
         storeDataInAttributeList(3, decorationTexCoord, 2);
         unbindVAO();

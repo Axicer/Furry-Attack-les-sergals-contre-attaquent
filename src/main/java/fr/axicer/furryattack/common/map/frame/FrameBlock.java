@@ -1,14 +1,12 @@
 package fr.axicer.furryattack.common.map.frame;
 
 import fr.axicer.furryattack.client.render.texture.TextureAtlas;
+import fr.axicer.furryattack.util.Direction;
 import org.joml.Vector2d;
-import org.joml.Vector2f;
-import org.joml.Vector4f;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class FrameBlock {
@@ -38,112 +36,104 @@ public class FrameBlock {
         return (data & 0b00000000000000000000000000000001) == 1;
     }
 
-    public FrameOrientation getSpawnFromOrientation() {
-        return FrameOrientation.getFromOrdinal((data & 0b00000000000000000000000000000110) >>> 1);
+    public Direction getSpawnFromOrientation() {
+        return Direction.getFromOrdinal((data & 0b00000000000000000000000000000110) >>> 1);
     }
 
     public boolean isFrameTrigger() {
         return (data & 0b00000000000000000000000000001000) >>> 3 == 1;
     }
 
-    public FrameOrientation getFrameToMoveOnWhenTriggered() {
-        return FrameOrientation.getFromOrdinal((data & 0b00000000000000000000000000110000) >>> 4);
+    public Direction getFrameToMoveOnWhenTriggered() {
+        return Direction.getFromOrdinal((data & 0x00000030) >>> 4);
     }
 
     public boolean isSolid() {
-        return (data & 0b00000000000000000000000001000000) >>> 6 == 1;
+        return (data & 0x00000040) >>> 6 == 1;
     }
 
     public boolean isBreakable() {
-        return (data & 0b00000000000000000000000010000000) >>> 7 == 1;
+        return (data & 0x00000080) >>> 7 == 1;
     }
 
     public FrameBlockType getFrameType() {
-        return FrameBlockType.getTypeFromOrdinal((data & 0b00000000000000001111111100000000) >>> 8);
+        return FrameBlockType.getTypeFromOrdinal((data & 0x0000FF00) >>> 8);
     }
 
     public int[] getPosition() {
         return position;
     }
 
-    public boolean isNeighborSolid(FrameOrientation orientation) {
+    public boolean isNeighbor(Direction orientation, FrameBlockType type) {
         return Optional.ofNullable(frame.getNeighbor(this, orientation))
-                .map(FrameBlock::isSolid)
-                .orElse(false);
+                .map(f -> f.getFrameType().equals(type))
+                .orElse(true);
     }
 
-//    private final List<Integer> bottomIndex = Arrays.asList(3, 7, 8, 10, 11, 12, 13, 15);
-//    private final List<Integer> topIndex = Arrays.asList(1, 5, 6, 9, 10, 12, 13, 15);
-//    private final List<Integer> leftIndex = Arrays.asList(2, 6, 7, 9, 10, 11, 13, 14);
-//    private final List<Integer> rightIndex = Arrays.asList(4, 5, 8, 9, 11, 12, 13, 14);
+    private static final Map<Integer, Predicate<FrameBlock>> borderChecks = new HashMap<>();
+    static{
+        //single corner
+        borderChecks.put(1, b -> b.isNeighbor(Direction.BOTTOM_LEFT, FrameBlockType.AIR));
+        borderChecks.put(2, b -> b.isNeighbor(Direction.TOP_LEFT, FrameBlockType.AIR));
+        borderChecks.put(3, b -> b.isNeighbor(Direction.TOP_RIGHT, FrameBlockType.AIR));
+        borderChecks.put(4, b -> b.isNeighbor(Direction.BOTTOM_RIGHT, FrameBlockType.AIR));
+        //single border
+        borderChecks.put(5, b -> b.isNeighbor(Direction.BOTTOM, FrameBlockType.AIR));
+        borderChecks.put(6, b -> b.isNeighbor(Direction.LEFT, FrameBlockType.AIR));
+        borderChecks.put(7, b -> b.isNeighbor(Direction.TOP, FrameBlockType.AIR));
+        borderChecks.put(8, b -> b.isNeighbor(Direction.RIGHT, FrameBlockType.AIR));
+        //2 borders opposite
+        borderChecks.put(9, b -> Stream.of(Direction.LEFT, Direction.RIGHT).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)));
+        borderChecks.put(10, b -> Stream.of(Direction.TOP, Direction.BOTTOM).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)));
+        //one border one corner left
+        borderChecks.put(11, b -> Stream.of(Direction.BOTTOM, Direction.TOP_LEFT).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)));
+        borderChecks.put(12, b -> Stream.of(Direction.LEFT, Direction.TOP_RIGHT).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)));
+        borderChecks.put(13, b -> Stream.of(Direction.TOP, Direction.BOTTOM_RIGHT).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)));
+        borderChecks.put(14, b -> Stream.of(Direction.RIGHT, Direction.BOTTOM_LEFT).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)));
+        //one border one corner right
+        borderChecks.put(15, b -> Stream.of(Direction.BOTTOM, Direction.TOP_RIGHT).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)));
+        borderChecks.put(16, b -> Stream.of(Direction.LEFT, Direction.BOTTOM_RIGHT).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)));
+        borderChecks.put(17, b -> Stream.of(Direction.TOP, Direction.BOTTOM_LEFT).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)));
+        borderChecks.put(18, b -> Stream.of(Direction.RIGHT, Direction.TOP_LEFT).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)));
+        //one border both corner
+        borderChecks.put(19, b -> Stream.of(Direction.BOTTOM, Direction.TOP_RIGHT, Direction.TOP_LEFT).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)) &&
+                !b.isNeighbor(Direction.TOP, FrameBlockType.AIR));//check for opposite being air to avoid mismatch with full opposite border
+        borderChecks.put(20, b -> Stream.of(Direction.LEFT, Direction.BOTTOM_RIGHT, Direction.TOP_RIGHT).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)) &&
+                !b.isNeighbor(Direction.RIGHT, FrameBlockType.AIR));//check for opposite being air to avoid mismatch with full opposite border
+        borderChecks.put(21, b -> Stream.of(Direction.TOP, Direction.BOTTOM_LEFT, Direction.BOTTOM_RIGHT).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)) &&
+                !b.isNeighbor(Direction.BOTTOM, FrameBlockType.AIR));//check for opposite being air to avoid mismatch with full opposite border
+        borderChecks.put(22, b -> Stream.of(Direction.RIGHT, Direction.TOP_LEFT, Direction.BOTTOM_LEFT).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)) &&
+                !b.isNeighbor(Direction.LEFT, FrameBlockType.AIR));//check for opposite being air to avoid mismatch with full opposite border
+        //2 borders corners
+        borderChecks.put(23, b -> Stream.of(Direction.RIGHT, Direction.BOTTOM).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)));
+        borderChecks.put(24, b -> Stream.of(Direction.BOTTOM, Direction.LEFT).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)));
+        borderChecks.put(25, b -> Stream.of(Direction.LEFT, Direction.TOP).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)));
+        borderChecks.put(26, b -> Stream.of(Direction.TOP, Direction.RIGHT).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)));
+        //2 borders corner + opposite corner
+        borderChecks.put(27, b -> Stream.of(Direction.RIGHT, Direction.BOTTOM, Direction.TOP_LEFT).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)));
+        borderChecks.put(28, b -> Stream.of(Direction.BOTTOM, Direction.LEFT, Direction.TOP_RIGHT).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)));
+        borderChecks.put(29, b -> Stream.of(Direction.LEFT, Direction.TOP, Direction.BOTTOM_RIGHT).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)));
+        borderChecks.put(30, b -> Stream.of(Direction.TOP, Direction.RIGHT, Direction.BOTTOM_LEFT).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)));
+        //3 borders
+        borderChecks.put(31, b -> Stream.of(Direction.RIGHT, Direction.BOTTOM, Direction.LEFT).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)));
+        borderChecks.put(32, b -> Stream.of(Direction.BOTTOM, Direction.LEFT, Direction.TOP).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)));
+        borderChecks.put(33, b -> Stream.of(Direction.LEFT, Direction.TOP, Direction.RIGHT).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)));
+        borderChecks.put(34, b -> Stream.of(Direction.TOP, Direction.RIGHT, Direction.BOTTOM).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)));
+        //4 borders
+        borderChecks.put(35, b -> Stream.of(Direction.RIGHT, Direction.BOTTOM, Direction.TOP, Direction.LEFT).allMatch(dir -> b.isNeighbor(dir, FrameBlockType.AIR)));
+    }
 
     public Vector2d getBorderTexCoords(TextureAtlas atlas) {
-//        List<Integer> possible = new ArrayList<>(15);
-//        IntStream.rangeClosed(1, 15).forEach(possible::add);
-//
-//        if (!isNeighborSolid(FrameOrientation.TOP)) {
-//            possible = possible.stream()
-//                    .filter(topIndex::contains)
-//                    .collect(Collectors.toList());
-//        } else {
-//            possible.removeAll(topIndex);
-//        }
-//        if (!isNeighborSolid(FrameOrientation.RIGHT)) {
-//            possible = possible.stream()
-//                    .filter(rightIndex::contains)
-//                    .collect(Collectors.toList());
-//        } else {
-//            possible.removeAll(rightIndex);
-//        }
-//        if (!isNeighborSolid(FrameOrientation.BOTTOM)) {
-//            possible = possible.stream()
-//                    .filter(bottomIndex::contains)
-//                    .collect(Collectors.toList());
-//        } else {
-//            possible.removeAll(bottomIndex);
-//        }
-//        if (!isNeighborSolid(FrameOrientation.LEFT)) {
-//            possible = possible.stream()
-//                    .filter(leftIndex::contains)
-//                    .collect(Collectors.toList());
-//        } else {
-//            possible.removeAll(leftIndex);
-//        }
-//
-//        AtomicInteger x = new AtomicInteger(possible.stream().findFirst().orElse(0));
-//
-//        //check for single corner
-//        if (x.get() == 0) {
-//            Optional.ofNullable(frame.getNeighbor(this, FrameOrientation.BOTTOM))
-//                    .ifPresent(bottom -> {
-//                        if (!bottom.isNeighborSolid(FrameOrientation.RIGHT)) {
-//                            x.set(18);
-//                        } else if (!bottom.isNeighborSolid(FrameOrientation.LEFT)) {
-//                            x.set(17);
-//                        }
-//                    });
-//            Optional.ofNullable(frame.getNeighbor(this, FrameOrientation.TOP))
-//                    .ifPresent(top -> {
-//                        if (!top.isNeighborSolid(FrameOrientation.RIGHT)) {
-//                            x.set(19);
-//                        } else if (!top.isNeighborSolid(FrameOrientation.LEFT)) {
-//                            x.set(16);
-//                        }
-//                    });
-//        }
-//
-//        int y;
-//        if (isNeighborSolid(FrameOrientation.BOTTOM)) {
-//            y = 0;
-//        } else {
-//            y = 1;
-//        }
-//
-//        //TODO add more borders
-//
-//        return new Vector2f(x.get() * atlas.getRatioX(), y * atlas.getRatioY());
+        var x = new AtomicInteger(0);
+        borderChecks.entrySet().stream()
+                .filter(entry -> entry.getValue().test(this))
+                .max(Comparator.comparingInt(Map.Entry::getKey))
+                .ifPresent(entry -> x.set(entry.getKey()));
+        int y = getFrameType().equals(FrameBlockType.AIR) ? 0 : 1;
 
-        return new Vector2d(0D, 0D);
+        //TODO add more borders
+
+        return new Vector2d(x.get() * atlas.getRatioX(), y * atlas.getRatioY());
     }
 
     public Vector2d getDecorationTexCoord(TextureAtlas atlas) {
@@ -162,17 +152,8 @@ public class FrameBlock {
         return new Vector2d(x, y);
     }
 
-    public enum FrameOrientation {
-        TOP,
-        BOTTOM,
-        LEFT,
-        RIGHT;
-
-        public static FrameOrientation getFromOrdinal(int ordinal) {
-            return Stream.of(values())
-                    .filter(orientation -> orientation.ordinal() == ordinal)
-                    .findFirst()
-                    .orElse(null);
-        }
+    @Override
+    public String toString() {
+        return getFrameType().ordinal()+"";
     }
 }

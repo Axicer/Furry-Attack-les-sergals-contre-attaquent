@@ -160,7 +160,7 @@ public class Layer {
     }
 
     public static Layer getStoneFullMap() {
-        int height = 27;
+        int height = 54;
         int width = (int) (height*(16.0/9.0));
 
         OpenSimplexNoise noise = new OpenSimplexNoise(new Random().nextLong());

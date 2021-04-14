@@ -54,7 +54,7 @@ public class Main {
         }
 
         //start Boostrap
-        start(width, height, isServer, isFullscreen, isVsync, 0);//TODO use screen ID from config
+        start(width, height, isServer, isFullscreen, isVsync, 1);//TODO use screen ID from config
     }
 
 
@@ -71,7 +71,7 @@ public class Main {
                 System.exit(3);
             }
 
-            client.getEventManager().addListener(new EscapeListener(client));
+            FAClient.getEventManager().addListener(new EscapeListener(client));
 
             client.start();
             //nothing should be run under this line as they will only be called when the program shutdown
